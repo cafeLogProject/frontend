@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useNavigationStore } from "@shared/store/useNavigationStore";
 import { useReviewDraftStore } from "@shared/store/useReviewDraftStore";
@@ -16,74 +16,48 @@ import type { ShowReviewResponse } from "@shared/api/reviews/types";
 const CafeInfo = () => {
   const { id } = useParams();
   const { getCafe } = useCafeApi();
-  const [cafeInfo, setCafeInfo] = useState<ICafeDescription | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [reviews, setReviews] = useState<ShowReviewResponse[]>([]);
   const { getCafeReviews } = useReviewApi();
   const navigate = useNavigate();
   const { setReturnPath } = useNavigationStore();
   const { updateDraft } = useReviewDraftStore();
-  
-  // 디버깅을 위한 로그 추가
-  useEffect(() => {
-    console.log('Current URL id parameter:', id);
-  }, [id]);
 
-  const dependencies = useRef({ id, getCafe });
-  dependencies.current = { id, getCafe };
-
-  const fetchCafeInfo = useCallback(async () => {
-    const { id, getCafe } = dependencies.current;
-    console.log('Attempting to fetch cafe with id:', id); // 디버깅 로그
-    
-    if (!id) {
-      setError(new Error("카페 ID가 없습니다. URL을 확인해주세요."));
-      setIsLoading(false);
-      return; 
-    }
-
-    try {
-      const data = await getCafe(id);
-      setCafeInfo(data);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error("카페 정보를 불러오는데 실패했습니다."));
-    } finally {
-      setIsLoading(false); 
-    }
-  }, []);
-
-  const fetchReviews = useCallback(async () => {
-    if (!cafeInfo?.id) return;
-
-    try {
-      const response = await getCafeReviews(cafeInfo.id, { 
-        page: 1, 
-        size: 10,
-        sort: "latest" 
-      });
-      setReviews(response);
-    } catch (err) {
-      console.error("리뷰 조회 중 오류 발생:", err);
-    }
-  }, [cafeInfo?.id]);
+  const [cafeInfo, setCafeInfo] = useState<ICafeDescription | null>(null);
+  const [reviews, setReviews] = useState<ShowReviewResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    const fetchCafeInfo = async () => {
+      if (!id) {
+        setError(new Error("카페 ID가 없습니다. URL을 확인해주세요."));
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const data = await getCafe(id);
+        setCafeInfo(data);
+        
+        const reviewsData = await getCafeReviews(data.id, {
+          page: 1,
+          size: 10,
+          sort: "latest"
+        });
+        setReviews(reviewsData);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error("카페 정보를 불러오는데 실패했습니다."));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchCafeInfo();
-  }, [fetchCafeInfo]);
-
-  useEffect(() => {
-    if (cafeInfo) {
-      fetchReviews();
-    }
-  }, [cafeInfo, fetchReviews]);
+  }, [id]);
 
   const handleWriteReviewClick = () => {
     if (cafeInfo) {
       setReturnPath(`/cafe/${cafeInfo.id}`);
-      updateDraft({ 
-        cafe: cafeInfo
-      });
+      updateDraft({ cafe: cafeInfo });
       navigate('/review/write');
     }
   };

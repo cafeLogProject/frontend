@@ -1,4 +1,5 @@
 @use "sass:color";
+@use "@app/styles/abstracts/variables" as var;
 
 .loadingContainer {
     display: flex;
@@ -54,4 +55,24 @@
   p {
     margin: 0;
   }
+}
+
+.searchPage {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.searchBarWrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #fff;
+  z-index: 100;
+  padding: 16px 0;
+}
+
+.cafeListContainer {
+  padding-top: 0px;
 }

@@ -22,6 +22,7 @@ const ReviewItem = ({ review, showChips = false }: ReviewItemProps) => {
         imageIds={(review.imageIds || []).map(id => id.toString())} 
         showChips={showChips}
         cafeName={review.cafeName}
+        cafeId={review.cafeId}
       />
       <ReviewContent content={review.content} />
       <ReviewTagList tagIds={review.tagIds} />

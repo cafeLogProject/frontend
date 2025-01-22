@@ -18,20 +18,20 @@ const MyPage = () => {
 
     const handleScroll = throttle(() => {
       const scrollTop = mainContent.scrollTop;
-      
-      if (!isScrolled && scrollTop > 80) {
+
+      if (!isScrolled && scrollTop > 156) {
         const oldHeight = headerRef.current?.offsetHeight || 0;
         setIsScrolled(true);
-        
+
         // 헤더 축소 후 스크롤 위치 보정하기
-        requestAnimationFrame(() => {
-          const newHeight = headerRef.current?.offsetHeight || 0;
-          const heightDiff = oldHeight - newHeight;
-          if (heightDiff > 0) {
-            mainContent.scrollTop += heightDiff;
-          }
-        });
-      } else if (isScrolled && scrollTop < 10) {
+        // requestAnimationFrame(() => {
+        //   const newHeight = headerRef.current?.offsetHeight || 0;
+        //   const heightDiff = oldHeight - newHeight;
+        //   if (heightDiff > 0) {
+        //     mainContent.scrollTop += heightDiff;
+        //   }
+        // });
+      } else if (isScrolled && scrollTop < 76) {
         setIsScrolled(false);
       }
     }, 100);
@@ -48,7 +48,13 @@ const MyPage = () => {
       <div ref={headerRef}>
         <ProfileHeader isScrolled={isScrolled} />
       </div>
-      <div ref={contentRef} style={{ paddingTop: isScrolled ? "84px" : "212px" }}>
+      <div
+        ref={contentRef}
+        style={{
+          // paddingTop: isScrolled ? "84px" : "252px",
+          paddingTop: "252px",
+        }}
+      >
         <FilterBtn />
         <ReviewList type="my" params={{ limit: 10 }} />
         <button onClick={openModal}>Open Modal</button>

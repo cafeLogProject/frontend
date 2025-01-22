@@ -72,23 +72,27 @@ const CafeSearch = () => {
 
   return (
     <div className={styles.searchPage}>
-      <SearchBar />
-      {isLoading ? (
-        <div className={styles.loadingContainer}>
-          <div className={styles.loadingSpinner}></div>
-          <p>검색 중입니다...</p>
-        </div>
-      ) : error ? (
-        <div className={styles.errorContainer}>
-          <p>카페 검색 중 오류가 발생했습니다.</p>
-        </div>
-      ) : cafes.length === 0 ? (
-        <div className={styles.noResults}>
-          <p>검색 결과가 없습니다.</p>
-        </div>
-      ) : (
-        <CafeList cafeInfo={cafes} onCafeSelect={handleCafeSelect} />
-      )}
+      <div className={styles.searchBarWrapper}>
+        <SearchBar />
+      </div>
+      <div className={styles.cafeListContainer}>
+        {isLoading ? (
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingSpinner}></div>
+            <p>검색 중입니다...</p>
+          </div>
+        ) : error ? (
+          <div className={styles.errorContainer}>
+            <p>카페 검색 중 오류가 발생했습니다.</p>
+          </div>
+        ) : cafes.length === 0 ? (
+          <div className={styles.noResults}>
+            <p>검색 결과가 없습니다.</p>
+          </div>
+        ) : (
+          <CafeList cafeInfo={cafes} onCafeSelect={handleCafeSelect} />
+        )}
+      </div>
     </div>
   );
 };

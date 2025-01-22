@@ -26,7 +26,10 @@ export interface CafeApiHook {
   cafe: ICafeDescription | null
   isLoading: boolean
   error: ApiError | null
-  getCafe: (cafeId: string) => Promise<ICafeDescription>
+  getCafe: (cafeId: string, options?: {
+    onSuccess?: (response: ICafeDescription) => void;
+    onError?: (error: any) => void;
+  }) => Promise<ICafeDescription>
   checkCafeExists: (params: {
     name: string
     mapx: string
@@ -62,9 +65,30 @@ export const useCafeApi = (): CafeApiHook => {
     post
   } = useApi<ICafeDescription>();
 
-  const getCafe = async (cafeId: string): Promise<ICafeDescription> => {
-    const response = await get<ICafeApiResponse>(`${BASE_URL}/${cafeId}`);
-    return mapCafeApiResponse(response, cafeId);
+  const getCafe = async (
+    cafeId: string, 
+    options?: {
+      onSuccess?: (response: ICafeDescription) => void;
+      onError?: (error: any) => void;
+    }
+  ): Promise<ICafeDescription> => {
+    try {
+      const response = await get<ICafeApiResponse>(
+        `${BASE_URL}/${cafeId}`,
+        {},
+        {
+          onSuccess: (apiResponse) => {
+            const mappedResponse = mapCafeApiResponse(apiResponse, cafeId);
+            options?.onSuccess?.(mappedResponse);
+          },
+          onError: options?.onError,
+        }
+      );
+      return mapCafeApiResponse(response, cafeId);
+    } catch (error) {
+      console.error('카페 정보 조회 중 오류 발생:', error);
+      throw error;
+    }
   };
 
   const checkCafeExists = async (params: {
