@@ -1,4 +1,5 @@
 @use "@app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
 
 .inputContainer {
   width: 100%;
@@ -23,13 +24,38 @@
   margin-top: 24px;
 }
 
+.labelText {
+  position: relative;
+  display: inline-block;
+
+  &.fullWidth {
+    width: 100%;
+  }
+}
+
+.required {
+  position: absolute;
+  top: 0;
+  right: -6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var.$primitive-primary-orange500;
+}
+
 .inputWrapper {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+  gap: 4px;
+}
+
+.inputContent {
   width: 100%;
   min-height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .baseInput {
@@ -50,4 +76,19 @@
   &::placeholder {
     color: #9ca3af;
   }
+}
+
+.errorText {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var.$primitive-system-error;
+  @include mixins.apply-text-style(b2_regular);
+  width: 100%;
+  margin-top: 4px;
+}
+
+.alertIcon {
+  width: 17px;
+  height: 17px;
 }

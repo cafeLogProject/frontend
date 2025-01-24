@@ -6,6 +6,7 @@ import styles from "./DatePicker.module.scss";
 interface DatePickerProps {
   value: string;
   onChange: (date: string) => void;
+  className?: string;
 }
 
 interface CalendarDay {
@@ -13,7 +14,7 @@ interface CalendarDay {
   isCurrentMonth: boolean;
 }
 
-const DatePicker = ({ value, onChange }: DatePickerProps) => {
+const DatePicker = ({ value, onChange, className }: DatePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
@@ -74,14 +75,14 @@ const DatePicker = ({ value, onChange }: DatePickerProps) => {
   return (
     <>
       <div
-        className={styles.inputContainer}
+        className={`${styles.inputContainer} ${className || ''}`}
         onClick={() => setIsOpen(true)}
       >
         <input
           type="text"
           value={value}
           readOnly
-          className={styles.dateInput}
+          className={`${styles.dateInput} ${className || ''}`}
           placeholder="방문하신 날짜를 선택해주세요."
         />
         <img src={calendarIcon} className={styles.calendarIcon} alt="달력" />

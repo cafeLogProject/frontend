@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { ICafeDescription } from '@shared/api/cafe/types';
 
-interface ReviewDraft {
+export interface ReviewDraft {
   id?: number;
   cafe: ICafeDescription | null;
   rating: number;

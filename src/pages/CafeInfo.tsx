@@ -91,7 +91,7 @@ const CafeInfo = () => {
           <div className={styles.ratingScore}>
             <StarRating 
               value={cafeInfo.avgStar || 0}
-              showRatingText={true}
+              showRatingValue={true}
               size={36}
               starsContainerClassName={styles.starRatingStars}
               ratingTextClassName={styles.ratingText}

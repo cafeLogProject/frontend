@@ -1,5 +1,5 @@
 @use "@app/styles/abstracts/mixins";
-@use "@app/styles/abstracts/_variables" as *;
+@use "@app/styles/abstracts/_variables" as var;
 
 .container {
   --star-rating-gap: 8px;
@@ -43,6 +43,32 @@
 }
 
 .ratingText {
-  color: var(--semantic-text-icon-brand);
+  color: var.$semantic-text-icon-brand;
+  @include mixins.apply-text-style(b2_bold);
+}
+
+.ratingTextContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.ratingValue {
+  @include mixins.apply-text-style(b2_bold);
+  margin-top: 2px;
+  margin-bottom: 16px;
+  
+  &.low {
+    color: var.$primitive-secondary-brown500;
+  }
+  
+  &.medium, 
+  &.high {
+    color: var.$semantic-text-icon-brand;  
+  }
+}
+
+.ratingDescription {
   @include mixins.apply-text-style(b2_bold);
 }
