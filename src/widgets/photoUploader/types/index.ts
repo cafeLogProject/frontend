@@ -3,6 +3,7 @@ export interface UploadedImage {
   file?: File;
   previewUrl: string;
   uploadedUrl?: string;
+  isUploading?: boolean;
 }
 
 export interface PhotoUploaderConfig {

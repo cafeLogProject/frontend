@@ -45,12 +45,16 @@ $spacing: 32px;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+
+  .reviewSubLabel {
+    color: var.$semantic-text-icon-primary;
+    @include mixins.apply-text-style(b2_bold);
+  }
 }
 
 .charCount {
   color: var.$semantic-text-icon-secondary;
-  font-size: 12px;
-  font-weight: 140;
+  @include mixins.apply-text-style(b2_regular);
 }
 
 .reviewTextarea {
@@ -74,8 +78,7 @@ $spacing: 32px;
 
 .photoCount {
   color: var.$semantic-text-icon-secondary;
-  font-size: 12px;
-  font-weight: 140;
+  @include mixins.apply-text-style(b2_regular);
   display: flex;
   justify-content: flex-end;
   margin: 4px 0;

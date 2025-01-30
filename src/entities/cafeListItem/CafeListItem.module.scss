@@ -1,20 +1,24 @@
+@use "@app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
+
 .cafeItem {
-    list-style: none;
-    padding: 16px;
-    border-bottom: 1px solid rgb(212, 212, 212);
-    .cafeItem__link {
-      text-decoration: none;
-      display: flex;
-      gap: 16px;
-      .cafeItem__info {
-        line-height: 140%;
-        .cafeItem__name {
-          color: #000;
-        }
-        .cafeItem__address {
-          color: #767676;
-          font-size: 12px;
-        }
+  list-style: none;
+  padding: 16px;
+  border-bottom: 1px solid rgb(212, 212, 212);
+  .cafeItem__link {
+    text-decoration: none;
+    display: flex;
+    gap: 16px;
+    .cafeItem__info {
+      line-height: 140%;
+      .cafeItem__name {
+        color: var.$semantic-text-icon-primary;
+        @include mixins.apply-text-style(b1_bold);
+      }
+      .cafeItem__address {
+        color: var.$semantic-text-icon-secondary;
+        @include mixins.apply-text-style(b2_regular);
       }
     }
   }
+}

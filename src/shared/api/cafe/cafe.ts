@@ -1,20 +1,21 @@
 import type { ICafeDescription, ICafeApiResponse } from './types';
 import { useApi, ApiError } from "@shared/api/hooks/useApi";
+import { useCallback } from 'react';
 
 const BASE_URL = '/api/cafes';
 
 interface IsExistCafeResponse {
-  cafeId: number
-  exist: boolean
+  cafeId?: number
+  exist?: boolean
 }
 
 interface SaveCafeRequest {
-  title: string;
-  category: string;
-  mapx: string;
-  mapy: string;
-  address: string;
-  roadAddress: string;
+  title?: string;
+  category?: string;
+  mapx?: string;
+  mapy?: string;
+  address?: string;
+  roadAddress?: string;
   link?: string;
 }
 
@@ -31,9 +32,9 @@ export interface CafeApiHook {
     onError?: (error: any) => void;
   }) => Promise<ICafeDescription>
   checkCafeExists: (params: {
-    name: string
-    mapx: string
-    mapy: string
+    name?: string
+    mapx?: string
+    mapy?: string
   }) => Promise<IsExistCafeResponse>
   saveCafe: (params: SaveCafeRequest) => Promise<SaveCafeResponse>
 }
@@ -65,36 +66,39 @@ export const useCafeApi = (): CafeApiHook => {
     post
   } = useApi<ICafeDescription>();
 
-  const getCafe = async (
-    cafeId: string, 
-    options?: {
-      onSuccess?: (response: ICafeDescription) => void;
-      onError?: (error: any) => void;
-    }
-  ): Promise<ICafeDescription> => {
-    try {
-      const response = await get<ICafeApiResponse>(
-        `${BASE_URL}/${cafeId}`,
-        {},
-        {
-          onSuccess: (apiResponse) => {
-            const mappedResponse = mapCafeApiResponse(apiResponse, cafeId);
-            options?.onSuccess?.(mappedResponse);
-          },
-          onError: options?.onError,
-        }
-      );
-      return mapCafeApiResponse(response, cafeId);
-    } catch (error) {
-      console.error('카페 정보 조회 중 오류 발생:', error);
-      throw error;
-    }
-  };
+  const getCafe = useCallback(
+    async (
+      cafeId: string, 
+      options?: {
+        onSuccess?: (response: ICafeDescription) => void;
+        onError?: (error: any) => void;
+      }
+    ): Promise<ICafeDescription> => {
+      try {
+        const response = await get<ICafeApiResponse>(
+          `${BASE_URL}/${cafeId}`,
+          {},
+          {
+            onSuccess: (apiResponse) => {
+              const mappedResponse = mapCafeApiResponse(apiResponse, cafeId);
+              options?.onSuccess?.(mappedResponse);
+            },
+            onError: options?.onError,
+          }
+        );
+        return mapCafeApiResponse(response, cafeId);
+      } catch (error) {
+        console.error('카페 정보 조회 중 오류 발생:', error);
+        throw error;
+      }
+    },
+    []
+  );
 
   const checkCafeExists = async (params: {
-    name: string
-    mapx: string
-    mapy: string
+    name?: string
+    mapx?: string
+    mapy?: string
   }): Promise<IsExistCafeResponse> => {
     try {
       const response = await get<IsExistCafeResponse>(BASE_URL, {

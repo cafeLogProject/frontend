@@ -1,0 +1,28 @@
+@use "@app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
+
+.selectionModeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+//   padding: 8px;
+//   border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: transparent;
+  
+  &.selectionModeButton--selected {
+    background-color: var.$semantic-background-primary;
+  }
+  
+  .selectionModeButton__icon {
+    width: 24px;
+    height: 24px;
+    // margin-right: 8px;
+  }
+  
+  .selectionModeButton__text {
+    color: var.$semantic-text-icon-primary;
+    @include mixins.apply-text-style(b1_bold);
+  }
+}

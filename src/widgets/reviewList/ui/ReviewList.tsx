@@ -10,32 +10,30 @@ interface ReviewListProps {
 }
 
 const ReviewList = ({ type = 'all', params = { limit: 10 } }: ReviewListProps) => {
-  const [reviews, setReviews] = useState<ShowReviewResponse[]>([]);
-  const { getReviewList, getMyReviews } = useReviewApi();
+  const { useReviewList, useMyReviews } = useReviewApi();
+  
+  const reviewListQuery = useReviewList({
+    sort: "NEW",
+    ...params as ShowReviewListRequest
+  });
+  
+  const myReviewsQuery = useMyReviews({
+    ...params as ShowUserReviewRequest
+  });
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = type === 'all' 
-          ? await getReviewList({
-              sort: "NEW",
-              ...params as ShowReviewListRequest
-            })
-          : await getMyReviews({
-              ...params as ShowUserReviewRequest
-            });
-        setReviews(response);
-      } catch (error) {
-        console.error("Failed to fetch reviews:", error);
-      }
-    };
+  const reviews = type === 'all' ? reviewListQuery.data : myReviewsQuery.data;
 
-    fetchReviews();
-  }, [type, params, getReviewList, getMyReviews]);
+  if (reviewListQuery.isError || myReviewsQuery.isError) {
+    return <div>리뷰를 불러오는데 실패했습니다.</div>;
+  }
+
+  if (reviewListQuery.isLoading || myReviewsQuery.isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <ul className={styles.reviewList}>
-      {reviews.map(review => (
+      {reviews?.map(review => (
         <li key={review.reviewId} className={styles.reviewList__item}>
           <ReviewItem review={review} showChips={true} />
         </li>

@@ -9,9 +9,9 @@ interface CafeListProps {
 
 export const CafeList = ({ cafeInfo, onCafeSelect }: CafeListProps) => (
   <ul className={styles.cafeList}>
-    {cafeInfo?.length > 0 && cafeInfo.map((cafe) => (
+    {cafeInfo?.length > 0 && cafeInfo.map((cafe, index) => (
       <CafeItem
-        key={cafe.id}
+        key={`${cafe.name}-${cafe.mapx}-${cafe.mapy}-${index}`}
         {...cafe}
         onSelect={() => onCafeSelect(cafe)}
       />

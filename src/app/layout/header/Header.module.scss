@@ -46,12 +46,23 @@
     }
   }
 
-  .title {
+  .titleContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     width: 100%;
-    text-align: center;
-    @include mixins.apply-text-style(t2_bold);
-    color: #111827;
-    margin: 0;
+    
+    .title {
+      @include mixins.apply-text-style(t2_bold);
+      color: #111827;
+      margin: 0;
+    }
+    
+    .count {
+      @include mixins.apply-text-style(t2_bold);
+      color: var.$semantic-text-icon-brand;
+    }
   }
 
   .rightElement {

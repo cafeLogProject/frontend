@@ -6,11 +6,12 @@ export const Button: React.FC<ButtonProps> = ({
   altText,
   text,
   className,
+  textClassName,
 }) => {
   return (
     <button onClick={onClick} className={className}>
       {imgUrl && <img src={imgUrl} alt={altText} />}
-      {text && <p>{text}</p>}
+      {text && <p className={textClassName}>{text}</p>}
     </button>
   );
 };

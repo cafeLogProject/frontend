@@ -12,19 +12,27 @@ import NoReview from "@shared/assets/images/review/no-review.svg";
 import { ReviewItem } from "@/entities/review/ui";
 import { useReviewApi } from "@shared/api/reviews/reviewApi";
 import type { ShowReviewResponse } from "@shared/api/reviews/types";
+import { useReviewDraftApi } from "@shared/api/reviews/reviewDraftApi";
 
 const CafeInfo = () => {
   const { id } = useParams();
   const { getCafe } = useCafeApi();
-  const { getCafeReviews } = useReviewApi();
+  const { useCafeReviews } = useReviewApi();
   const navigate = useNavigate();
   const { setReturnPath } = useNavigationStore();
   const { updateDraft } = useReviewDraftStore();
+  const { createDraft } = useReviewDraftApi();
 
   const [cafeInfo, setCafeInfo] = useState<ICafeDescription | null>(null);
-  const [reviews, setReviews] = useState<ShowReviewResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const reviewsQuery = useCafeReviews(Number(id), {
+    page: 1,
+    size: 10,
+    sort: "latest"
+  });
 
   useEffect(() => {
     const fetchCafeInfo = async () => {
@@ -37,13 +45,6 @@ const CafeInfo = () => {
       try {
         const data = await getCafe(id);
         setCafeInfo(data);
-        
-        const reviewsData = await getCafeReviews(data.id, {
-          page: 1,
-          size: 10,
-          sort: "latest"
-        });
-        setReviews(reviewsData);
       } catch (err) {
         setError(err instanceof Error ? err : new Error("카페 정보를 불러오는데 실패했습니다."));
       } finally {
@@ -54,19 +55,61 @@ const CafeInfo = () => {
     fetchCafeInfo();
   }, [id]);
 
-  const handleWriteReviewClick = () => {
-    if (cafeInfo) {
+  const handleWriteReviewClick = async () => {
+    if (!cafeInfo) return;
+  
+    try {
+      // 1. 네비게이션 상태 업데이트
       setReturnPath(`/cafe/${cafeInfo.id}`);
-      updateDraft({ cafe: cafeInfo });
-      navigate('/review/write');
+      
+      // 2. Draft 스토어 업데이트
+      updateDraft({ 
+        cafe: cafeInfo
+      });
+  
+      // 3. Draft 생성
+      try {
+        const response = await createDraft({
+          cafeId: cafeInfo.id,
+          rating: 0,
+          visitDate: '',
+          content: '',
+          imageIds: [],
+          tagIds: []
+        });
+  
+        // 4. Draft ID 업데이트
+        await updateDraft({ 
+          id: response.draftReviewId,
+          cafe: cafeInfo
+        });
+
+        // 5. 네비게이션 트리거
+        setShouldNavigate(true);
+
+      } catch (error) {
+        console.error('Draft 생성 실패:', error);
+      }
+    } catch (error) {
+      console.error("리뷰 작성 페이지 이동 중 오류 발생:", error);
     }
   };
 
-  if (isLoading) {
+  useEffect(() => {
+    if (shouldNavigate) {
+      navigate('/review/write', {
+        replace: true,
+        state: { from: `/cafe/${cafeInfo?.id}` }
+      });
+      setShouldNavigate(false);
+    }
+  }, [shouldNavigate, navigate, cafeInfo]);
+
+  if (isLoading || reviewsQuery.isLoading) {
     return <div>로딩 중...</div>;
   }
 
-  if (error || !cafeInfo) {
+  if (error || !cafeInfo || reviewsQuery.isError) {
     return <div>카페 정보를 불러오는데 실패했습니다.</div>;
   }
 
@@ -85,7 +128,7 @@ const CafeInfo = () => {
       <div className={styles.ratingWrapper}>
         <div className={styles.ratingHeader}>
           <label className={styles.ratingLabel}>리뷰</label>
-          <span className={styles.reviewCount}>({reviews.length}개)</span>
+          <span className={styles.reviewCount}>({reviewsQuery.data?.length ?? 0}개)</span>
         </div>
         <div className={styles.ratingScoreContainer}>
           <div className={styles.ratingScore}>
@@ -100,9 +143,9 @@ const CafeInfo = () => {
         </div>
       </div>
       
-      {reviews.length > 0 ? (
+      {reviewsQuery.data && reviewsQuery.data.length > 0 ? (
         <ul className={styles.reviewList}>
-          {reviews.map((review) => (
+          {reviewsQuery.data.map((review) => (
             <li key={review.reviewId} className={styles.reviewList__item}>
               <ReviewItem review={review} />
             </li>

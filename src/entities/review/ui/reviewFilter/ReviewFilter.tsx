@@ -3,13 +3,18 @@ import styles from "./ReviewFilter.module.scss";
 import Button from "@/shared/ui/button/ui/Button";
 import filter from "@shared/assets/images/filter.svg";
 
-const ReviewFilter = () => {
-  const [activeFilter, setActiveFilter] = useState<"latest" | "highRating">(
-    "latest"
-  );
+interface ReviewFilterProps {
+  onSortChange: (filter: "latest" | "highRating") => void;
+}
+
+const ReviewFilter = ({ onSortChange }: ReviewFilterProps) => {
+  const [activeFilter, setActiveFilter] = useState<"latest" | "highRating">("latest");
+  
   const handleFilterClick = (filterType: "latest" | "highRating") => {
     setActiveFilter(filterType);
+    onSortChange(filterType);
   };
+
   return (
     <div className={styles.reviewFilter}>
       <div className={styles.reviewFilter__btnWraper}>

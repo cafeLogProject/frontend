@@ -1,0 +1,8 @@
+@use "/src/app/styles/abstracts/mixins";
+@use "/src/app/styles/abstracts/variables" as var;
+
+.draftList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

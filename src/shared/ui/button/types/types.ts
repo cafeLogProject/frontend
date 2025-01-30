@@ -4,4 +4,5 @@ export interface ButtonProps {
   altText?: string;
   text?: string;
   className?: string;
+  textClassName?: string;
 }

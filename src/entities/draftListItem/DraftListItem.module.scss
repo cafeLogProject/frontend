@@ -1,0 +1,53 @@
+@use "@app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
+
+.draftItem {
+  list-style: none;
+  padding: 16px;
+  border-bottom: 1px solid var.$semantic-border-primary;
+
+  .draftItem__link {
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .draftItem__info {
+    line-height: 140%;
+
+    .draftItem__name {
+      color: var.$semantic-text-icon-primary;
+      @include mixins.apply-text-style(b1_bold);
+      margin-bottom: 4px;
+    }
+
+    .draftItem__date {
+      color: var.$semantic-text-icon-secondary;
+      @include mixins.apply-text-style(b2_regular);
+    }
+  }
+
+  .draftItem__checkbox {
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var.$semantic-text-icon-brand;
+    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .checkboxIcon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}

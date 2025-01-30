@@ -14,7 +14,7 @@ interface CalendarDay {
   isCurrentMonth: boolean;
 }
 
-const DatePicker = ({ value, onChange, className }: DatePickerProps) => {
+const DatePicker = ({ value = '', onChange, className }: DatePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);

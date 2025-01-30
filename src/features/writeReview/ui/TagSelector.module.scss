@@ -1,3 +1,6 @@
+@use "@app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
+
 .tagContainer {
   margin-top: 24px;
 }
@@ -7,8 +10,11 @@
     margin-top: 24px;
   }
 
-  h3 {
-    margin-bottom: 16px;
+  .tagSubLabel {
+    display: block;
+    margin-bottom: 12px;
+    color: var.$semantic-text-icon-primary;
+    @include mixins.apply-text-style(b2_bold);
   }
 }
 
@@ -16,4 +22,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.errorText {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var.$primitive-system-error;
+  @include mixins.apply-text-style(b2_regular);
+  width: 100%;
+  margin-top: 4px;
+}
+
+.alertIcon {
+  width: 17px;
+  height: 17px;
 }

@@ -28,6 +28,11 @@
   p {
     @include mixins.apply-text-style(b2_regular);
   }
+  h2.modal-subtitle {
+    @include mixins.apply-text-style(b2_regular);
+    color: var.$semantic-text-icon-primary;
+    margin-top: 4px;
+  }
   .modal-btn-wrap {
     display: flex;
     gap: 16px;

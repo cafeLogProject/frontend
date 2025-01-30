@@ -23,7 +23,7 @@ const PhotoSwiper: FC<PhotoSwiperProps> = ({
 }) => {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [initialSlideIndex, setInitialSlideIndex] = useState(0);
-  const { getUrl } = useReviewImageApi();
+  const { getImageUrl } = useReviewImageApi();
 
   // imageIds가 없고 cafeName과 showChips가 있는 경우에도 Chips 렌더링
   if ((!imageIds || imageIds.length === 0) && showChips && cafeName) {
@@ -58,7 +58,7 @@ const PhotoSwiper: FC<PhotoSwiperProps> = ({
             }}
           >
             <img 
-              src={getUrl(imageId)}
+              src={getImageUrl(imageId)}
               alt="Review"
               className={styles.image}
             />
@@ -73,7 +73,7 @@ const PhotoSwiper: FC<PhotoSwiperProps> = ({
 
       {viewerOpen && (
         <FullScreenViewer
-          images={imageIds.map(getUrl)}
+          images={imageIds.map(getImageUrl)}
           initialIndex={initialSlideIndex}
           onClose={() => setViewerOpen(false)}
         />

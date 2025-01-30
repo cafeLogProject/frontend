@@ -6,18 +6,18 @@ interface ICoordinate {
 export interface ICafeDescription {
     id: number;
     readonly name: string;
-    readonly category: string;
-    readonly isClosedDown: boolean;
-    readonly address: string;
-    readonly roadAddress: string;
-    readonly mapx: string;
-    readonly mapy: string;
-    readonly link: string;
+    readonly category?: string;
+    readonly isClosedDown?: boolean;
+    readonly address?: string;
+    readonly roadAddress?: string;
+    readonly mapx?: string;
+    readonly mapy?: string;
+    readonly link?: string;
     // 프론트엔드에서 추가로 사용하는 속성
     readonly imageIds?: number[];
-    readonly isBookmark: boolean;
-    readonly avgStar: number;
-    readonly profileImg: string;
+    readonly isBookmark?: boolean;
+    readonly avgStar?: number;
+    readonly profileImg?: string;
 }
 
 export interface INaverLocalApiResponse {
