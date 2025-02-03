@@ -31,7 +31,7 @@ const Footer = () => {
             </span>
           </button>
         </div>
-        <div className={styles.navItem}>
+        <div onClick={handleSearchClick} className={styles.navItem}>
           <button onClick={handleSearchClick} className={styles.navButton}>
             <img
               src={isActive("/search") ? searchIconOn : searchIcon}

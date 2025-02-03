@@ -50,10 +50,10 @@ const mapCafeApiResponse = (response: ICafeApiResponse, cafeId: string): ICafeDe
     mapx: response.mapx,
     mapy: response.mapy,
     link: response.link,
-    isBookmark: false,
     avgStar: response.avgRating,
     profileImg: '',
-    imageIds: []
+    imageIds: [],
+    isScrap: response.isScrap
   };
 };
 

@@ -1,12 +1,14 @@
 import type { ICafeDescription } from "@shared/api/cafe/types";
 import styles from "./CafeInfoItem.module.scss";
 import bookmarkIcon from "@shared/assets/images/cafe/bookmark.svg";
+import bookmarkIconFilled from "@shared/assets/images/cafe/bookmark-filled.svg";
 
 type CafeInfoItemProps = Pick<
   ICafeDescription,
   "name" | "address" | "link"
 > & {
   onBookmarkClick: () => void;
+  isBookmarked: boolean;
 };
 
 const CafeInfoItem = ({
@@ -14,6 +16,7 @@ const CafeInfoItem = ({
   address,
   link: instaLink,
   onBookmarkClick,
+  isBookmarked,
 }: CafeInfoItemProps) => {
   return (
     <div className={styles.cafeInfoItem}>
@@ -37,7 +40,12 @@ const CafeInfoItem = ({
           onClick={onBookmarkClick}
           aria-label="bookmark"
         >
-          <img src={bookmarkIcon} alt="Bookmark" width={20} height={23} />
+          <img 
+            src={isBookmarked ? bookmarkIconFilled : bookmarkIcon}
+            alt="Bookmark" 
+            width={20} 
+            height={23}
+          />
         </button>
       </div>
     </div>

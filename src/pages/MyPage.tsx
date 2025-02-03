@@ -2,13 +2,20 @@ import { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
 import { ProfileHeader, FilterBtn } from "@/entities/profile/ui";
 import { ReviewList } from "@/widgets/reviewList";
+import { CafeList } from "@/widgets/cafeList";
+import { useFavoriteApi } from "@/shared/api/favorite";
 import Modal from "@/shared/ui/modal/Modal";
 import Toast from "@/shared/ui/toast/Toast";
 import styles from "@/app/layout/mainLayout/MainLayout.module.scss";
+import type { ICafeDescription } from "@shared/api/cafe/types";
 
 const MyPage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<"review" | "scrap">(
+    "review"
+  );
+  const { favorites, isLoading } = useFavoriteApi();
   const headerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +50,15 @@ const MyPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleFilterChange = (type: "review" | "scrap") => {
+    setActiveFilter(type);
+  };
+
+  const handleCafeSelect = (cafe: ICafeDescription) => {
+    // 카페 선택 시 해당 카페 상세 페이지로 이동
+    window.location.href = `/cafe/${cafe.id}`;
+  };
+
   return (
     <div>
       <div ref={headerRef}>
@@ -51,12 +67,27 @@ const MyPage = () => {
       <div
         ref={contentRef}
         style={{
-          // paddingTop: isScrolled ? "84px" : "252px",
           paddingTop: "252px",
         }}
       >
-        <FilterBtn />
-        <ReviewList type="my" params={{ limit: 10 }} />
+        <FilterBtn onChange={handleFilterChange} activeType={activeFilter} />
+
+        {activeFilter === "review" ? (
+          <ReviewList type="my" params={{ limit: 10 }} />
+        ) : isLoading ? (
+          <div>로딩 중...</div>
+        ) : (
+          <CafeList
+            cafeInfo={favorites.map((favorite) => ({
+              id: favorite.cafeId,
+              name: favorite.cafeName,
+              address: favorite.location,
+              profileImg: ''
+            }))}
+            onCafeSelect={handleCafeSelect}
+          />
+        )}
+
         <button onClick={openModal}>Open Modal</button>
         <Modal
           isOpen={isModalOpen}

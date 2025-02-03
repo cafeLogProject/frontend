@@ -10,7 +10,7 @@ interface MainLayoutProps {
   showFooter?: boolean;
   showBackButton?: boolean;
   showWriteButton?: boolean;
-  headerTitle?: string;
+  headerTitle?: string | React.ReactElement;
   headerCount?: number;
   rightElement?: React.ReactNode;
   bgColor?: string;

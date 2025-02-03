@@ -14,9 +14,9 @@ export class CafeMapper {
       mapy: naverResponse.mapy || '',
       link: naverResponse.link || '',
       imageIds: [],
-      isBookmark: false,
       avgStar: 0,
-      profileImg: ''
+      profileImg: '',
+      isScrap: false
     };
   }
 

@@ -13,6 +13,7 @@ import { ReviewItem } from "@/entities/review/ui";
 import { useReviewApi } from "@shared/api/reviews/reviewApi";
 import type { ShowReviewResponse } from "@shared/api/reviews/types";
 import { useReviewDraftApi } from "@shared/api/reviews/reviewDraftApi";
+import { useFavoriteApi } from "@shared/api/favorite";
 
 const CafeInfo = () => {
   const { id } = useParams();
@@ -22,6 +23,7 @@ const CafeInfo = () => {
   const { setReturnPath } = useNavigationStore();
   const { updateDraft } = useReviewDraftStore();
   const { createDraft } = useReviewDraftApi();
+  const { toggleFavorite } = useFavoriteApi();
 
   const [cafeInfo, setCafeInfo] = useState<ICafeDescription | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -95,6 +97,31 @@ const CafeInfo = () => {
     }
   };
 
+  const handleBookmarkClick = async () => {
+    if (!cafeInfo) return;
+    
+    try {
+      await toggleFavorite(
+        {
+          cafeId: cafeInfo.id,
+          isScrap: !cafeInfo.isScrap
+        },
+        {
+          onSuccess: async () => {
+            // 북마크 토글 후 카페 정보 다시 가져오기
+            const updatedCafeInfo = await getCafe(cafeInfo.id.toString());
+            setCafeInfo(updatedCafeInfo);
+          },
+          onError: (error) => {
+            console.error("즐겨찾기 토글 실패:", error.message);
+          }
+        }
+      );
+    } catch (error) {
+      console.error("즐겨찾기 처리 중 오류 발생:", error);
+    }
+  };
+
   useEffect(() => {
     if (shouldNavigate) {
       navigate('/review/write', {
@@ -122,7 +149,8 @@ const CafeInfo = () => {
         name={cafeInfo.name}
         address={cafeInfo.address}
         link={cafeInfo.link}
-        onBookmarkClick={() => console.log("Bookmark clicked")}
+        onBookmarkClick={handleBookmarkClick}
+        isBookmarked={cafeInfo.isScrap ?? false}
       />
       <div className={styles.divider} />
       <div className={styles.ratingWrapper}>

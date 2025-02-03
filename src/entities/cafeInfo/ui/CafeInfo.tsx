@@ -16,6 +16,7 @@ const CafeInfo = () => {
         address="서울 성동구 연무장 3길 6 (성수동 2가)"
         link="https://instagram.com/cafename"
         onBookmarkClick={() => console.log("Bookmark clicked")}
+        isBookmarked={false}
       />
 
     </div>

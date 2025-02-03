@@ -7,7 +7,8 @@ $button-height: 56px;
 $spacing: 32px;
 
 .container {
-  padding-bottom: calc(#{$bottom-nav-height} + #{$button-height} + #{$spacing});
+  // padding-bottom: calc(#{$bottom-nav-height} + #{$button-height} + #{$spacing});
+  padding-bottom: calc(#{$button-height});
   position: relative;
   z-index: 1;
 

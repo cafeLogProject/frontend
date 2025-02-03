@@ -28,7 +28,7 @@ const ReviewTagList = ({ tagIds }: ReviewTagListProps) => {
       {visibleTags.map((tag) => (
         <ReviewTag key={tag.id} content={tag.content} id={tag.id} />
       ))}
-      {!showAll && allTags.length > 3 && (
+      {!showAll && allTags.length > 2 && (
         <button className={styles.tagBtn} onClick={() => setShowAll(true)}>
           + {allTags.length - 2}
         </button>

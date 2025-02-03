@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useApiQuery, useApiMutation } from "@shared/api/hooks/useQuery";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 import type {
   ReviewRequest,
   ReviewResponse,
@@ -14,8 +14,8 @@ export const useReviewApi = () => {
   const queryClient = useQueryClient();
 
   const createReviewMutation = useApiMutation<ReviewResponse, ReviewRequest & { draftId: number }>(
-    '/api/reviews/:draftId',  // base URL
-    'post',                   // HTTP method
+    '/api/reviews/:draftId',
+    'post',
     {
       urlTransform: (request) => `/api/reviews/${request.draftId}`
     }
@@ -31,12 +31,38 @@ export const useReviewApi = () => {
     try {
       const response = await createReviewMutation.mutateAsync(request);
       // 리뷰 작성 성공 시 reviews 관련 쿼리 무효화
-      await queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      await queryClient.invalidateQueries({ queryKey: ["reviews"] });
       options?.onSuccess?.(response);
       return response;
     } catch (error) {
       console.error("리뷰 작성 중 오류 발생:", error);
       options?.onError?.(error);
+      throw error;
+    }
+  };
+
+  const deleteReviewMutation = useApiMutation<void, number>(
+    '/api/reviews/:reviewId',
+    'delete',
+    {
+      urlTransform: (reviewId) => `/api/reviews/${reviewId}`
+    }
+  );
+
+  const deleteReview = async (
+    reviewId: number,
+    options?: {
+      onSuccess?: () => void;
+      onError?: (error: any) => void;
+    }
+  ) => {
+    try {
+      await deleteReviewMutation.mutateAsync(reviewId);
+      await queryClient.invalidateQueries({ queryKey: ["reviews"] });
+      options?.onSuccess?.();
+    } catch (error) {
+      console.error("리뷰 삭제 중 오류 발생:", error);
+      options?.onError?.(error); 
       throw error;
     }
   };
@@ -48,10 +74,30 @@ export const useReviewApi = () => {
     );
   };
 
-  const useReviewList = (params: ShowReviewListRequest = { sort: "NEW", limit: 10 }) => {
+  const useReviewList = (
+    params: ShowReviewListRequest = {
+      sort: "NEW",
+      limit: 10,
+      timestamp: new Date(3000, 0, 1).toISOString(),
+    }
+  ) => {
+    const validatedParams = {
+      sort: params.sort,
+      timestamp: params.timestamp,
+      limit: Math.min(Math.max(params.limit || 10, 1), 20),
+      ...(params.tagIds?.length ? { tagIds: params.tagIds.slice(0, 5) } : {}),
+      ...(params.rating
+        ? { rating: Math.min(Math.max(params.rating, 1), 5) }
+        : {}),
+    };
+
+    const cleanParams = Object.fromEntries(
+      Object.entries(validatedParams).filter(([_, value]) => value != null)
+    );
+
     return useApiQuery<ShowReviewResponse[]>(
-      ["reviews", "list", params],
-      `/api/reviews/list?${new URLSearchParams(params as any).toString()}`
+      ["reviews", "list", validatedParams],
+      `/api/reviews/list?${new URLSearchParams(cleanParams as any).toString()}`
     );
   };
 
@@ -65,51 +111,56 @@ export const useReviewApi = () => {
   /**
    * 이하 레거시 호환을 위한 코드
    */
-  const getCafeReviews = useCallback(async (
-    cafeId: number,
-    params: ShowCafeReviewRequest,
-    options?: {
-      onSuccess?: (response: ShowReviewResponse[]) => void;
-      onError?: (error: any) => void;
-    }
-  ) => {
-    try {
-      const query = useCafeReviews(cafeId, params);
-      const response = await query.refetch();
-      options?.onSuccess?.(response.data || []);
-      return response.data || [];
-    } catch (error) {
-      console.error("카페 리뷰 조회 중 오류 발생:", error);
-      options?.onError?.(error);
-      throw error;
-    }
-  }, []);
+  const getCafeReviews = useCallback(
+    async (
+      cafeId: number,
+      params: ShowCafeReviewRequest,
+      options?: {
+        onSuccess?: (response: ShowReviewResponse[]) => void;
+        onError?: (error: any) => void;
+      }
+    ) => {
+      try {
+        const query = useCafeReviews(cafeId, params);
+        const response = await query.refetch();
+        options?.onSuccess?.(response.data || []);
+        return response.data || [];
+      } catch (error) {
+        console.error("카페 리뷰 조회 중 오류 발생:", error);
+        options?.onError?.(error);
+        throw error;
+      }
+    },
+    []
+  );
 
-  const getReviewList = useCallback(async (
-    params: ShowReviewListRequest = { sort: "NEW", limit: 10 }
-  ) => {
-    try {
-      const query = useReviewList(params);
-      const response = await query.refetch();
-      return response.data || [];
-    } catch (error) {
-      console.error("리뷰 목록 조회 중 오류 발생:", error);
-      throw error;
-    }
-  }, []);
+  const getReviewList = useCallback(
+    async (params: ShowReviewListRequest = { sort: "NEW", limit: 10 }) => {
+      try {
+        const query = useReviewList(params);
+        const response = await query.refetch();
+        return response.data || [];
+      } catch (error) {
+        console.error("리뷰 목록 조회 중 오류 발생:", error);
+        throw error;
+      }
+    },
+    []
+  );
 
-  const getMyReviews = useCallback(async (
-    params: ShowUserReviewRequest = { limit: 10 }
-  ) => {
-    try {
-      const query = useMyReviews(params);
-      const response = await query.refetch();
-      return response.data || [];
-    } catch (error) {
-      console.error("내 리뷰 목록 조회 중 오류 발생:", error);
-      throw error;
-    }
-  }, []);
+  const getMyReviews = useCallback(
+    async (params: ShowUserReviewRequest = { limit: 10 }) => {
+      try {
+        const query = useMyReviews(params);
+        const response = await query.refetch();
+        return response.data || [];
+      } catch (error) {
+        console.error("내 리뷰 목록 조회 중 오류 발생:", error);
+        throw error;
+      }
+    },
+    []
+  );
 
   return {
     createReview,
@@ -123,7 +174,10 @@ export const useReviewApi = () => {
     getReviewList,
     getMyReviews,
 
+    deleteReview,
+    deleteReviewMutation,
+
     isLoading: createReviewMutation.isPending,
-    error: createReviewMutation.error
+    error: createReviewMutation.error,
   };
 };

@@ -1,4 +1,5 @@
 export interface UserInfoResponse {
+  userId: number;
   nickname: string;
   introduce: string;
   isProfileImageExist: boolean;

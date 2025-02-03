@@ -41,12 +41,19 @@ const WriteReview = () => {
     if (event) {
       event.preventDefault();
     }
-    
-    if (preventBack || (draft.content || draft.rating > 0 || draft.visitDate || draft.tags.menu.length > 0 || draft.tags.interior.length > 0)) {
+
+    if (
+      preventBack ||
+      draft.content ||
+      draft.rating > 0 ||
+      draft.visitDate ||
+      draft.tags.menu.length > 0 ||
+      draft.tags.interior.length > 0
+    ) {
       handleBlock();
       return false;
     }
-    
+
     // 작성된 내용이 없는 경우
     clearDraft();
     navigate("/", { replace: true });
@@ -62,10 +69,16 @@ const WriteReview = () => {
 
   // 모달에서 "나가기" 선택 시
   const handleExit = () => {
-    setIsModalOpen(false);
-    setModalState(false);
-    clearDraft();
-    navigate("/", { replace: true });
+    Promise.all([
+      setIsModalOpen(false),
+      setModalState(false),
+      clearDraft(),
+    ]).then(() => {
+      navigate("/", {
+        replace: true,
+        state: { from: null },
+      });
+    });
   };
 
   const handleContinue = () => {
@@ -142,12 +155,17 @@ const WriteReview = () => {
     fetchCafeInfo();
   }, [clearDraft, location, draft.cafe?.id, getCafe, updateDraft]);
 
+  // if (!draft.cafe) {
+  //   return (
+  //     <div>
+  //       <p>카페를 선택해주세요.</p>
+  //     </div>
+  //   );
+  // }
+
   if (!draft.cafe) {
-    return (
-      <div>
-        <p>카페를 선택해주세요.</p>
-      </div>
-    );
+    navigate("/");
+    return null;
   }
 
   const isValidForm = () => {

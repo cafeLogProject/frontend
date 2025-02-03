@@ -24,6 +24,7 @@ import DraftCounter from "@shared/ui/draftCounter/DraftCounter";
 import { useNavigationStore } from "@shared/store/useNavigationStore";
 import { useDraftCountStore } from "@shared/store/useDraftCountStore";
 import SelectionModeButton from "@shared/ui/selectionModeButton/SelectionModeButton";
+import headerLogo from "@shared/assets/images/logo/logo-header.svg";
 
 export const AppRouter = () => {
   const { isFromFooter } = useNavigationStore();
@@ -62,7 +63,13 @@ export const AppRouter = () => {
               showHeader={true}
               showFooter={true}
               showBackButton={false}
-              headerTitle="BrewScape"
+              headerTitle={
+                <img 
+                  src={headerLogo} 
+                  alt="카페2025 로고"
+
+                />
+              }
             >
               <Main />
             </MainLayout>

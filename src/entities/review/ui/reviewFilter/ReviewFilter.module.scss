@@ -29,3 +29,81 @@
     }
   }
 }
+
+.bottomSheetContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottomSheetButtons {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+
+  .resetButton {
+    flex: 0.675;
+    height: 56px;
+    border-radius: 8px;
+    border: 1px solid var.$semantic-border-secondary;
+    background-color: var.$primitive-system-white;
+    color: #374151;
+    @include mixins.apply-text-style(b1_bold);
+
+    .resetButtonContent {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .resetIcon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .confirmButton {
+    flex: 1;
+    height: 56px;
+    border-radius: 8px;
+    background-color: #ff8922;
+    color: white;
+    @include mixins.apply-text-style(b1_bold);
+  }
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 16px;
+
+  .title {
+    @include mixins.apply-text-style(t2_bold);
+  }
+
+  .tagCount {
+    margin-left: 8px;
+    color: #ff8922;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+.filterButtonContainer {
+  position: relative;
+}
+
+.filterButton {
+  position: relative;
+}
+
+.filterDot {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var.$semantic-background-button-default;
+}

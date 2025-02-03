@@ -6,7 +6,7 @@ import { useDraftSelectionStore } from "@/shared/store/useDraftSelectionStore";
 
 interface HeaderProps {
   showBackButton?: boolean;
-  title?: string;
+  title?: string | React.ReactElement;
   count?: number;
   rightElement?: React.ReactNode;
   bgColor?: string;
