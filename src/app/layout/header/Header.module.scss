@@ -60,13 +60,13 @@
     justify-content: center;
     gap: 4px;
     width: 100%;
-    
+
     .title {
       @include mixins.apply-text-style(t2_bold);
       color: #111827;
       margin: 0;
     }
-    
+
     .count {
       @include mixins.apply-text-style(t2_bold);
       color: var.$semantic-text-icon-brand;
@@ -87,6 +87,10 @@
     border: none;
     &--color {
       color: var.$semantic-text-icon-brand;
+    }
+    &:disabled {
+      color: #c0b4a7;
+      cursor: not-allowed;
     }
   }
 }

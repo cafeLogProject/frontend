@@ -7,6 +7,15 @@
   label {
     @include mixins.apply-text-style(b1_bold);
   }
+  .label__left {
+    display: flex;
+    .label__required {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: var.$primitive-primary-orange500;
+    }
+  }
   .label__right {
     display: flex;
     align-items: center;

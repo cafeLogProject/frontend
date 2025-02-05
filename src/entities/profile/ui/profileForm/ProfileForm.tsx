@@ -1,7 +1,13 @@
 import styles from "./ProfilForm.module.scss";
 import ProfileInputSection from "./ProfileInputSection";
+import { useUserStore } from "@/shared/store/useUserStore";
 
-const ProfileForm = () => {
+interface ProfileFormProps {
+  onNicknameChange: (nickname: string) => void;
+}
+
+const ProfileForm = ({ onNicknameChange }: ProfileFormProps) => {
+  const { userData, nicknameError, setUserData } = useUserStore();
   return (
     <div className={styles.profileForm}>
       <ProfileInputSection
@@ -11,15 +17,19 @@ const ProfileForm = () => {
         showRight={false}
         showInput={false}
         showSocialAccount={true}
-        socialAccount="luna7252@google.com"
+        socialAccount={userData.email}
       />
       <ProfileInputSection
         label="닉네임"
         placeholder="닉네임"
+        required={true}
         maxLength={20}
         showInput={true}
         showRight={true}
         showSocialAccount={false}
+        value={userData.nickname}
+        onChange={onNicknameChange}
+        errorMessage={nicknameError}
       />
       <ProfileInputSection
         label="소개"
@@ -28,6 +38,10 @@ const ProfileForm = () => {
         showRight={true}
         showSocialAccount={false}
         showTextarea={true}
+        value={userData.introduce || ""}
+        onChange={(value) =>
+          setUserData((prev) => ({ ...prev, introduce: value }))
+        }
       />
     </div>
   );

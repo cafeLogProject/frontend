@@ -11,6 +11,7 @@ interface HeaderProps {
   rightElement?: React.ReactNode;
   bgColor?: string;
   onBackClick?: () => void;
+  onBackButtonClick?: () => void;
 }
 
 const Header = ({
@@ -20,6 +21,7 @@ const Header = ({
   rightElement,
   bgColor = "#fff",
   onBackClick,
+  onBackButtonClick,
 }: HeaderProps) => {
   const navigate = useNavigate();
   const { isSelectionMode, setSelectionMode } = useDraftSelectionStore();
@@ -40,16 +42,18 @@ const Header = ({
       <div className={styles.headerContent}>
         {showBackButton && (
           <button onClick={handleBackClick} className={styles.backButton}>
-            <img 
-              src={isSelectionMode ? cancelIcon : backIcon} 
-              alt={isSelectionMode ? "선택 취소" : "뒤로가기"} 
+            <img
+              src={isSelectionMode ? cancelIcon : backIcon}
+              alt={isSelectionMode ? "선택 취소" : "뒤로가기"}
             />
           </button>
         )}
         {title && (
-          <div className={styles.titleContainer}>  
+          <div className={styles.titleContainer}>
             <h1 className={styles.title}>{title}</h1>
-            {count !== undefined && <span className={styles.count}>{count}</span>}
+            {count !== undefined && (
+              <span className={styles.count}>{count}</span>
+            )}
           </div>
         )}
         {rightElement && (

@@ -8,12 +8,10 @@ import type {
 export const useUserApi = () => {
   const { get, patch, isLoading, error } = useApi();
 
-  const getUserInfo = async (
-    options?: {
-      onSuccess?: (response: UserInfoResponse) => void;
-      onError?: (error: any) => void;
-    }
-  ) => {
+  const getUserInfo = async (options?: {
+    onSuccess?: (response: UserInfoResponse) => void;
+    onError?: (error: any) => void;
+  }) => {
     try {
       const response = await get<UserInfoResponse>(
         "/api/my/profile",

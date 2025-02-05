@@ -4,6 +4,7 @@ import SimpleStarRating from "@/widgets/simpleStarRating/ui/SimpleStarRating";
 import ReviewMore from "../reviewMore/ReviewMore";
 import profileIcon from "@shared/assets/images/profile.svg";
 import moreIcon from "@shared/assets/images/more.svg";
+import { useProfileImageApi } from "@/shared/api/user/useProfileImagesApi";
 
 interface ReviewerInfoProps {
   nickname: string;
@@ -28,6 +29,25 @@ const ReviewerInfo = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const reviewMoreRef = useRef<HTMLDivElement | null>(null);
   const isOwner = currentUserId === userId;
+
+  const { getProfileImage } = useProfileImageApi();
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadProfileImage = async () => {
+      if (isProfileImageExist && userId) {
+        try {
+          const imageUrl = await getProfileImage(userId);
+          setProfileImageUrl(imageUrl);
+        } catch (error) {
+          console.error("프로필 이미지 로드 실패:", error);
+          setProfileImageUrl(null);
+        }
+      }
+    };
+
+    loadProfileImage();
+  }, [isProfileImageExist, userId, getProfileImage]);
 
   // 표시할 버튼 개수 계산
   const getVisibleButtonCount = () => {
@@ -77,8 +97,8 @@ const ReviewerInfo = ({
     <div className={styles.reviewerInfo}>
       <img
         className={styles.reviewerInfo__profilePicture}
-        src={isProfileImageExist ? `path/to/profile/${nickname}` : profileIcon}
-        alt="프로필"
+        src={profileImageUrl || profileIcon}
+        alt={`${nickname}의 프로필`}
       />
       <div className={styles.reviewerInfo__details}>
         <p className={styles.reviewerInfo__name}>{nickname}</p>

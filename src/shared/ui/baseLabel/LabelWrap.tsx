@@ -8,6 +8,7 @@ interface LabelWrapProps {
   maxLength: number;
   showSocialAccount: boolean;
   socialAccount?: string;
+  required?: boolean;
 }
 
 const LabelWrap = ({
@@ -17,10 +18,14 @@ const LabelWrap = ({
   maxLength,
   showSocialAccount,
   socialAccount,
+  required,
 }: LabelWrapProps) => {
   return (
     <div className={styles.labelWrap}>
-      <label>{label}</label>
+      <div className={styles.label__left}>
+        <label>{label}</label>
+        {required && <div className={styles.label__required}></div>}
+      </div>
       {showSocialAccount && socialAccount && (
         <div className={styles.label__right}>
           <img src={mail} alt="메일 이모티콘" />

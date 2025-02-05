@@ -2,7 +2,9 @@ export interface UserInfoResponse {
   userId: number;
   nickname: string;
   introduce: string;
+  email: string;
   isProfileImageExist: boolean;
+  profileImage?: string;
 }
 
 export interface UserUpdateRequest {
@@ -12,5 +14,5 @@ export interface UserUpdateRequest {
 
 export interface IsExistNicknameResponse {
   nickname: string;
-  isExist: boolean;
+  exist: boolean;
 }

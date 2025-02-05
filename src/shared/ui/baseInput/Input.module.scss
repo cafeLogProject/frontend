@@ -18,3 +18,7 @@
     color: var.$primitive-secondary-brown400;
   }
 }
+
+.error {
+  border: 1px solid var.$primitive-system-error;
+}

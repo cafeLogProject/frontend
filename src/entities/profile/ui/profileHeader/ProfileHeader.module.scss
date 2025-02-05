@@ -36,6 +36,8 @@
 
   &__profileImg {
     width: 132px;
+    height: 132px;
+    border-radius: 50%;
     transition: width 0.3s ease;
   }
 
@@ -63,6 +65,8 @@
 
     .profileHead__profileImg {
       width: 52px;
+      height: 52px;
+      border-radius: 50%;
     }
 
     .profileHead__meta {

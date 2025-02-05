@@ -7,18 +7,24 @@
 
   display: flex;
   justify-content: center;
-  // align-items: center;
+
   .photoEditBox {
     margin: 12px 0 0;
     height: 132px;
     position: relative;
     .photoEditBox__profile {
       width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      object-fit: cover;
     }
     .photoEditBox__profile--edit {
       position: absolute;
       bottom: 0;
       right: 0;
+    }
+    .photoEditBox__profilefileInput {
+      display: none;
     }
   }
 }
