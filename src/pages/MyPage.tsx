@@ -26,7 +26,7 @@ const MyPage = () => {
     const handleScroll = throttle(() => {
       const scrollTop = mainContent.scrollTop;
 
-      if (!isScrolled && scrollTop > 156) {
+      if (!isScrolled && scrollTop > 248) { // 248px은 헤더 축소 완료되기까지의 스크롤 간격
         const oldHeight = headerRef.current?.offsetHeight || 0;
         setIsScrolled(true);
 
@@ -59,15 +59,24 @@ const MyPage = () => {
     window.location.href = `/cafe/${cafe.id}`;
   };
 
+  const handleViewReviews = () => {
+    setActiveFilter("review");
+    const mainContent = document.querySelector(`.${styles.mainContent}`);
+    if (!mainContent || !headerRef.current || mainContent.scrollHeight <= 943) return;  //943은 임시값
+    console.log(mainContent.scrollHeight);
+    mainContent.scrollTop = 248;
+    setIsScrolled(true);
+  }
+
   return (
     <div>
       <div ref={headerRef}>
-        <ProfileHeader isScrolled={isScrolled} />
+        <ProfileHeader isScrolled={isScrolled} onViewReviews={handleViewReviews}/>
       </div>
       <div
         ref={contentRef}
         style={{
-          paddingTop: "252px",
+          paddingTop: "324px",
         }}
       >
         <FilterBtn onChange={handleFilterChange} activeType={activeFilter} />

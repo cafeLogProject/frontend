@@ -9,20 +9,19 @@
   z-index: 100;
   width: 100%;
   max-width: 600px;
-  height: 252px;
+  height: 324px;
   background-color: var.$primitive-secondary-brown50;
   border-left: 1px solid #d8d8d8;
   border-right: 1px solid #d8d8d8;
   overflow: hidden;
   transition: all 0.3s ease;
-  pointer-events: none;
+  // pointer-events: none;
 
   &__inner {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%;
-    padding: 16px 0 32px;
     gap: 20px;
     transition: all 0.3s ease;
     transform-origin: top center;
@@ -47,11 +46,43 @@
   }
 
   &__introduction {
+    margin-top: 2px;
     @include mixins.apply-text-style(b1_regular);
     color: var.$semantic-text-icon-secondary;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  &__buttonContainer {
+    display: flex;
+    border-radius: 16px;
+    width: 342px;
+    // width: 568px;
+    height: 80px;
+    background-color : var.$semantic-background-primary;
+    .button{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      width: 114px;
+      height: 80px;
+      background-color : var.$semantic-background-primary;
+      border-radius: 16px;
+
+      .profileHead__count{
+        @include mixins.apply-text-style(t2_bold);
+        color: var.$semantic-text-icon-primary;
+      }
+
+      .profileHead__label{
+        @include mixins.apply-text-style(b2_regular);
+        color: var.$semantic-text-icon-primary;
+      }
+
+    }
+    
   }
 
   &--shrink {
@@ -72,6 +103,10 @@
     .profileHead__meta {
       max-width: 275px;
       text-align: left;
+    }
+
+    .profileHead__buttonContainer {
+      display: none;
     }
   }
 }

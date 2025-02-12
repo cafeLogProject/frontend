@@ -7,7 +7,7 @@ import type { UserInfoResponse } from "@shared/api/user/types";
 import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
 
-const ProfileHeader = ({ isScrolled }: ProfileHeaderProps) => {
+const ProfileHeader = ({ isScrolled, onViewReviews}: ProfileHeaderProps) => {
   const { getUserInfo } = useUserApi();
   const { getProfileImage } = useProfileImageApi();
   const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
@@ -39,10 +39,10 @@ const ProfileHeader = ({ isScrolled }: ProfileHeaderProps) => {
 
   return (
     <div
-      className={`${styles.profileHead} ${
-        isScrolled ? styles["profileHead--shrink"] : ""
+    className={`${styles.profileHead} ${
+      isScrolled ? styles["profileHead--shrink"] : ""
       }`}
-    >
+      >
       <div className={styles.profileHead__inner}>
         <img
           className={styles.profileHead__profileImg}
@@ -54,9 +54,23 @@ const ProfileHeader = ({ isScrolled }: ProfileHeaderProps) => {
             {userInfo?.nickname || "별명을 설정해주세요"}
           </p>
           <p className={styles.profileHead__introduction}>
-            {userInfo?.introduce || "자기소개를 입력해주세요"}
+            {userInfo?.introduce || ""}
           </p>
         </div>
+        <div className={styles.profileHead__buttonContainer}>
+          <button onClick={() => onViewReviews()} className={styles.button}>
+            <p className={styles.profileHead__count}>8</p>
+            <p className={styles.profileHead__label}>리뷰</p>
+          </button>
+          <button onClick={() => console.log("팔로워 수 클릭")} className={styles.button}>
+            <p className={styles.profileHead__count}>6</p>
+            <p className={styles.profileHead__label}>팔로워</p>
+          </button>
+          <button onClick={() => console.log("팔로잉 수 클릭")} className={styles.button}>
+            <p className={styles.profileHead__count}>5</p>
+            <p className={styles.profileHead__label}>팔로잉</p>
+          </button>
+      </div>
       </div>
     </div>
   );
