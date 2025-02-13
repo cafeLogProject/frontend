@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import styles from "./ProfileHeader.module.scss";
 import { ProfileHeaderProps } from "../../types";
 import MyProfileImage from "@shared/assets/images/profile/profile.svg";
+import addImage from "@shared/assets/images/add.svg";
 import { useUserApi } from "@shared/api/user/userApi";
 import type { UserInfoResponse } from "@shared/api/user/types";
 import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
 
-const ProfileHeader = ({ isScrolled, onViewReviews}: ProfileHeaderProps) => {
+const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false}: ProfileHeaderProps) => {
   const { getUserInfo } = useUserApi();
   const { getProfileImage } = useProfileImageApi();
   const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
@@ -37,6 +38,28 @@ const ProfileHeader = ({ isScrolled, onViewReviews}: ProfileHeaderProps) => {
     }
   }, [profileImageUrl]);
 
+
+  // -----------------------------------------------
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // -----------------------------------------------
+
+  
   return (
     <div
     className={`${styles.profileHead} ${
@@ -70,7 +93,18 @@ const ProfileHeader = ({ isScrolled, onViewReviews}: ProfileHeaderProps) => {
             <p className={styles.profileHead__count}>5</p>
             <p className={styles.profileHead__label}>팔로잉</p>
           </button>
-      </div>
+        </div>
+        { showFollowButton ? (
+          <button onClick={() => console.log("팔로우 클릭")} className={styles.profileHead__followButton}>
+            <img 
+              className={styles.followImage}
+              src={addImage} 
+              alt="팔로우" />
+            <p className={styles.followText}>팔로우</p>
+          </button>
+        ) : (
+          null
+        )}
       </div>
     </div>
   );

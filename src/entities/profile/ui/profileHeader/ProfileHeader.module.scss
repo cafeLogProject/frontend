@@ -9,7 +9,6 @@
   z-index: 100;
   width: 100%;
   max-width: 600px;
-  height: 324px;
   background-color: var.$primitive-secondary-brown50;
   border-left: 1px solid #d8d8d8;
   border-right: 1px solid #d8d8d8;
@@ -22,7 +21,7 @@
     flex-direction: column;
     align-items: center;
     height: 100%;
-    gap: 20px;
+    // gap: 20px;
     transition: all 0.3s ease;
     transform-origin: top center;
   }
@@ -38,20 +37,22 @@
     height: 132px;
     border-radius: 50%;
     transition: width 0.3s ease;
+    margin-bottom: 20px;
   }
 
   &__nickName {
     @include mixins.apply-text-style(t2_bold);
     color: var.$semantic-text-icon-primary;
+    margin-bottom: 2px;
   }
 
   &__introduction {
-    margin-top: 2px;
     @include mixins.apply-text-style(b1_regular);
     color: var.$semantic-text-icon-secondary;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin-bottom: 20px;
   }
 
   &__buttonContainer {
@@ -59,6 +60,7 @@
     border-radius: 16px;
     width: 342px;
     // width: 568px;
+    margin-bottom: 20px;
     height: 80px;
     background-color : var.$semantic-background-primary;
     .button{
@@ -81,8 +83,27 @@
         color: var.$semantic-text-icon-primary;
       }
 
+    }    
+  }
+  &__followButton {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    padding: 16px;
+    width: 343px;
+    height: 40px;
+    margin-top: -4px;
+    background-color: var.$semantic-background-button-default;
+    margin-bottom: 20px;
+
+    .followText {
+      @include mixins.apply-text-style(b1_bold);
+      color: var.$semantic-text-icon-button-default;;
     }
-    
+
+    .followImage {
+      margin-right: 8px;
+    }
   }
 
   &--shrink {
@@ -106,6 +127,10 @@
     }
 
     .profileHead__buttonContainer {
+      display: none;
+    }
+
+    .profileHead__followButton {
       display: none;
     }
   }

@@ -30,10 +30,10 @@ import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
 import { useUserStore } from "@shared/store/useUserStore";
 import { useUserApi } from "@shared/api/user/userApi";
-import NotFoundPage from "@/shared/components/NotFoundPage";
 import ErrorBoundary from "@/shared/components/ErrorBoundary";
 import TestError from "@/shared/components/TestError";
 import GeneralErrorPage from "@/shared/components/GeneralErrorPage";
+import UserPage from "@/pages/UserPage";
 
 export const AppRouter = () => {
   const { isFromFooter } = useNavigationStore();
@@ -207,6 +207,20 @@ export const AppRouter = () => {
             </MainLayout>
           }
           handle={{ crumb: <Link to="/mypage/edit">마이페이지 수정</Link> }}
+        />
+        <Route
+          path="user/:id"
+          element={
+            <MainLayout
+              showHeader={true}
+              showFooter={true}
+              showBackButton={true}
+              bgColor="rgb(249, 248, 246)"
+            >
+              <UserPage />
+            </MainLayout>
+          }
+          handle={{ crumb: <Link to="/user">유저페이지</Link> }}
         />
         <Route
           path="test/error"

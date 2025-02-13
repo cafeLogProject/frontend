@@ -8,13 +8,15 @@ import Modal from "@/shared/ui/modal/Modal";
 import Toast from "@/shared/ui/toast/Toast";
 import styles from "@/app/layout/mainLayout/MainLayout.module.scss";
 import type { ICafeDescription } from "@shared/api/cafe/types";
+import { useParams } from "react-router-dom";
 
-const MyPage = () => {
+const UserPage = () => {
+	const { id } = useParams();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<"review" | "scrap">(
-    "review"
-  );
+  // const [activeFilter, setActiveFilter] = useState<"review" | "scrap">(
+    // "review"
+  // );
   const { favorites, isLoading } = useFavoriteApi();
   const headerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -50,9 +52,9 @@ const MyPage = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleFilterChange = (type: "review" | "scrap") => {
-    setActiveFilter(type);
-  };
+  // const handleFilterChange = (type: "review" | "scrap") => {
+    // setActiveFilter(type);
+  // };
 
   const handleCafeSelect = (cafe: ICafeDescription) => {
     // 카페 선택 시 해당 카페 상세 페이지로 이동
@@ -60,7 +62,7 @@ const MyPage = () => {
   };
 
   const handleViewReviews = () => {
-    setActiveFilter("review");
+    // setActiveFilter("review");
     const mainContent = document.querySelector(`.${styles.mainContent}`);
     if (!mainContent || !headerRef.current || mainContent.scrollHeight <= 943) return;  //943은 임시값
     console.log(mainContent.scrollHeight);
@@ -72,10 +74,10 @@ const MyPage = () => {
     <div>
       <div ref={headerRef}>
         <ProfileHeader 
-          isScrolled={isScrolled} 
-          onViewReviews={handleViewReviews}
-          showFollowButton={false}
-          />
+					isScrolled={isScrolled} 
+					onViewReviews={handleViewReviews}
+					showFollowButton={true}
+				/>
       </div>
       <div
         ref={contentRef}
@@ -83,27 +85,14 @@ const MyPage = () => {
           paddingTop: "324px",
         }}
       >
-        <FilterBtn onChange={handleFilterChange} activeType={activeFilter} />
-
-        {activeFilter === "review" ? (
-          <ReviewList type="my" params={{ limit: 10 }} />
-        ) : isLoading ? (
-          <div>로딩 중...</div>
-        ) : (
-          <CafeList
-            cafeInfo={favorites.map((favorite) => ({
-              id: favorite.cafeId,
-              name: favorite.cafeName,
-              address: favorite.location,
-              profileImg: ''
-            }))}
-            onCafeSelect={handleCafeSelect}
-          />
-        )}
-
+			{ isLoading ? (
+			<div>로딩 중...</div> 
+			) : (
+				<ReviewList type="my" params={{ limit: 10 }} />
+			)}
       </div>
     </div>
   );
 };
 
-export default MyPage;
+export default UserPage;
