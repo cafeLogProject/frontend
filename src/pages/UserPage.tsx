@@ -57,15 +57,6 @@ const UserPage = () => {
     window.location.href = `/cafe/${cafe.id}`;
   };
 
-  // const handleViewReviews = () => {
-  //   // setActiveFilter("review");
-  //   const mainContent = document.querySelector(`.${styles.mainContent}`);
-  //   if (!mainContent || !headerRef.current || mainContent.scrollHeight <= 943) return;  //943은 임시값
-  //   console.log(mainContent.scrollHeight);
-  //   mainContent.scrollTop = 248;
-  //   setIsScrolled(true);
-  // }
-
   const handleViewReviews = () => {
     const mainContent = document.querySelector(`.${styles.mainContent}`);
     if (!mainContent || !headerRef.current ) return;
