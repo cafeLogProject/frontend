@@ -17,7 +17,6 @@ const MyPage = () => {
   );
   const { favorites, isLoading } = useFavoriteApi();
   const headerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mainContent = document.querySelector(`.${styles.mainContent}`);
@@ -27,7 +26,6 @@ const MyPage = () => {
       const scrollTop = mainContent.scrollTop;
 
       if (!isScrolled && scrollTop > 248) { // 248px은 헤더 축소 완료되기까지의 스크롤 간격
-        const oldHeight = headerRef.current?.offsetHeight || 0;
         setIsScrolled(true);
 
         // 헤더 축소 후 스크롤 위치 보정하기
@@ -38,7 +36,8 @@ const MyPage = () => {
         //     mainContent.scrollTop += heightDiff;
         //   }
         // });
-      } else if (isScrolled && scrollTop < 76) {
+      }
+       else if (isScrolled && scrollTop < 248) {
         setIsScrolled(false);
       }
     }, 100);
@@ -62,9 +61,8 @@ const MyPage = () => {
   const handleViewReviews = () => {
     setActiveFilter("review");
     const mainContent = document.querySelector(`.${styles.mainContent}`);
-    if (!mainContent || !headerRef.current || mainContent.scrollHeight <= 943) return;  //943은 임시값
-    console.log(mainContent.scrollHeight);
-    mainContent.scrollTop = 248;
+    if (!mainContent || !headerRef.current) return;
+    mainContent.scrollTop = 249;
     setIsScrolled(true);
   }
 
@@ -77,12 +75,7 @@ const MyPage = () => {
           showFollowButton={false}
           />
       </div>
-      <div
-        ref={contentRef}
-        style={{
-          paddingTop: "324px",
-        }}
-      >
+      <div>
         <FilterBtn onChange={handleFilterChange} activeType={activeFilter} />
 
         {activeFilter === "review" ? (

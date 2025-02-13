@@ -61,17 +61,34 @@ const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false}: P
 
   
   return (
-    <div
-    className={`${styles.profileHead} ${
-      isScrolled ? styles["profileHead--shrink"] : ""
-      }`}
-      >
+    <div>
+      {isScrolled ? (
+        <div className={`${styles.profileHead} ${styles["profileHead--shrink"]}`}>
+          <div className={styles.profileHead__inner}>
+            <img
+              className={styles.profileHead__profileImg}
+              src={profileImageUrl || MyProfileImage}
+              alt="myProfileImage"
+            />
+            <div className={styles.profileHead__meta}>
+              <p className={styles.profileHead__nickName}>
+                {userInfo?.nickname || "별명을 설정해주세요"}
+              </p>
+              <p className={styles.profileHead__introduction}>
+                {userInfo?.introduce || ""}
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        null
+      )}
+    <div className={styles.profileHead}>
       <div className={styles.profileHead__inner}>
         <img
           className={styles.profileHead__profileImg}
           src={profileImageUrl || MyProfileImage}
-          alt="myProfileImage"
-        />
+          alt="myProfileImage" />
         <div className={styles.profileHead__meta}>
           <p className={styles.profileHead__nickName}>
             {userInfo?.nickname || "별명을 설정해주세요"}
@@ -94,11 +111,11 @@ const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false}: P
             <p className={styles.profileHead__label}>팔로잉</p>
           </button>
         </div>
-        { showFollowButton ? (
+        {showFollowButton ? (
           <button onClick={() => console.log("팔로우 클릭")} className={styles.profileHead__followButton}>
-            <img 
+            <img
               className={styles.followImage}
-              src={addImage} 
+              src={addImage}
               alt="팔로우" />
             <p className={styles.followText}>팔로우</p>
           </button>
@@ -107,6 +124,8 @@ const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false}: P
         )}
       </div>
     </div>
+  </div>
+    
   );
 };
 

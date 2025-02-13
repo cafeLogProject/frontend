@@ -19,7 +19,6 @@ const UserPage = () => {
   // );
   const { favorites, isLoading } = useFavoriteApi();
   const headerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mainContent = document.querySelector(`.${styles.mainContent}`);
@@ -28,7 +27,7 @@ const UserPage = () => {
     const handleScroll = throttle(() => {
       const scrollTop = mainContent.scrollTop;
 
-      if (!isScrolled && scrollTop > 248) { // 248px은 헤더 축소 완료되기까지의 스크롤 간격
+      if (!isScrolled && scrollTop > 308) { // 248px은 헤더 축소 완료되기까지의 스크롤 간격
         const oldHeight = headerRef.current?.offsetHeight || 0;
         setIsScrolled(true);
 
@@ -40,7 +39,7 @@ const UserPage = () => {
         //     mainContent.scrollTop += heightDiff;
         //   }
         // });
-      } else if (isScrolled && scrollTop < 76) {
+      } else if (isScrolled && scrollTop < 308) {
         setIsScrolled(false);
       }
     }, 100);
@@ -79,12 +78,7 @@ const UserPage = () => {
 					showFollowButton={true}
 				/>
       </div>
-      <div
-        ref={contentRef}
-        style={{
-          paddingTop: "324px",
-        }}
-      >
+      <div>
 			{ isLoading ? (
 			<div>로딩 중...</div> 
 			) : (
