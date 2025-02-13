@@ -61,9 +61,8 @@ const MyPage = () => {
   const handleViewReviews = () => {
     setActiveFilter("review");
     const mainContent = document.querySelector(`.${styles.mainContent}`);
-    if (!mainContent || !headerRef.current) return;
+    if (!mainContent || !headerRef.current ) return;
     mainContent.scrollTop = 249;
-    setIsScrolled(true);
   }
 
   return (
