@@ -14,9 +14,6 @@ const UserPage = () => {
 	const { id } = useParams();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [activeFilter, setActiveFilter] = useState<"review" | "scrap">(
-    // "review"
-  // );
   const { favorites, isLoading } = useFavoriteApi();
   const headerRef = useRef<HTMLDivElement>(null);
 
@@ -60,13 +57,19 @@ const UserPage = () => {
     window.location.href = `/cafe/${cafe.id}`;
   };
 
+  // const handleViewReviews = () => {
+  //   // setActiveFilter("review");
+  //   const mainContent = document.querySelector(`.${styles.mainContent}`);
+  //   if (!mainContent || !headerRef.current || mainContent.scrollHeight <= 943) return;  //943은 임시값
+  //   console.log(mainContent.scrollHeight);
+  //   mainContent.scrollTop = 248;
+  //   setIsScrolled(true);
+  // }
+
   const handleViewReviews = () => {
-    // setActiveFilter("review");
     const mainContent = document.querySelector(`.${styles.mainContent}`);
-    if (!mainContent || !headerRef.current || mainContent.scrollHeight <= 943) return;  //943은 임시값
-    console.log(mainContent.scrollHeight);
-    mainContent.scrollTop = 248;
-    setIsScrolled(true);
+    if (!mainContent || !headerRef.current ) return;
+    mainContent.scrollTop = 309;
   }
 
   return (

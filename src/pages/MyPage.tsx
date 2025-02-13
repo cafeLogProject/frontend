@@ -25,7 +25,7 @@ const MyPage = () => {
     const handleScroll = throttle(() => {
       const scrollTop = mainContent.scrollTop;
 
-      if (!isScrolled && scrollTop > 248) { // 248px은 헤더 축소 완료되기까지의 스크롤 간격
+      if (!isScrolled && scrollTop > 246) { // 246px은 헤더 축소 완료되기까지의 스크롤 간격
         setIsScrolled(true);
 
         // 헤더 축소 후 스크롤 위치 보정하기
@@ -37,7 +37,7 @@ const MyPage = () => {
         //   }
         // });
       }
-       else if (isScrolled && scrollTop < 248) {
+       else if (isScrolled && scrollTop < 246) {
         setIsScrolled(false);
       }
     }, 100);
