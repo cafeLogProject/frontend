@@ -99,7 +99,6 @@
 
   &--shrink {
     position: fixed;
-    top: var(--header-height);
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -109,7 +108,7 @@
     transition: all 0.3s ease;
 
     .profileHead__inner {
-      padding: 16px;
+      padding: 0px 16px 0px 16px;
       gap: 16px;
       flex-direction: row;
     }
