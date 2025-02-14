@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
 import { ProfileHeader, FilterBtn } from "@/entities/profile/ui";
 import { ReviewList } from "@/widgets/reviewList";
-import { CafeList } from "@/widgets/cafeList";
 import { useFavoriteApi } from "@/shared/api/favorite";
 import Modal from "@/shared/ui/modal/Modal";
 import Toast from "@/shared/ui/toast/Toast";

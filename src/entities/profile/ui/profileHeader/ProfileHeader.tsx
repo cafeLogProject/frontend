@@ -7,18 +7,20 @@ import { useUserApi } from "@shared/api/user/userApi";
 import type { UserInfoResponse } from "@shared/api/user/types";
 import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
+import { useFollowApi } from "@/shared/api/follow/followApi";
 
-const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false}: ProfileHeaderProps) => {
-  const { getUserInfo } = useUserApi();
+const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false }: ProfileHeaderProps) => {
+  const { getMyInfo } = useUserApi();
   const { getProfileImage } = useProfileImageApi();
   const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
+  const { follow } = useFollowApi();
 
   const { profileImageUrl, setProfileImageUrl } = useProfileStore();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await getUserInfo();
+        const response = await getMyInfo();
         setUserInfo(response);
 
         // 여기서 userId를 이용해 프로필 이미지를 가져옴
@@ -39,9 +41,26 @@ const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false}: P
   }, [profileImageUrl]);
 
 
-  // -----------------------------------------------
-  
-  
+  // ----------------팔로우 버튼 관련-------------------------------
+
+
+  const { useFollow } = useFollowApi();
+
+
+  const handleFollow = () => {
+    useFollow.mutate(
+      { id: userId },
+      {
+        onSuccess: (data) => {
+          console.log("팔로우 성공:", data);
+        },
+        onError: (error) => {
+          console.error("팔로우 실패:", error);
+        },
+      }
+    );
+  };
+
   
   
   
@@ -112,7 +131,7 @@ const ProfileHeader = ({ isScrolled, onViewReviews, showFollowButton = false}: P
           </button>
         </div>
         {showFollowButton ? (
-          <button onClick={() => console.log("팔로우 클릭")} className={styles.profileHead__followButton}>
+          <button onClick={handleFollow} className={styles.profileHead__followButton}>
             <img
               className={styles.followImage}
               src={addImage}

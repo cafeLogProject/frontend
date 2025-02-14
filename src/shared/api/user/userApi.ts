@@ -4,11 +4,15 @@ import type {
   UserUpdateRequest,
   IsExistNicknameResponse,
 } from "./types";
+import { useApiQuery } from "@shared/api/hooks/useQuery";
+
 
 export const useUserApi = () => {
   const { get, patch, isLoading, error } = useApi();
 
-  const getUserInfo = async (options?: {
+
+
+  const getMyInfo = async (options?: {
     onSuccess?: (response: UserInfoResponse) => void;
     onError?: (error: any) => void;
   }) => {
@@ -75,7 +79,7 @@ export const useUserApi = () => {
   };
 
   return {
-    getUserInfo,
+    getMyInfo,
     updateUserInfo,
     checkNicknameExistence,
     isLoading,

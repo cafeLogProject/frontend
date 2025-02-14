@@ -12,13 +12,13 @@ interface ReviewListProps {
 
 const ReviewList = ({ type = 'all', params = { limit: 10 } }: ReviewListProps) => {
   const { useReviewList, useMyReviews } = useReviewApi();
-  const { getUserInfo } = useUserApi();
+  const { getMyInfo } = useUserApi();
   const [currentUserId, setCurrentUserId] = useState<number | undefined>();
   
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const userInfo = await getUserInfo();
+        const userInfo = await getMyInfo();
         setCurrentUserId(userInfo.userId);
       } catch (error) {
         console.error("사용자 정보 조회 실패:", error);

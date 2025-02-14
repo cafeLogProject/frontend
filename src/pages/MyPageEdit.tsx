@@ -10,7 +10,7 @@ import ProfileForm from "@/entities/profile/ui/profileForm/ProfileForm";
 import styles from "./styles/MyPageEdit.module.scss";
 
 const MyPageEdit = () => {
-  const { getUserInfo, checkNicknameExistence } = useUserApi();
+  const { getMyInfo, checkNicknameExistence } = useUserApi();
   const { setUserData, setNicknameError } = useUserStore();
   const { getProfileImage } = useProfileImageApi();
   const { setProfileImageUrl } = useProfileStore();
@@ -18,7 +18,7 @@ const MyPageEdit = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        await getUserInfo({
+        await getMyInfo({
           onSuccess: (data) => {
             console.log("사용자 정보 조회 성공:", data);
             setUserData(data);
