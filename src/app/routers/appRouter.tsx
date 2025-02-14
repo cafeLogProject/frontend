@@ -209,7 +209,7 @@ export const AppRouter = () => {
           handle={{ crumb: <Link to="/mypage/edit">마이페이지 수정</Link> }}
         />
         <Route
-          path="user/:id"
+          path="userpage/:id"
           element={
             <MainLayout
               showHeader={true}

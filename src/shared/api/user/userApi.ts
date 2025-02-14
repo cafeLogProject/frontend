@@ -1,5 +1,6 @@
 import { useApi } from "@shared/api/hooks/useApi";
 import type {
+  OtherUserInfoRes,
   UserInfoResponse,
   UserUpdateRequest,
   IsExistNicknameResponse,
@@ -11,20 +12,12 @@ import { useQuery } from "@tanstack/react-query";
 export const useUserApi = () => {
   const { get, patch, isLoading, error } = useApi();
 
-
-  const getUserInfo1 = useQuery<UserInfoResponse, any>({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const response = await get<UserInfoResponse>(`/api/users/${id}`);
-      return response;
-    },
-    throwOnError: true,
-  })
-
-  const getUserInfo2 = useApiQuery<UserInfoResponse, {id : number}>(
-    ["user"],
-    `/api/users/${id}`,
-  );
+  const useUserInfo = (id : number) => {
+    return useApiQuery<OtherUserInfoRes>(
+      ["user", id],
+      () => `/api/users/${id}`,
+    );
+  };
 
   const getMyInfo = async (options?: {
     onSuccess?: (response: UserInfoResponse) => void;
@@ -93,6 +86,7 @@ export const useUserApi = () => {
   };
 
   return {
+    useUserInfo,
     getMyInfo,
     updateUserInfo,
     checkNicknameExistence,

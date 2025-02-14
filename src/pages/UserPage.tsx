@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
-import { ProfileHeader, FilterBtn } from "@/entities/profile/ui";
+import { ProfileHeader } from "@/entities/profile/ui";
 import { ReviewList } from "@/widgets/reviewList";
 import { useFavoriteApi } from "@/shared/api/favorite";
 import Modal from "@/shared/ui/modal/Modal";
@@ -66,10 +66,9 @@ const UserPage = () => {
     <div>
       <div ref={headerRef}>
         <ProfileHeader 
-					isScrolled={isScrolled} 
-					onViewReviews={handleViewReviews}
-					showFollowButton={true}
-				/>
+          isScrolled={isScrolled}
+          onViewReviews={handleViewReviews} 				
+        />
       </div>
       <div>
 			{ isLoading ? (

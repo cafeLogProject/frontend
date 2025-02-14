@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
-import { ProfileHeader, FilterBtn } from "@/entities/profile/ui";
+import { FilterBtn, MyProfileHeader } from "@/entities/profile/ui";
 import { ReviewList } from "@/widgets/reviewList";
 import { CafeList } from "@/widgets/cafeList";
 import { useFavoriteApi } from "@/shared/api/favorite";
@@ -68,10 +68,9 @@ const MyPage = () => {
   return (
     <div>
       <div ref={headerRef}>
-        <ProfileHeader 
+        <MyProfileHeader 
           isScrolled={isScrolled} 
           onViewReviews={handleViewReviews}
-          showFollowButton={false}
           />
       </div>
       <div>
