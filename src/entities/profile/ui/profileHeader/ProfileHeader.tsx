@@ -12,9 +12,6 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
   const { id } = useParams();
   const { useUserInfo } = useUserApi();
   const { getProfileImage } = useProfileImageApi();
-=======
-  const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
->>>>>>> cd8af98f92075bd46bd82e7154c9fa1c8cb2d6a5
   const { profileImageUrl, setProfileImageUrl } = useProfileStore();
   const { data: userInfo, isLoading, error } = useUserInfo(Number(id));
   const [isFollowing, setIsFollowing] = useState(false);
