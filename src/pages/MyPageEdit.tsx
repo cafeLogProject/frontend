@@ -1,19 +1,24 @@
 import { debounce } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useUserApi } from "@/shared/api/user/userApi";
 import { useProfileImageApi } from "@/shared/api/user/useProfileImagesApi";
 import { useUserStore } from "@/shared/store/useUserStore";
 import { useProfileStore } from "@/shared/store/useProfileStore";
+import { useProfileEditStore } from "@/shared/store/useProfileEditStore";
+import { useNavigate } from "react-router-dom";
 import PhotoEdit from "@/entities/profile/ui/photoEdit/PhotoEdit";
 import ProfileBtnWrap from "@/entities/profile/ui/profileBtnWrap/ProfileBtnWrap";
 import ProfileForm from "@/entities/profile/ui/profileForm/ProfileForm";
 import styles from "./styles/MyPageEdit.module.scss";
 
 const MyPageEdit = () => {
-  const { getMyInfo, checkNicknameExistence } = useUserApi();
-  const { setUserData, setNicknameError } = useUserStore();
-  const { getProfileImage } = useProfileImageApi();
-  const { setProfileImageUrl } = useProfileStore();
+  const { getMyInfo, checkNicknameExistence, updateUserInfo } = useUserApi();
+  const { setUserData, setNicknameError, userData } = useUserStore();
+  const { getProfileImage, uploadProfileImage } = useProfileImageApi();
+  const { setProfileImageUrl, file } = useProfileStore();
+  const { setHandleComplete } = useProfileEditStore();
+  const navigate = useNavigate();
+  const navigateRef = useRef(navigate);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -40,6 +45,45 @@ const MyPageEdit = () => {
 
     fetchUserInfo();
   }, [setUserData, getProfileImage, setProfileImageUrl]);
+
+  useEffect(() => {
+    // navigate 함수 변경 시 로그 출력 - 버그 수정, 호출 최적화 후 삭제할 것
+    if (navigateRef.current !== navigate) {
+      console.log('navigate 함수 변경됨:', {
+        oldNavigate: navigateRef.current,
+        newNavigate: navigate,
+        timestamp: new Date().toISOString()
+      });
+      navigateRef.current = navigate;
+    }
+  }, [navigate]);
+
+  const handleComplete = async () => {
+    try {
+      if (file) {
+        await uploadProfileImage(file);
+      }
+
+      const { nickname, introduce, userId } = userData;
+      await updateUserInfo({ nickname, introduce });
+      
+      if (userId) {
+        const newImageUrl = await getProfileImage(userId);
+        if (newImageUrl) {
+          setProfileImageUrl(newImageUrl);
+        }
+      }
+      
+      alert("프로필 수정이 완료되었습니다!");
+      navigateRef.current("/mypage", { replace: true });
+    } catch (error) {
+      alert("수정 중 오류가 발생했습니다.");
+    }
+  };
+
+  useEffect(() => {
+    setHandleComplete(handleComplete);
+  }, [file, userData]);
 
   const handleNicknameChange = debounce(async (nickname: string) => {
     if (nickname.length === 0) {

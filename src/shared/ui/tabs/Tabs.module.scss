@@ -1,0 +1,33 @@
+@use "@app/styles/abstracts/mixins";
+@use "/src/app/styles/abstracts/variables" as var;
+
+.tabsContainer {
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+}
+
+.tab {
+  flex: 1;
+  height: 48px;
+  text-align: center;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  @include mixins.apply-text-style(b1_regular);
+  color: var.$semantic-text-icon-button-disabled;
+  border-bottom: 1px solid var.$semantic-border-primary;
+
+  &.active {
+    @include mixins.apply-text-style(b1_bold);
+    color: var.$semantic-text-icon-brand;
+    border-bottom: 2px solid var.$semantic-text-icon-brand;
+  }
+
+  &:hover {
+    color: var.$semantic-text-icon-brand;
+  }
+}

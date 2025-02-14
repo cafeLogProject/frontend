@@ -1,9 +1,25 @@
 @use "/src/app/styles/abstracts/mixins";
 @use "/src/app/styles/abstracts/variables" as var;
 
+.reviewListContainer {
+  position: relative;
+  min-height: 200px;
+}
+
 .reviewList {
   .reviewList__item {
     padding: 24px 16px;
     border-bottom: 1px solid var.$semantic-border-primary;
   }
+}
+
+.loadMoreTrigger {
+  width: 100%;
+  visibility: hidden; // 보이지는 않지만 공간은 차지
+}
+
+.loadingIndicator {
+  text-align: center;
+  padding: 20px 0;
+  color: #666;
 }
