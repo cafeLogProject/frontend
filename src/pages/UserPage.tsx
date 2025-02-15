@@ -45,8 +45,17 @@ const UserPage = () => {
     const handleScroll = throttle(() => {
       const scrollTop = mainContent.scrollTop;
 
-      if (!isScrolled && scrollTop > 308) {
+      if (!isScrolled && scrollTop > 308) { // 248px은 헤더 축소 완료되기까지의 스크롤 간격
         setIsScrolled(true);
+
+        // 헤더 축소 후 스크롤 위치 보정하기
+        // requestAnimationFrame(() => {
+        //   const newHeight = headerRef.current?.offsetHeight || 0;
+        //   const heightDiff = oldHeight - newHeight;
+        //   if (heightDiff > 0) {
+        //     mainContent.scrollTop += heightDiff;
+        //   }
+        // });
       } else if (isScrolled && scrollTop < 308) {
         setIsScrolled(false);
       }
