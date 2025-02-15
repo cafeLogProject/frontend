@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
-import { ProfileHeader, FilterBtn } from "@/entities/profile/ui";
+import { FilterBtn, MyProfileHeader } from "@/entities/profile/ui";
 import { ReviewList } from "@/widgets/reviewList";
 import { CafeList } from "@/widgets/cafeList";
 import { useFavoriteApi } from "@/shared/api/favorite";
@@ -29,8 +29,7 @@ const MyPage = () => {
     const handleScroll = throttle(() => {
       const scrollTop = mainContent.scrollTop;
 
-      if (!isScrolled && scrollTop > 156) {
-        const oldHeight = headerRef.current?.offsetHeight || 0;
+      if (!isScrolled && scrollTop > 246) { // 246px은 헤더 축소 완료되기까지의 스크롤 간격
         setIsScrolled(true);
 
         // 헤더 축소 후 스크롤 위치 보정하기
@@ -41,7 +40,8 @@ const MyPage = () => {
         //     mainContent.scrollTop += heightDiff;
         //   }
         // });
-      } else if (isScrolled && scrollTop < 76) {
+      }
+       else if (isScrolled && scrollTop < 246) {
         setIsScrolled(false);
       }
     }, 100);
@@ -62,6 +62,13 @@ const MyPage = () => {
     window.location.href = `/cafe/${cafe.id}`;
   };
 
+  const handleViewReviews = () => {
+    setActiveFilter("review");
+    const mainContent = document.querySelector(`.${styles.mainContent}`);
+    if (!mainContent || !headerRef.current ) return;
+    mainContent.scrollTop = 249;
+  }
+
   const handleLoadMore = (timestamp: string) => {
     setLastTimestamp(timestamp);
   };
@@ -69,14 +76,12 @@ const MyPage = () => {
   return (
     <div>
       <div ref={headerRef}>
-        <ProfileHeader isScrolled={isScrolled} />
+        <MyProfileHeader 
+          isScrolled={isScrolled} 
+          onViewReviews={handleViewReviews}
+          />
       </div>
-      <div
-        ref={contentRef}
-        style={{
-          paddingTop: "252px",
-        }}
-      >
+      <div>
         <FilterBtn onChange={handleFilterChange} activeType={activeFilter} />
 
         {activeFilter === "review" ? (

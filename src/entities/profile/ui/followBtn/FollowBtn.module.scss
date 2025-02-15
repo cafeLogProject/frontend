@@ -1,0 +1,45 @@
+@use "/src/app/styles/abstracts/mixins";
+@use "/src/app/styles/abstracts/variables" as var;
+
+.followButton {
+	&__followinner, 
+	&__unfollowinner {
+		display: flex;
+		align-items: center;
+		padding: 16px;
+		border-radius: 8px;
+		width: 343px;
+		height: 40px;
+		margin-top: -4px;
+		margin-bottom: 20px;
+	}
+
+	&__followinner {
+		background-color: var.$semantic-background-button-default;
+
+		.followButton__followtext {
+			@include mixins.apply-text-style(b1_bold);
+			color: var.$semantic-text-icon-button-default;
+		}
+		.followButton__followimage {
+				margin-right: 8px;
+		}
+	}
+
+	&__unfollowinner {
+		border: 1px solid var.$semantic-border-secondary;
+		background-color: var.$semantic-background-primary;;
+
+		.followButton__unfollowtext {
+			@include mixins.apply-text-style(b1_bold);
+			color: var.$semantic-text-icon-primary;
+		}
+	
+		.followButton__unfollowimage {
+			margin-right: 8px;
+		}
+	}
+
+}
+  
+
