@@ -3,11 +3,9 @@ import { throttle } from "lodash";
 import { ProfileHeader } from "@/entities/profile/ui";
 import { ReviewList } from "@/widgets/reviewList";
 import { useFavoriteApi } from "@/shared/api/favorite";
-import Modal from "@/shared/ui/modal/Modal";
-import Toast from "@/shared/ui/toast/Toast";
 import styles from "@/app/layout/mainLayout/MainLayout.module.scss";
-import type { ICafeDescription } from "@shared/api/cafe/types";
 import { useParams } from "react-router-dom";
+import { useUserApi } from "@/shared/api/user/userApi";
 
 const UserPage = () => {
 	const { id } = useParams();
@@ -15,6 +13,28 @@ const UserPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { favorites, isLoading } = useFavoriteApi();
   const headerRef = useRef<HTMLDivElement>(null);
+  const [ myId, setMyId] = useState(0);
+
+  //------- 차후 reactQuery 세션스토리지로 userId 가져오도록 수정 필요 ------
+  const { getMyInfo } = useUserApi();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try{
+        const response = await getMyInfo();
+        setMyId(response.userId);
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  // -------------------------------------------------------
+
+  if (myId === Number(id)) {
+    window.location.href = "/mypage";
+  }
 
   useEffect(() => {
     const mainContent = document.querySelector(`.${styles.mainContent}`);
@@ -43,18 +63,6 @@ const UserPage = () => {
     mainContent.addEventListener("scroll", handleScroll);
     return () => mainContent.removeEventListener("scroll", handleScroll);
   }, [isScrolled]);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  // const handleFilterChange = (type: "review" | "scrap") => {
-    // setActiveFilter(type);
-  // };
-
-  const handleCafeSelect = (cafe: ICafeDescription) => {
-    // 카페 선택 시 해당 카페 상세 페이지로 이동
-    window.location.href = `/cafe/${cafe.id}`;
-  };
 
   const handleViewReviews = () => {
     const mainContent = document.querySelector(`.${styles.mainContent}`);
