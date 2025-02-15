@@ -18,6 +18,7 @@ const UserPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { getMyInfo } = useUserApi();
 
+  //------- 차후 reactQuery 세션스토리지로 userId 가져오도록 수정 필요 ------
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -35,6 +36,7 @@ const UserPage = () => {
     };
     fetchUserData();
   }, [id, navigate]);
+  // -------------------------------------------------------
 
   useEffect(() => {
     const mainContent = document.querySelector(`.${styles.mainContent}`);
