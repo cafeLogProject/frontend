@@ -31,7 +31,14 @@ const CafeInfoItem = ({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Instagram
+              {(() => {
+                const isInstagram = instaLink.includes('instagram.com');
+                const username = instaLink.split('/').pop();
+                if (isInstagram && username) {
+                  return `@${username}`;
+                }
+                return 'welcome';
+              })()}
             </a>
           )}
         </div>
