@@ -4,7 +4,7 @@ import { StarRating } from "@widgets/starRating";
 import { DatePicker } from "@widgets/datePicker";
 import { useReviewDraftStore } from "@shared/store/useReviewDraftStore";
 import { usePhotoUploaderStore } from "@shared/store/usePhotoUploaderStore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CafeListItem from "@entities/cafeListItem/CafeListItem";
 import { InputWrapper } from "@shared/ui/input/Input";
 import { Textarea } from "@shared/ui/textarea";
@@ -61,9 +61,9 @@ const WriteReview = () => {
   };
 
   // 페이지 이탈 시도 시 호출될 함수
-  const handleBlock = () => {
+  const handleBlock = useCallback(() => {
     setIsModalOpen(true);
-  };
+  }, []);
 
   const { setModalState } = useBlocker(handleBlock, preventBack);
 

@@ -10,15 +10,17 @@ export type ApiError = {
 
 export const useApiQuery = <TData>(
   queryKey: QueryKey,
-  endpoint: string,
+  endpoint: string | (() => string),
   options?: UseQueryOptions<TData, ApiError>
 ) => {
   return useQuery<TData, ApiError>({
     queryKey,
     queryFn: async () => {
-      const response = await apiInstance.get<TData>(endpoint)
+      const url = typeof endpoint === "function" ? endpoint() : endpoint;
+      const response = await apiInstance.get<TData>(url);
       return response
     },
+    throwOnError: true,
     ...options,
   })
 }
@@ -40,5 +42,6 @@ export const useApiMutation = <TData, TVariables>(
       const response = await apiInstance[method]<TData>(transformedUrl, variables)
       return response
     },
+    throwOnError: true
   });
 };

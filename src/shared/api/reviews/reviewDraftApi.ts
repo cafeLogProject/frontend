@@ -83,6 +83,7 @@ export const useReviewDraftApi = () => {
     return useQuery<ShowUserDraftReviewResponse, ApiError>({
       queryKey: ["draftReview", draftId],
       queryFn: () => fetchDraftReview(draftId),
+      throwOnError: true,
       ...options,
       enabled: draftId !== null && options?.enabled !== false,
     });
@@ -102,6 +103,7 @@ export const useReviewDraftApi = () => {
         );
         return response;
       },
+      throwOnError: true,
       ...options,
       enabled: options?.enabled !== false,
     });

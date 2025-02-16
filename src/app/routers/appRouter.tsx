@@ -30,42 +30,25 @@ import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
 import { useUserStore } from "@shared/store/useUserStore";
 import { useUserApi } from "@shared/api/user/userApi";
+import ErrorBoundary from "@/shared/components/ErrorBoundary";
+import TestError from "@/shared/components/TestError";
+import GeneralErrorPage from "@/shared/components/GeneralErrorPage";
+import UserPage from "@/pages/UserPage";
+import { useProfileEditStore } from "@shared/store/useProfileEditStore";
 
 export const AppRouter = () => {
   const { isFromFooter } = useNavigationStore();
   const draftCount = useDraftCountStore((state) => state.count);
-
-  const { file, setProfileImageUrl } = useProfileStore();
-  const { userData, nicknameError } = useUserStore();
-  const { uploadProfileImage, getProfileImage } = useProfileImageApi();
-  const { updateUserInfo } = useUserApi();
-
-  const handleCompleteClick = async () => {
-    try {
-      if (file) {
-        await uploadProfileImage(file);
-      }
-
-      const { nickname, introduce, userId } = userData;
-      await updateUserInfo({ nickname, introduce });
-      if (userId) {
-        const newImageUrl = await getProfileImage(userId);
-        if (newImageUrl) {
-          setProfileImageUrl(newImageUrl);
-        }
-      }
-      alert("프로필 수정이 완료되었습니다!");
-      window.location.href = "/mypage";
-    } catch (error) {
-      alert("수정 중 오류가 발생했습니다.");
-    }
-  };
+  const { nicknameError } = useUserStore();
+  const { handleComplete } = useProfileEditStore();
 
   const routes = createRoutesFromElements(
+    
     <Route path="/" element={<Outlet />}>
       <Route
         path="login"
         element={
+          <ErrorBoundary>
           <MainLayout
             showHeader={false}
             showFooter={false}
@@ -75,16 +58,26 @@ export const AppRouter = () => {
           >
             <Login />
           </MainLayout>
+          </ErrorBoundary>
         }
       />
 
-      <Route path="oauth/redirect" element={<OAuthRedirect />} />
+      <Route 
+        path="oauth/redirect" 
+        element={
+          <ErrorBoundary>
+          <OAuthRedirect />
+          </ErrorBoundary>
+        } 
+      />
 
       <Route
         element={
+          <ErrorBoundary>
           <ProtectedRoute>
             <Outlet />
           </ProtectedRoute>
+          </ErrorBoundary>
         }
       >
         <Route
@@ -180,7 +173,7 @@ export const AppRouter = () => {
               rightElement={
                 <button
                   className={`${styles.completeButton} ${styles["completeButton--color"]}`}
-                  onClick={handleCompleteClick}
+                  onClick={handleComplete}
                   disabled={!!nicknameError}
                 >
                   완료
@@ -192,8 +185,47 @@ export const AppRouter = () => {
           }
           handle={{ crumb: <Link to="/mypage/edit">마이페이지 수정</Link> }}
         />
+        <Route
+          path="userpage/:id"
+          element={
+            <MainLayout
+              showHeader={true}
+              showFooter={true}
+              showBackButton={true}
+              bgColor="rgb(249, 248, 246)"
+            >
+              <UserPage />
+            </MainLayout>
+          }
+          handle={{ crumb: <Link to="/user">유저페이지</Link> }}
+        />
+        <Route
+          path="test/error"
+          element={
+            <TestError />
+          }
+          handle={{ crumb: <Link to="/mypage/edit">마이페이지 수정</Link> }}
+        />
       </Route>
-    </Route>
+      <Route
+          path="*"
+          element={
+            <MainLayout
+              showHeader={true}
+              showFooter={false}
+              showBackButton={true}
+              showWriteButton={false}
+              bgColor="rgb(249, 248, 246)"
+            >
+              <GeneralErrorPage 
+                mainText={"화면을 불러올 수 없어요"} 
+                subText={"존재하지 않는 페이지입니다"} 
+              />
+            </MainLayout>
+          }
+          handle={{ crumb: <Link to="/notfound">not Found 에러</Link> }}
+      />
+      </Route>
   );
 
   return <RouterProvider router={createBrowserRouter(routes)} />;

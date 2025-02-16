@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 import { useApiQuery, useApiMutation } from "@shared/api/hooks/useQuery";
-import { useQueryClient } from "@tanstack/react-query";
+import {
+  useQueryClient,
+} from "@tanstack/react-query";
 import type {
   ReviewRequest,
   ReviewResponse,
@@ -13,13 +15,12 @@ import type {
 export const useReviewApi = () => {
   const queryClient = useQueryClient();
 
-  const createReviewMutation = useApiMutation<ReviewResponse, ReviewRequest & { draftId: number }>(
-    '/api/reviews/:draftId',
-    'post',
-    {
-      urlTransform: (request) => `/api/reviews/${request.draftId}`
-    }
-  );
+  const createReviewMutation = useApiMutation<
+    ReviewResponse,
+    ReviewRequest & { draftId: number }
+  >("/api/reviews/:draftId", "post", {
+    urlTransform: (request) => `/api/reviews/${request.draftId}`,
+  });
 
   const createReview = async (
     request: ReviewRequest & { draftId: number },
@@ -42,10 +43,10 @@ export const useReviewApi = () => {
   };
 
   const deleteReviewMutation = useApiMutation<void, number>(
-    '/api/reviews/:reviewId',
-    'delete',
+    "/api/reviews/:reviewId",
+    "delete",
     {
-      urlTransform: (reviewId) => `/api/reviews/${reviewId}`
+      urlTransform: (reviewId) => `/api/reviews/${reviewId}`,
     }
   );
 
@@ -62,7 +63,7 @@ export const useReviewApi = () => {
       options?.onSuccess?.();
     } catch (error) {
       console.error("리뷰 삭제 중 오류 발생:", error);
-      options?.onError?.(error); 
+      options?.onError?.(error);
       throw error;
     }
   };
@@ -78,12 +79,14 @@ export const useReviewApi = () => {
     params: ShowReviewListRequest = {
       sort: "NEW",
       limit: 10,
-      timestamp: new Date(3000, 0, 1).toISOString(),
+      timestamp: "3000-01-01T00:00:00",
     }
   ) => {
     const validatedParams = {
       sort: params.sort,
-      timestamp: params.timestamp,
+      timestamp: params.timestamp?.endsWith("Z")
+        ? params.timestamp.slice(0, -1)
+        : params.timestamp || "3000-01-01T00:00:00",
       limit: Math.min(Math.max(params.limit || 10, 1), 20),
       ...(params.tagIds?.length ? { tagIds: params.tagIds.slice(0, 5) } : {}),
       ...(params.rating
@@ -102,9 +105,24 @@ export const useReviewApi = () => {
   };
 
   const useMyReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+    const validatedParams = {
+      limit: Math.min(Math.max(params.limit || 10, 1), 20),
+      ...(params.timestamp
+        ? {
+            timestamp: params.timestamp?.endsWith("Z")
+              ? params.timestamp.slice(0, -1)
+              : params.timestamp,
+          }
+        : {}),
+    };
+
+    const cleanParams = Object.fromEntries(
+      Object.entries(validatedParams).filter(([_, value]) => value != null)
+    );
+
     return useApiQuery<ShowReviewResponse[]>(
-      ["reviews", "my", params],
-      `/api/reviews/my?${new URLSearchParams(params as any).toString()}`
+      ["reviews", "my", validatedParams],
+      `/api/reviews/my?${new URLSearchParams(cleanParams as any).toString()}`
     );
   };
 

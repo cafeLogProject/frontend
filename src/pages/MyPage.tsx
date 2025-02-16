@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { throttle } from "lodash";
-import { ProfileHeader, FilterBtn } from "@/entities/profile/ui";
+import { FilterBtn, MyProfileHeader } from "@/entities/profile/ui";
 import { ReviewList } from "@/widgets/reviewList";
 import { CafeList } from "@/widgets/cafeList";
 import { useFavoriteApi } from "@/shared/api/favorite";
@@ -18,6 +18,9 @@ const MyPage = () => {
   const { favorites, isLoading } = useFavoriteApi();
   const headerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [lastTimestamp, setLastTimestamp] = useState<string>(
+    new Date(3000, 0, 1).toISOString()
+  );
 
   useEffect(() => {
     const mainContent = document.querySelector(`.${styles.mainContent}`);
@@ -26,8 +29,7 @@ const MyPage = () => {
     const handleScroll = throttle(() => {
       const scrollTop = mainContent.scrollTop;
 
-      if (!isScrolled && scrollTop > 156) {
-        const oldHeight = headerRef.current?.offsetHeight || 0;
+      if (!isScrolled && scrollTop > 246) { // 246px은 헤더 축소 완료되기까지의 스크롤 간격
         setIsScrolled(true);
 
         // 헤더 축소 후 스크롤 위치 보정하기
@@ -38,7 +40,8 @@ const MyPage = () => {
         //     mainContent.scrollTop += heightDiff;
         //   }
         // });
-      } else if (isScrolled && scrollTop < 76) {
+      }
+       else if (isScrolled && scrollTop < 246) {
         setIsScrolled(false);
       }
     }, 100);
@@ -59,21 +62,37 @@ const MyPage = () => {
     window.location.href = `/cafe/${cafe.id}`;
   };
 
+  const handleViewReviews = () => {
+    setActiveFilter("review");
+    const mainContent = document.querySelector(`.${styles.mainContent}`);
+    if (!mainContent || !headerRef.current ) return;
+    mainContent.scrollTop = 249;
+  }
+
+  const handleLoadMore = (timestamp: string) => {
+    setLastTimestamp(timestamp);
+  };
+
   return (
     <div>
       <div ref={headerRef}>
-        <ProfileHeader isScrolled={isScrolled} />
+        <MyProfileHeader 
+          isScrolled={isScrolled} 
+          onViewReviews={handleViewReviews}
+          />
       </div>
-      <div
-        ref={contentRef}
-        style={{
-          paddingTop: "252px",
-        }}
-      >
+      <div>
         <FilterBtn onChange={handleFilterChange} activeType={activeFilter} />
 
         {activeFilter === "review" ? (
-          <ReviewList type="my" params={{ limit: 10 }} />
+          <ReviewList 
+            type="my" 
+            params={{ 
+              limit: 10,
+              timestamp: lastTimestamp 
+            }}
+            onLoadMore={handleLoadMore}
+          />
         ) : isLoading ? (
           <div>로딩 중...</div>
         ) : (
@@ -88,31 +107,6 @@ const MyPage = () => {
           />
         )}
 
-        <button onClick={openModal}>Open Modal</button>
-        <Modal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          title="정말 나가시겠어요?"
-          description="작성 중인 내용은 임시 저장되어 다음에 이어서 작성할 수 있어요."
-          primaryButton={{
-            text: "나가기",
-            altText: "나가기",
-            onClick: closeModal,
-            className: "modal-btn modal-btn-yes",
-          }}
-          secondaryButton={{
-            text: "계속 작성하기",
-            altText: "계속 작성하기",
-            onClick: closeModal,
-            className: "modal-btn modal-btn-no",
-          }}
-        />
-        <Toast
-          icon={true}
-          message="리뷰 작성이 완료되었습니다"
-          linkTo="/search"
-          linkText="보러가기"
-        />
       </div>
     </div>
   );

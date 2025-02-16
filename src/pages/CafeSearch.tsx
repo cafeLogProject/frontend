@@ -10,6 +10,8 @@ import { useCafeApi } from "@/shared/api/cafe/cafe";
 import { useReviewDraftApi } from "@shared/api/reviews/reviewDraftApi";
 import Modal from "@shared/ui/modal/Modal";
 import styles from "./styles/CafeSearch.module.scss";
+import { Tabs } from "@shared/ui/tabs/Tabs";
+import type { Tab } from "@shared/ui/tabs/types";
 
 const CafeSearch = () => {
   const [searchParams] = useSearchParams();
@@ -17,16 +19,30 @@ const CafeSearch = () => {
   const { updateDraft, clearDraft } = useReviewDraftStore();
   const { returnPath, setReturnPath, isFromFooter, setIsFromFooter } =
     useNavigationStore();
-  const { searchByName, isLoading, error } = useCafeSearch();
+  const { searchByName, isLoading: isCafeLoading, error: cafeError } = useCafeSearch();
+
+  // TODO: 프로필 검색 구현 필요
+  // const { searchByName, isLoading: isProfileLoading, error: profileError } = useProfileSearch();
+
   const { checkCafeExists, saveCafe } = useCafeApi();
   const { useUserDraftReviews, createDraft } = useReviewDraftApi();
   const [cafes, setCafes] = useState<ICafeDescription[]>([]);
+
+  // TODO: 프로필 타입 정의 필요
+  // const [profiles, setProfiles] = useState<any[]>([]);
+
   const [shouldNavigate, setShouldNavigate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCafe, setSelectedCafe] = useState<{
     cafe: ICafeDescription;
     cafeId: number;
   } | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("cafe");
+
+  const tabs: Tab[] = [
+    { id: "cafe", label: "카페" },
+    { id: "profile", label: "프로필" },
+  ];
 
   useEffect(() => {
     console.log("selectedCafe updated:", selectedCafe);
@@ -116,10 +132,10 @@ const CafeSearch = () => {
       // replace: true로 설정하여 현재 /search 페이지를 대체
       navigate("/review/write", {
         replace: true,
-        state: { 
+        state: {
           from: "/search",
-          preventBack: true
-        }
+          preventBack: true,
+        },
       });
     } catch (error) {
       console.error("Draft 생성 실패:", error);
@@ -169,10 +185,23 @@ const CafeSearch = () => {
     }
   }, [shouldNavigate, navigate]);
 
+  // 검색어와 탭이 변경될 때마다 해당 탭의 검색 실행
   useEffect(() => {
-    const name = searchParams.get("name");
-    searchByName(name).then(setCafes);
-  }, [searchParams]); // searchByName 의존성 제거
+    const query = searchParams.get("name");
+    if (!query) return;
+
+    switch (activeTab) {
+      case "cafe":
+        // TODO: 프로필 검색 결과 초기화
+        searchByName(query).then(setCafes);
+        break;
+      case "profile":
+        // 카페 검색 결과 초기화
+        setCafes([]);
+        // TODO: 프로필 검색 API 호출
+        break;
+    }
+  }, [searchParams, activeTab]);
 
   useEffect(() => {
     // selectedCafe와 draftsQuery.data가 모두 있을 때만 실행
@@ -186,29 +215,68 @@ const CafeSearch = () => {
     }
   }, [draftsQuery.data, selectedCafe, shouldNavigate]);
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case "cafe":
+        return (
+          <div className={styles.cafeListContainer}>
+            {isCafeLoading ? (
+              <div className={styles.loadingContainer}>
+                <div className={styles.loadingSpinner}></div>
+                <p>검색 중입니다...</p>
+              </div>
+            ) : cafeError ? (
+              <div className={styles.errorContainer}>
+                <p>카페 검색 중 오류가 발생했습니다.</p>
+              </div>
+            ) : cafes.length === 0 ? (
+              <div className={styles.noResults}>
+                <p>검색 결과가 없습니다.</p>
+              </div>
+            ) : (
+              <CafeList cafeInfo={cafes} onCafeSelect={handleCafeSelect} />
+            )}
+          </div>
+        );
+      case "profile":
+        return (
+          <div className={styles.noResults}>
+            <p>프로필 검색 기능은 준비 중입니다.</p>
+          </div>
+          // TODO: 프로필 검색 구현 필요
+          // <div className={styles.profileListContainer}>
+          //   {isProfileLoading ? (
+          //     <div className={styles.loadingContainer}>
+          //       <div className={styles.loadingSpinner}></div>
+          //       <p>검색 중입니다...</p>
+          //     </div>
+          //   ) : profileError ? (
+          //     <div className={styles.errorContainer}>
+          //       <p>프로필 검색 중 오류가 발생했습니다.</p>
+          //     </div>
+          //   ) : profiles.length === 0 ? (
+          //     <div className={styles.noResults}>
+          //       <p>검색 결과가 없습니다.</p>
+          //     </div>
+          //   ) : (
+          //     <ProfileList profileInfo={profiles} onProfileSelect={handleProfileSelect} />
+          //   )}
+          // </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className={styles.searchPage}>
       <div className={styles.searchBarWrapper}>
         <SearchBar />
       </div>
-      <div className={styles.cafeListContainer}>
-        {isLoading ? (
-          <div className={styles.loadingContainer}>
-            <div className={styles.loadingSpinner}></div>
-            <p>검색 중입니다...</p>
-          </div>
-        ) : error ? (
-          <div className={styles.errorContainer}>
-            <p>카페 검색 중 오류가 발생했습니다.</p>
-          </div>
-        ) : cafes.length === 0 ? (
-          <div className={styles.noResults}>
-            <p>검색 결과가 없습니다.</p>
-          </div>
-        ) : (
-          <CafeList cafeInfo={cafes} onCafeSelect={handleCafeSelect} />
-        )}
+      <div>
+        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
       </div>
+      {renderContent()}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

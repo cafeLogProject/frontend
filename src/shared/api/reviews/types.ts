@@ -54,16 +54,22 @@ export interface ShowReviewResponse {
 }
 
 export interface ShowReviewListRequest {
-  sort?: "NEW" | "HIGH_RATING";
-  limit?: number;
-  timestamp?: string;
+  sort: "NEW" | "HIGH_RATING";
+  limit: number;
   tagIds?: number[];
+  timestamp?: string;
   rating?: number;
 }
 
 export interface ShowUserReviewRequest {
-  limit?: number;
+  limit: number;
   timestamp?: string;
+}
+
+export interface ReviewListProps {
+  type?: 'all' | 'my';
+  params?: ShowReviewListRequest | ShowUserReviewRequest;
+  onLoadMore?: (timestamp: string, rating?: number) => void;
 }
 
 export interface DraftReviewResponse {

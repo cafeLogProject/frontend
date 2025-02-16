@@ -1,0 +1,44 @@
+@use "@app/styles/abstracts/mixins";
+@use "@app/styles/abstracts/variables" as var;
+
+
+
+.generalErrorPageContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+
+    .generalErrorText {
+      text-align: center;
+
+      &__main {
+        margin-top: 21px;
+        @include mixins.apply-text-style(b1_bold);
+        color: var.$semantic-text-icon-primary;
+        // margin-bottom: 4px;
+      }
+
+      &__sub {
+        margin-top: 2px;
+        @include mixins.apply-text-style(b2_regular);
+        color: var.$semantic-text-icon-secondary;
+      }
+  
+    }
+    .generalErrorButton {
+      margin-top: 16px;
+      padding: 4px 16px 4px 16px;
+      height: 40px;
+      border: 1px solid var.$semantic-border-secondary;
+      background-color: var.$semantic-background-primary;
+      border-radius: var.$radius-radius-md;
+      
+      .content {
+        color: var.$semantic-text-icon-primary;
+        @include mixins.apply-text-style(b1_bold);
+      }
+    }  
+    
+  }

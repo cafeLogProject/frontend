@@ -34,6 +34,7 @@ export const useFavoriteApi = () => {
       );
       return response;
     },
+    throwOnError: true,
     // 낙관적 업데이트
     onMutate: async (newFavorite) => {
       await queryClient.cancelQueries({ queryKey: ['favorites', 'cafes'] });
