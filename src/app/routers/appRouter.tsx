@@ -16,6 +16,7 @@ import DraftReview from "@/pages/DraftReview";
 import CafeInfo from "@/pages/CafeInfo";
 import MyPage from "@/pages/MyPage";
 import MyPageEdit from "@/pages/MyPageEdit";
+import FollowListPage from "@/pages/FollowListPage";
 import { ProtectedRoute } from "@app/routers/ProtectedRoute";
 import styles from "@app/layout/header/Header.module.scss";
 import { OAuthRedirect } from "@app/auth/OAuthRedirect";
@@ -198,6 +199,21 @@ export const AppRouter = () => {
             </MainLayout>
           }
           handle={{ crumb: <Link to="/user">유저페이지</Link> }}
+        />
+        <Route
+          path="followlist/:id"
+          element={
+            <MainLayout
+              showHeader={true}
+              showFooter={false}
+              showBackButton={true}
+              showWriteButton={false}
+              headerTitle="유저명_수정필요"
+            >
+              <FollowListPage />
+            </MainLayout>
+          }
+          handle={{ crumb: <Link to="/cafe">카페 정보</Link> }}
         />
         <Route
           path="test/error"
