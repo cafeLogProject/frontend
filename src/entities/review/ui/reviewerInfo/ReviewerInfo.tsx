@@ -29,6 +29,8 @@ const ReviewerInfo = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const reviewMoreRef = useRef<HTMLDivElement | null>(null);
   const isOwner = currentUserId === userId;
+  console.log(currentUserId);
+  console.log(userId);
 
   const { getProfileImage } = useProfileImageApi();
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);

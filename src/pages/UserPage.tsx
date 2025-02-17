@@ -91,7 +91,12 @@ const UserPage = () => {
         {isFavLoading ? (
           <div>로딩 중...</div>
         ) : (
-          <ReviewList type="my" params={{ limit: 10 }} />
+          <ReviewList 
+          type="user" 
+          params={{ 
+            limit: 10,
+            userId: Number(id),
+          }} />
         )}
       </div>
     </div>
