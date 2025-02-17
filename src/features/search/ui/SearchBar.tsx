@@ -4,8 +4,8 @@ import searchIcon from '@shared/assets/images/search/search.svg';
 import clearIcon from '@shared/assets/images/search/search-clear.svg';
 import styles from './SearchBar.module.scss';
 
-export const SearchBar = () => {
-  const [value, setValue] = useState('');
+export const SearchBar = ({ initialValue = '' }: { initialValue?: string }) => {
+  const [value, setValue] = useState(initialValue);
   const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent) => {

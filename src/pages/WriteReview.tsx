@@ -32,6 +32,18 @@ const WriteReview = () => {
 
   // location.state에서 preventBack 확인
   const preventBack = location.state?.preventBack;
+  // location.state에서 isContinue 확인
+  const isContinue = location.state?.isContinue;
+
+  // handleBlock 콜백 함수 업데이트
+  const handleBlock = useCallback(() => {
+    if (!isContinue) {
+      handleSetIsModalOpen(true);
+    }
+  }, [isContinue]);
+
+  // isContinue가 true인 경우에는 preventBack 무시
+  const { setModalState } = useBlocker(handleBlock, !isContinue && preventBack);
 
   // 초안 작성 여부 확인
   const isDrafting = location.state?.from === "/search";
@@ -42,6 +54,25 @@ const WriteReview = () => {
       event.preventDefault();
     }
 
+    // isContinue가 true인 경우 바로 이전 페이지로 이동
+    if (isContinue) {
+      if (returnPath) {
+        navigate(returnPath, { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
+      return true;
+    }
+
+    console.log("returnPath:", returnPath);
+
+    // returnPath가 있는 경우 해당 경로로 이동
+    if (returnPath) {
+      navigate(returnPath, { replace: true });
+      return true;
+    }
+
+    // 기존 로직 유지
     if (
       preventBack ||
       draft.content ||
@@ -54,36 +85,29 @@ const WriteReview = () => {
       return false;
     }
 
-    // 작성된 내용이 없는 경우
     clearDraft();
     navigate("/", { replace: true });
     return true;
   };
 
-  // 페이지 이탈 시도 시 호출될 함수
-  const handleBlock = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
-
-  const { setModalState } = useBlocker(handleBlock, preventBack);
+  // 블로커의 모달 상태도 함께 업데이트하도록 setIsModalOpen 핸들러 수정
+  const handleSetIsModalOpen = (open: boolean) => {
+    setIsModalOpen(open);
+    setModalState(open);
+  };
 
   // 모달에서 "나가기" 선택 시
   const handleExit = () => {
-    Promise.all([
-      setIsModalOpen(false),
-      setModalState(false),
-      clearDraft(),
-    ]).then(() => {
-      navigate("/", {
-        replace: true,
-        state: { from: null },
-      });
+    handleSetIsModalOpen(false);
+    clearDraft();
+    navigate("/", {
+      replace: true,
+      state: { from: null },
     });
   };
 
   const handleContinue = () => {
-    setIsModalOpen(false);
-    setModalState(false);
+    handleSetIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -322,7 +346,7 @@ const WriteReview = () => {
 
         <Modal
           isOpen={isModalOpen}
-          onClose={handleContinue}
+          onClose={handleContinue} // This will properly close the modal
           title="정말 나가시겠어요?"
           description="작성 중인 내용은 임시 저장되어 다음에 이어서 작성할 수 있어요."
           primaryButton={{
