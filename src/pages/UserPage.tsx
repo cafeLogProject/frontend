@@ -92,11 +92,12 @@ const UserPage = () => {
           <div>로딩 중...</div>
         ) : (
           <ReviewList 
-          type="user" 
-          params={{ 
-            limit: 10,
-            userId: Number(id),
-          }} />
+            type="user" 
+            params={{ 
+              limit: 10,
+              userId: Number(id),
+            }} 
+          />
         )}
       </div>
     </div>
