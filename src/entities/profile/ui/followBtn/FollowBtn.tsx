@@ -1,5 +1,6 @@
 import styles from "./FollowBtn.module.scss";
-import addImage from "@shared/assets/images/add.svg";
+import addImageWhite from "@shared/assets/images/add_white.svg";
+import addImageOrange from "@shared/assets/images/add_orange.svg";
 import checkImage from "@shared/assets/images/check.svg";
 import { useFollowApi } from "@/shared/api/follow/followApi";
 import { useEffect, useState } from "react";
@@ -8,9 +9,10 @@ interface FollowBtnProps {
 	onChange?: (type: "follow" | "unfollow") => void;
 	activeType : "follow" | "unfollow";
 	userId: string;
+	size: "small" | "large";
 }
 
-const FollowBtn: React.FC<FollowBtnProps> = ({ onChange, activeType, userId }) => {
+const FollowBtn: React.FC<FollowBtnProps> = ({ onChange, activeType, userId, size }) => {
 	const { useFollow, useUnfollow } = useFollowApi();
 	const [ isFollowing, setIsFollowing ] = useState(false);
 
@@ -43,26 +45,48 @@ const FollowBtn: React.FC<FollowBtnProps> = ({ onChange, activeType, userId }) =
 
 	return (
 		<div>
-			{(isFollowing) ? (
-				<button onClick={handleFollow} className={styles.followButton__unfollowinner}>
-					<img
-						className={styles.followButton__unfollowimage}
-						src={checkImage}
-						alt="팔로잉" 
-					/>
-					<p className={styles.followButton__unfollowtext}>팔로잉</p>
-				</button>
-			) : (
-				<button onClick={handleFollow} className={styles.followButton__followinner}>
-					<img
-						className={styles.followButton__followimage}
-						src={addImage}
-						alt="팔로우" 
-					/>
-					<p className={styles.followButton__followtext}>팔로우</p>
-				</button>
-			)}
-		</div>
+		{(isFollowing) ? (
+			<button onClick={handleFollow} className={`${styles[`followBtn__${size}__unfollowinner`]}`}>
+				<img
+					className={styles.followBtn__unfollowimage}
+					src={checkImage}
+					alt="팔로잉" 
+				/>
+				<p className={styles.followBtn__unfollowtext}>팔로잉</p>
+			</button>
+		) : (
+			<button onClick={handleFollow} className={`${styles[`followBtn__${size}__followinner`]}`}>
+				<img
+					className={styles.followBtn__followimage}
+					src={size==="small" ? addImageOrange : addImageWhite}
+					alt="팔로우" 
+				/>
+				<p className={styles.followBtn__followtext}>팔로우</p>
+			</button>
+		)}
+	</div>
+		// <div>
+		// 	{(isFollowing) ? (
+		// 		<button onClick={handleFollow} className={`${styles.followBtn__followinner} ${styles[`followBtn__followinner__${size}`]}`}>
+		// 				<img
+		// 					className={`${styles.followBtn__followinner} ${styles[`followBtn__unfollowimage__${size}`]}`}
+		// 					// className={styles.followBtn__unfollowimage}
+		// 					src={checkImage}
+		// 					alt="팔로잉" 
+		// 				/>
+		// 				<p className={styles.followBtn__unfollowtext}>팔로잉</p>
+		// 		</button>
+		// 	) : (
+		// 		<button onClick={handleFollow} className={`${styles.followBtn__followinner} ${styles[`followBtn__followinner__${size}`]}`}>
+		// 			<img
+		// 				className={styles.followBtn__followimage}
+		// 				src={addImage}
+		// 				alt="팔로우" 
+		// 			/>
+		// 			<p className={styles.followBtn__followtext}>팔로우</p>
+		// 		</button>
+		// 	)}
+		// </div>
 	);
 };
 

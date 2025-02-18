@@ -2,6 +2,7 @@ import { useReviewImageApi } from "@/shared/api/images";
 import styles from "./FollowListItem.module.scss";
 import defaultProfile from "@shared/assets/images/profile.svg";
 import { UserFollowResponse } from "@/shared/api/follow/types";
+import FollowBtn from "../profile/ui/followBtn/FollowBtn";
 
 interface FollowListItemProps {
   userInfo: UserFollowResponse;
@@ -13,22 +14,29 @@ const FollowListItem = ({ userInfo, onSelect }: FollowListItemProps) => {
   const imageUrl = getProfileImageUrl(String(userInfo.userId));
 
   return (
-    <li className={styles.followItem}>
-      <a onClick={onSelect}>
-      {/* <a onClick={onSelect} className={styles.followItem__link}> */}
-        <div className={styles.followItem__imageWrapper}>
+    <div className={styles.followListItem}>
+      <div className={styles.followListItem__inner}>
+        <button className={styles.followListItem__meta} onClick={onSelect}>
           <img
             src={imageUrl || defaultProfile}
             alt={`${userInfo.nickname} profile`}
-            className={styles.followItem__image}
+            className={styles.followListItem__image}
           />
-        </div>
-        <div className={styles.followItem__info}>
-          {/* <p className={styles.followItem__name}>{name}</p>
-          <p className={styles.followItem__address}>{address}</p> */}
-        </div>
-      </a>
-    </li>
+          <div className={styles.followListItem__infoContainer}>
+            <p className={styles.followListItem__nickname}>{userInfo.nickname}</p>
+            <p className={styles.followListItem__etc}>{
+              `리뷰 ${userInfo.review_cnt}・팔로워 ${userInfo.follower_cnt}` 
+            }</p>
+          </div>
+        </button>
+        <FollowBtn 
+          onChange={()=>{}} 
+          activeType={userInfo.isFollow? "follow" : "unfollow"} 
+          userId={String(userInfo.userId) || ""}
+          size="small"
+        />
+      </div>
+    </div>
   );
 };
 

@@ -1,24 +1,45 @@
 @use "@app/styles/abstracts/variables" as var;
 @use "@app/styles/abstracts/mixins";
 
-.followItem {
-  list-style: none;
+.followListItem {
+  width: 100%;
+  height: 72px;
+  padding: 0px;
   padding: 16px;
-  border-bottom: 1px solid rgb(212, 212, 212);
-  &__link {
-    text-decoration: none;
+  
+  &__inner {
     display: flex;
-    gap: 16px;
-    &__info {
-      line-height: 140%;
-      .followItem__name {
-        color: var.$semantic-text-icon-primary;
-        @include mixins.apply-text-style(b1_bold);
-      }
-      &__address {
+    align-items: center;
+    display: flex;
+    height: 40px;
+    justify-content: space-between;
+    
+  }
+  
+  &__meta {
+    display: flex;
+    padding: 0px;
+    background-color : var.$semantic-background-primary;
+  }
+
+  &__image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  &__infoContainer {
+    text-align: left;
+    margin-left: 16px;
+    
+    .followListItem__nickname {
+      @include mixins.apply-text-style(b1_bold);
+      color: var.$semantic-text-icon-primary;
+    }
+    
+    .followListItem__etc {
+          @include mixins.apply-text-style(b2_regular);
         color: var.$semantic-text-icon-secondary;
-        @include mixins.apply-text-style(b2_regular);
-      }
     }
   }
 }

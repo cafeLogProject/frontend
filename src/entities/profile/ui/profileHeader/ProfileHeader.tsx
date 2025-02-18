@@ -85,7 +85,12 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
             <p className={styles.profileHead__label}>팔로잉</p>
           </button>
         </div>
-        <FollowBtn onChange={()=>{}} activeType={isFollowing? "follow" : "unfollow"} userId={id || ""}/>
+        <FollowBtn 
+          onChange={()=>{}} 
+          activeType={isFollowing? "follow" : "unfollow"} 
+          userId={id || ""}
+          size="large"
+        />
       </div>
     </div>
   </div>
