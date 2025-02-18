@@ -1,4 +1,6 @@
+import MainLayout from "@/app/layout/mainLayout/MainLayout";
 import { useFollowApi } from "@/shared/api/follow/followApi";
+import { useUserApi } from "@/shared/api/user/userApi";
 import { Tabs } from "@/shared/ui/tabs/Tabs";
 import { Tab } from "@/shared/ui/tabs/types";
 import { FollowList } from "@/widgets/followList";
@@ -7,6 +9,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const FollowListPage = () => {
 	const { tabType, id } = useParams(); 
+	const { useUserInfo } = useUserApi();
+  const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfo(Number(id));
 	if (tabType !== "follower" && tabType !== "following") {
 		console.log(tabType);
 		throw new Error("잘못된 tabType값 입니다");
@@ -69,8 +73,16 @@ const FollowListPage = () => {
 
 	return (
 		<div>
+			<MainLayout
+				showHeader={true}
+				showFooter={false}
+				showBackButton={true}
+				showWriteButton={false}
+				headerTitle={`${userInfo?.nickname}`}
+			>
 			<Tabs tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
 			{renderContent()}
+			</MainLayout>
 		</div>
 	);
 }

@@ -203,15 +203,7 @@ export const AppRouter = () => {
         <Route
           path="follow/:tabType/:id"  // tabtype은 "follwer" 또는 "following"
           element={
-            <MainLayout
-              showHeader={true}
-              showFooter={false}
-              showBackButton={true}
-              showWriteButton={false}
-              headerTitle="유저명_수정필요"
-            >
-              <FollowListPage />
-            </MainLayout>
+            <FollowListPage />  // 동적 변화로 인해 내부에 MainLayout 작성
           }
           handle={{ crumb: <Link to="/cafe">카페 정보</Link> }}
         />
