@@ -11,7 +11,7 @@ interface FollowListItemProps {
 
 const FollowListItem = ({ userInfo, onSelect }: FollowListItemProps) => {
   const { getProfileImageUrl } = useReviewImageApi();
-  const imageUrl = getProfileImageUrl(String(userInfo.userId));
+  const imageUrl = userInfo.isProfileImageExist ? getProfileImageUrl(String(userInfo.userId)) : null;
 
   return (
     <div className={styles.followListItem}>
@@ -29,12 +29,14 @@ const FollowListItem = ({ userInfo, onSelect }: FollowListItemProps) => {
             }</p>
           </div>
         </button>
-        <FollowBtn 
+        { userInfo.isFollow === 2? null : 
+          <FollowBtn 
           onChange={()=>{}} 
           activeType={userInfo.isFollow? "follow" : "unfollow"} 
           userId={String(userInfo.userId) || ""}
           size="small"
-        />
+          />
+        }
       </div>
     </div>
   );

@@ -6,9 +6,14 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const FollowListPage = () => {
-	const { id } = useParams(); 
+	const { tabType, id } = useParams(); 
+	if (tabType !== "follower" && tabType !== "following") {
+		console.log(tabType);
+		throw new Error("잘못된 tabType값 입니다");
+	}
+	if (!id) throw new Error("id값이 없습니다");
 	const navigate = useNavigate(); 
-	const [activeTab, setActiveTab] = useState<string>("follower");
+	const [activeTab, setActiveTab] = useState<string>(tabType);
 	const tabs: Tab[] = [
 		{ id: "follower", label: "팔로워" },
 		{ id: "following", label: "팔로잉" },
@@ -52,7 +57,7 @@ const FollowListPage = () => {
         );
       case "following":
         return (
-					<FollowList userList={followingList} onUserSelect={handleUserSelect} />
+			<FollowList userList={followingList} onUserSelect={handleUserSelect} />
         );
       default:
         return null;

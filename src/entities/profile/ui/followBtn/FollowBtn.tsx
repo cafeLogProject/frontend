@@ -65,28 +65,6 @@ const FollowBtn: React.FC<FollowBtnProps> = ({ onChange, activeType, userId, siz
 			</button>
 		)}
 	</div>
-		// <div>
-		// 	{(isFollowing) ? (
-		// 		<button onClick={handleFollow} className={`${styles.followBtn__followinner} ${styles[`followBtn__followinner__${size}`]}`}>
-		// 				<img
-		// 					className={`${styles.followBtn__followinner} ${styles[`followBtn__unfollowimage__${size}`]}`}
-		// 					// className={styles.followBtn__unfollowimage}
-		// 					src={checkImage}
-		// 					alt="팔로잉" 
-		// 				/>
-		// 				<p className={styles.followBtn__unfollowtext}>팔로잉</p>
-		// 		</button>
-		// 	) : (
-		// 		<button onClick={handleFollow} className={`${styles.followBtn__followinner} ${styles[`followBtn__followinner__${size}`]}`}>
-		// 			<img
-		// 				className={styles.followBtn__followimage}
-		// 				src={addImage}
-		// 				alt="팔로우" 
-		// 			/>
-		// 			<p className={styles.followBtn__followtext}>팔로우</p>
-		// 		</button>
-		// 	)}
-		// </div>
 	);
 };
 

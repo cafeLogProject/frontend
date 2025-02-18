@@ -5,7 +5,7 @@ import MyProfileImage from "@shared/assets/images/profile/profile.svg";
 import { useUserApi } from "@shared/api/user/userApi";
 import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import FollowBtn from "../followBtn/FollowBtn";
 const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
@@ -15,6 +15,7 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
   const { profileImageUrl, setProfileImageUrl } = useProfileStore();
   const { data: userInfo, isLoading, error } = useUserInfo(Number(id));
   const [isFollowing, setIsFollowing] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -76,11 +77,11 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
             <p className={styles.profileHead__count}>8</p>
             <p className={styles.profileHead__label}>리뷰</p>
           </button>
-          <button onClick={() => console.log("팔로워 수 클릭")} className={styles.button}>
+          <button onClick={() => navigate(`/follow/follower/${id}`)} className={styles.button}>
             <p className={styles.profileHead__count}>6</p>
             <p className={styles.profileHead__label}>팔로워</p>
           </button>
-          <button onClick={() => console.log("팔로잉 수 클릭")} className={styles.button}>
+          <button onClick={() => navigate(`/follow/following/${id}`)} className={styles.button}>
             <p className={styles.profileHead__count}>5</p>
             <p className={styles.profileHead__label}>팔로잉</p>
           </button>

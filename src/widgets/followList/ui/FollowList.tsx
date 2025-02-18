@@ -14,7 +14,6 @@ const FollowList = ({
 }: FollowListProps) => {
 
 	return (
-		// <ul>
 		<ul className={styles.followList}>	
 			{userList && userList?.length > 0 && userList.map((_userInfo, index) => (
 				<FollowListItem

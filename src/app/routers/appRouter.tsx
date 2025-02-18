@@ -201,7 +201,7 @@ export const AppRouter = () => {
           handle={{ crumb: <Link to="/user">유저페이지</Link> }}
         />
         <Route
-          path="followlist/:id"
+          path="follow/:tabType/:id"  // tabtype은 "follwer" 또는 "following"
           element={
             <MainLayout
               showHeader={true}

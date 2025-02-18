@@ -7,12 +7,14 @@ import { useUserApi } from "@shared/api/user/userApi";
 import type { UserInfoResponse } from "@shared/api/user/types";
 import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
+import { useNavigate } from "react-router-dom";
 
 const MyProfileHeader = ({ isScrolled, onViewReviews}: ProfileHeaderProps) => {
   const { getMyInfo } = useUserApi();
   const { getProfileImage } = useProfileImageApi();
   const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
   const { profileImageUrl, setProfileImageUrl } = useProfileStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -79,11 +81,11 @@ const MyProfileHeader = ({ isScrolled, onViewReviews}: ProfileHeaderProps) => {
             <p className={styles.profileHead__count}>8</p>
             <p className={styles.profileHead__label}>리뷰</p>
           </button>
-          <button onClick={() => console.log("팔로워 수 클릭")} className={styles.button}>
+          <button onClick={() => navigate(`/follow/follower/${userInfo?.userId}`)} className={styles.button}>
             <p className={styles.profileHead__count}>6</p>
             <p className={styles.profileHead__label}>팔로워</p>
           </button>
-          <button onClick={() => console.log("팔로잉 수 클릭")} className={styles.button}>
+          <button onClick={() => navigate(`/follow/following/${userInfo?.userId}`)} className={styles.button}>
             <p className={styles.profileHead__count}>5</p>
             <p className={styles.profileHead__label}>팔로잉</p>
           </button>
