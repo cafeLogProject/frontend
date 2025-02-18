@@ -20,6 +20,14 @@ export const useUserApi = () => {
     );
   };
 
+  const useMyInfo = () => {
+    return useApiQuery<UserInfoResponse>(
+      ["myInfo"],
+      () => `/api/my/profile`,
+    );
+  };
+
+  // useMyInfo 함수로 대체 예정
   const getMyInfo = useCallback(async (options?: {
     onSuccess?: (response: UserInfoResponse) => void;
     onError?: (error: any) => void;
@@ -89,6 +97,7 @@ export const useUserApi = () => {
   return {
     useUserInfo,
     getMyInfo,
+    useMyInfo,
     updateUserInfo,
     checkNicknameExistence,
     isLoading,

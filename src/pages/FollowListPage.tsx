@@ -51,9 +51,7 @@ const FollowListPage = () => {
     switch (activeTab) {
       case "follower":
         return (
-          // <div className={styles.cafeListContainer}>
-              <FollowList userList={followerList} onUserSelect={handleUserSelect} />
-          // </div>
+            <FollowList userList={followerList} onUserSelect={handleUserSelect} />
         );
       case "following":
         return (
