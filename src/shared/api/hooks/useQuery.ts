@@ -60,7 +60,6 @@ export const useApiInfiniteQuery = <TData>(
       const response =  pageParam 
         ? await apiInstance.get<TData>(`${url}&cursor=${pageParam}`) 
         : await apiInstance.get<TData>(`${url}`);
-      // const response = await apiInstance.get<TData>(`${url}&cursor=${pageParam}`);
       return response;
     },
     throwOnError: true,
