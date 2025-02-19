@@ -22,8 +22,6 @@ const FollowListPage = () => {
 		{ id: "follower", label: "팔로워" },
 		{ id: "following", label: "팔로잉" },
 	];  
-
-	//------------------useInfiniteQuery를 이용한 버전 ----------------------------
 	const {useFollowerList, useFollowingList} = useFollowApi();
 	const {data: followerList, fetchNextPage: fetchFollowerNextPage, hasNextPage: hasFollowerNexPage, refetch: refetchFollowerList, isLoading: isFollowerLoading} = useFollowerList(Number(id), { limit : 20 });
 	const {data: followingList, fetchNextPage: fetchFollowingNextPage, hasNextPage: hasFollowingNexPage,refetch: refetchFollowingList, isLoading: isFollowingLoading} = useFollowingList(Number(id), { limit : 20 });
@@ -39,7 +37,6 @@ const FollowListPage = () => {
 		}
 	}, [activeTab]);
 
-	//-----------------------------------------------
 
 	const handleUserSelect = (userId : number) => {
 		navigate(`/userpage/${userId}`);

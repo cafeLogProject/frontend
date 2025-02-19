@@ -69,6 +69,6 @@ const FollowList = ({
 		</div>
     
 	);
-	};
+};
 
 export default FollowList;
