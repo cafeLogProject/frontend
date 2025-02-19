@@ -1,0 +1,3 @@
+[*]
+indent_style = space
+indent_size = 2  # 탭 크기 변경 (2 or 4)
