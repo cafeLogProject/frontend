@@ -12,6 +12,7 @@ import Modal from "@shared/ui/modal/Modal";
 import styles from "./styles/CafeSearch.module.scss";
 import { Tabs } from "@shared/ui/tabs/Tabs";
 import type { Tab } from "@shared/ui/tabs/types";
+import NoContent from "@/shared/ui/noContent/NoContent";
 
 const CafeSearch = () => {
   const [searchParams] = useSearchParams();
@@ -231,9 +232,11 @@ const CafeSearch = () => {
                 <p>카페 검색 중 오류가 발생했습니다.</p>
               </div>
             ) : cafes.length === 0 ? (
-              <div className={styles.noResults}>
-                <p>검색 결과가 없습니다.</p>
-              </div>
+              <NoContent 
+                logo="noResult"
+                mainContent="해당 카페를 찾을 수 없어요"
+                subContent="카페명이 정확한지 확인하거나, 다른 카페를 찾아보세요!"
+              />
             ) : (
               <CafeList cafeInfo={cafes} onCafeSelect={handleCafeSelect} />
             )}

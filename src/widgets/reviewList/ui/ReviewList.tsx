@@ -4,9 +4,10 @@ import { useReviewApi } from "@shared/api/reviews/reviewApi";
 import type { ShowReviewResponse, ShowReviewListRequest, ShowUserReviewRequest } from "@shared/api/reviews/types";
 import styles from "./ReviewList.module.scss";
 import { useUserApi } from "@shared/api/user/userApi";
+import NoContent from "@/shared/ui/noContent/NoContent";
 
 interface ReviewListProps {
-  type?: 'all' | 'my';
+  type: 'all' | 'my';
   params?: ShowReviewListRequest | ShowUserReviewRequest;
   onLoadMore?: (timestamp: string, rating?: number) => void;
 }
@@ -109,32 +110,41 @@ const ReviewList = ({ type = 'all', params = { limit: 10 }, onLoadMore }: Review
   }
 
   return (
-    <div className={styles.reviewListContainer}>
-      <ul className={styles.reviewList}>
-        {reviews.map(review => (
-          <li key={review.reviewId} className={styles.reviewList__item}>
-            <ReviewItem 
-              review={review} 
-              showChips={true}
-              currentUserId={currentUserId} 
-            />
-          </li>
-        ))}
-      </ul>
+    <div>
+      {reviews.length === 0 ? 
+      <NoContent 
+        logo="noReview"
+        mainContent="아직 작성된 리뷰가 없어요"
+        subContent="최근에 다녀오신 카페는 어땠나요?"
+      />
+      : <div className={styles.reviewListContainer}>
+          <ul className={styles.reviewList}>
+            {reviews.map(review => (
+              <li key={review.reviewId} className={styles.reviewList__item}>
+                <ReviewItem 
+                  review={review} 
+                  showChips={true}
+                  currentUserId={currentUserId} 
+                  />
+              </li>
+            ))}
+          </ul>
 
-      {hasMore && (
-        <div 
-          ref={loadMoreTriggerRef}
-          className={styles.loadMoreTrigger}
-          style={{ height: '20px', margin: '20px 0' }}
-        />
-      )}
-      
-      {isLoading && (
-        <div className={styles.loadingIndicator}>
-          로딩 중...
+          {hasMore && (
+            <div 
+            ref={loadMoreTriggerRef}
+            className={styles.loadMoreTrigger}
+            style={{ height: '20px', margin: '20px 0' }}
+            />
+          )}
+          
+          {isLoading && (
+            <div className={styles.loadingIndicator}>
+              로딩 중...
+            </div>
+          )}
         </div>
-      )}
+      }
     </div>
   );
 };
