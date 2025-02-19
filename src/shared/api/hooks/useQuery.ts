@@ -1,4 +1,5 @@
 import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, type QueryKey } from '@tanstack/react-query'
+// import { useMutation, useSuspenseQuery, type UseMutationOptions, type UseSuspenseQueryOptions, type QueryKey } from '@tanstack/react-query'
 import { apiInstance } from '@shared/api/base'
 import type { AxiosError } from 'axios'
 

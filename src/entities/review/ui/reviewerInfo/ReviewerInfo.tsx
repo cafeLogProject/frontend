@@ -5,6 +5,7 @@ import ReviewMore from "../reviewMore/ReviewMore";
 import profileIcon from "@shared/assets/images/profile.svg";
 import moreIcon from "@shared/assets/images/more.svg";
 import { useProfileImageApi } from "@/shared/api/user/useProfileImagesApi";
+import { useNavigate } from "react-router-dom";
 
 interface ReviewerInfoProps {
   nickname: string;
@@ -29,6 +30,7 @@ const ReviewerInfo = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const reviewMoreRef = useRef<HTMLDivElement | null>(null);
   const isOwner = currentUserId === userId;
+  const navigate = useNavigate();
 
   const { getProfileImage } = useProfileImageApi();
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
@@ -94,42 +96,45 @@ const ReviewerInfo = ({
   };
 
   return (
+    <div>
     <div className={styles.reviewerInfo}>
-      <img
-        className={styles.reviewerInfo__profilePicture}
-        src={profileImageUrl || profileIcon}
-        alt={`${nickname}의 프로필`}
-      />
-      <div className={styles.reviewerInfo__details}>
-        <p className={styles.reviewerInfo__name}>{nickname}</p>
-        <div className={styles.reviewerInfo__meta}>
-          <p className={styles.reviewerInfo__visitDate}>
-            {formatVisitDate(visitDate)} 방문
-          </p>
-          <p>・</p>
-          <SimpleStarRating rating={rating} />
+        <img
+          onClick={()=>{navigate(`/userpage/${userId}`)}}
+          className={styles.reviewerInfo__profilePicture}
+          src={profileImageUrl || profileIcon}
+          alt={`${nickname}의 프로필`}
+        />
+        <div className={styles.reviewerInfo__details}>
+          <p className={styles.reviewerInfo__name}>{nickname}</p>
+          <div className={styles.reviewerInfo__meta}>
+            <p className={styles.reviewerInfo__visitDate}>
+              {formatVisitDate(visitDate)} 방문
+            </p>
+            <p>・</p>
+            <SimpleStarRating rating={rating} />
+          </div>
         </div>
-      </div>
 
-      {hasVisibleButtons && (
-        <div ref={reviewMoreRef} className={styles.reviewerInfo__moreWrapper}>
-          <img
-            className={styles.reviewerInfo__moreIcon}
-            src={moreIcon}
-            alt="더보기 아이콘"
-            onClick={toggleReviewMore}
-          />
-          {showReviewMore && (
-            <ReviewMore 
-              reviewId={reviewId}
-              isOwner={isOwner}
-              onDelete={() => setShowReviewMore(false)}
-              onModalOpen={() => setIsModalOpen(true)}
-              onModalClose={() => setIsModalOpen(false)}
+        {hasVisibleButtons && (
+          <div ref={reviewMoreRef} className={styles.reviewerInfo__moreWrapper}>
+            <img
+              className={styles.reviewerInfo__moreIcon}
+              src={moreIcon}
+              alt="더보기 아이콘"
+              onClick={toggleReviewMore}
             />
-          )}
-        </div>
-      )}
+            {showReviewMore && (
+              <ReviewMore 
+                reviewId={reviewId}
+                isOwner={isOwner}
+                onDelete={() => setShowReviewMore(false)}
+                onModalOpen={() => setIsModalOpen(true)}
+                onModalClose={() => setIsModalOpen(false)}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

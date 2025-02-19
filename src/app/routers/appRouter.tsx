@@ -16,6 +16,7 @@ import DraftReview from "@/pages/DraftReview";
 import CafeInfo from "@/pages/CafeInfo";
 import MyPage from "@/pages/MyPage";
 import MyPageEdit from "@/pages/MyPageEdit";
+import FollowListPage from "@/pages/FollowListPage";
 import { ProtectedRoute } from "@app/routers/ProtectedRoute";
 import styles from "@app/layout/header/Header.module.scss";
 import { OAuthRedirect } from "@app/auth/OAuthRedirect";
@@ -198,6 +199,13 @@ export const AppRouter = () => {
             </MainLayout>
           }
           handle={{ crumb: <Link to="/user">유저페이지</Link> }}
+        />
+        <Route
+          path="follow/:tabType/:id"  // tabtype은 "follwer" 또는 "following"
+          element={
+            <FollowListPage />  // 동적 변화로 인해 내부에 MainLayout 작성
+          }
+          handle={{ crumb: <Link to="/cafe">카페 정보</Link> }}
         />
         <Route
           path="test/error"

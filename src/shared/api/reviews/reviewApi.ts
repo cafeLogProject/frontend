@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useApiQuery, useApiMutation } from "@shared/api/hooks/useQuery";
 import {
-  useQueryClient,
+  useQueryClient, QueryClient
 } from "@tanstack/react-query";
 import type {
   ReviewRequest,

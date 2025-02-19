@@ -1,38 +1,22 @@
 import { useEffect, useState } from "react";
 import styles from "./ProfileHeader.module.scss";
 import { ProfileHeaderProps } from "../../types";
-import MyProfileImage from "@shared/assets/images/profile/profile.svg";
+import DefaultProfileImg from "@shared/assets/images/profile/profile.svg";
 import { useUserApi } from "@shared/api/user/userApi";
 import { useProfileStore } from "@shared/store/useProfileStore";
 import { useProfileImageApi } from "@shared/api/user/useProfileImagesApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import FollowBtn from "../followBtn/FollowBtn";
+import { useReviewImageApi } from "@/shared/api/images";
 const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
   const { id } = useParams();
-  const { useUserInfo } = useUserApi();
-  const { getProfileImage } = useProfileImageApi();
-  const { profileImageUrl, setProfileImageUrl } = useProfileStore();
-  const { data: userInfo, isLoading, error } = useUserInfo(Number(id));
+  const { useUserInfo, useMyInfo} = useUserApi();
+  const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfo(Number(id));
+  const navigate = useNavigate();
+  const { getProfileImageUrl } = useReviewImageApi();
+  const profileImageUrl = userInfo?.isProfileImageExist ? getProfileImageUrl(String(userInfo?.userId)) : null;
   const [isFollowing, setIsFollowing] = useState(false);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!id || !userInfo) return;
-      // 이미지 URL 가져오기
-      const newImageUrl = await getProfileImage(Number(id));
-      if (newImageUrl) {
-        setProfileImageUrl(newImageUrl);
-      }
-      if (userInfo.isFollow) {
-        setIsFollowing(true);
-      } else {
-        setIsFollowing(false);
-      }
-    }
-    fetchUserData();
-  }, [id, userInfo]);
-
   
   return (
     <div>
@@ -41,7 +25,7 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
           <div className={styles.profileHead__inner}>
             <img
               className={styles.profileHead__profileImg}
-              src={profileImageUrl || MyProfileImage}
+              src={profileImageUrl || DefaultProfileImg}
               alt="myProfileImage"
             />
             <div className={styles.profileHead__meta}>
@@ -61,7 +45,7 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
       <div className={styles.profileHead__inner}>
         <img
           className={styles.profileHead__profileImg}
-          src={profileImageUrl || MyProfileImage}
+          src={profileImageUrl || DefaultProfileImg}
           alt="myProfileImage" />
         <div className={styles.profileHead__meta}>
           <p className={styles.profileHead__nickName}>
@@ -73,19 +57,24 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
         </div>
         <div className={styles.profileHead__buttonContainer}>
           <button onClick={() => onViewReviews()} className={styles.button}>
-            <p className={styles.profileHead__count}>8</p>
+            <p className={styles.profileHead__count}>{userInfo?.review_cnt}</p>
             <p className={styles.profileHead__label}>리뷰</p>
           </button>
-          <button onClick={() => console.log("팔로워 수 클릭")} className={styles.button}>
-            <p className={styles.profileHead__count}>6</p>
+          <button onClick={() => navigate(`/follow/follower/${id}`)} className={styles.button}>
+            <p className={styles.profileHead__count}>{userInfo?.follower_cnt}</p>
             <p className={styles.profileHead__label}>팔로워</p>
           </button>
-          <button onClick={() => console.log("팔로잉 수 클릭")} className={styles.button}>
-            <p className={styles.profileHead__count}>5</p>
+          <button onClick={() => navigate(`/follow/following/${id}`)} className={styles.button}>
+            <p className={styles.profileHead__count}>{userInfo?.following_cnt}</p>
             <p className={styles.profileHead__label}>팔로잉</p>
           </button>
         </div>
-        <FollowBtn onChange={()=>{}} activeType={isFollowing? "follow" : "unfollow"} userId={id || ""}/>
+        <FollowBtn 
+          onChange={()=>{}} 
+          activeType={isFollowing? "follow" : "unfollow"} 
+          userId={id || ""}
+          size="large"
+        />
       </div>
     </div>
   </div>

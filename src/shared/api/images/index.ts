@@ -66,14 +66,20 @@ export const useReviewImageApi = (draftReviewId?: number) => {
     return `${API_URL}/api/images/draftReview?draftReviewId=${draftReviewId}&imageId=${imageId}`;
   };
 
+  // 프로필 이미지인 경우
+  const getProfileImageUrl = (userId: string) => {
+    return `${API_URL}/api/images/profile/${userId}`
+  }
+
   return useMemo(
     () => ({
       upload,
       remove: removeImage,
       getUrl,
       getImageUrl,
-      getDraftImageUrl
+      getDraftImageUrl,
+      getProfileImageUrl
     }),
-    [upload, removeImage, getUrl, getImageUrl, getDraftImageUrl]
+    [upload, removeImage, getUrl, getImageUrl, getDraftImageUrl, getProfileImageUrl]
   );
 };
