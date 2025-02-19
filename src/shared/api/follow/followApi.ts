@@ -2,8 +2,9 @@ import { FollowResponse,
 	UserFollowRequest,
 	UserFollowResponse,
 } from "./types";
-import { useApiQuery, useApiMutation } from "@shared/api/hooks/useQuery";
+import { useApiQuery, useApiMutation, useApiInfiniteQuery } from "@shared/api/hooks/useQuery";
 import {
+	useInfiniteQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 
@@ -66,28 +67,48 @@ export const useFollowApi = () => {
 		}
 	});
 
-	// 팔로워 리스트 조회
+	// // 팔로워 리스트 조회 (useQuery 버전)
+	// const useFollowerList = (userId: number, params: UserFollowRequest = {
+	// 	limit : 10
+	// }) => {
+	// 	if (!userId) {
+	// 		console.log("useFollowerList 오류 : userId 존재x");
+	// 	}
+	// 	const endpoint = params.cursor ? `/api/users/${userId}/follower?limit=${params.limit}&cursor=${params.cursor}` 
+	// 		: `/api/users/${userId}/follower?limit=${params.limit}`;
+	// 	return useApiQuery<UserFollowResponse[]>(["follower", userId, params], endpoint);
+	// };
+
+	// 팔로워 리스트 조회 (cursor 기반 무한스크롤)
 	const useFollowerList = (userId: number, params: UserFollowRequest = {
 		limit : 10
 	}) => {
 		if (!userId) {
 			console.log("useFollowerList 오류 : userId 존재x");
 		}
-		const endpoint = params.cursor ? `/api/users/${userId}/follower?limit=${params.limit}&cursor=${params.cursor}` 
-			: `/api/users/${userId}/follower?limit=${params.limit}`;
-		return useApiQuery<UserFollowResponse[]>(["follower", userId, params], endpoint);
+		return useApiInfiniteQuery<UserFollowResponse[]>(
+			['follower', userId, params],
+			`/api/users/${userId}/follower?limit=${params.limit}`,	//cursor 파라미터값은 useApiInfiniteQuery에서 자동설정됨
+			(lastPage: UserFollowResponse[]) => {
+				return (!lastPage || lastPage.length === 0) ? null : (lastPage.at(-1)?.followId ?? null);
+			}
+		);
 	};
 
-	// 팔로잉 리스트 조회
+	// 팔로잉 리스트 조회 (cursor 기반 무한스크롤)
 	const useFollowingList = (userId: number, params: UserFollowRequest = {
 		limit : 10
 	}) => {
 		if (!userId) {
 			console.log("useFollowerList 오류 : userId 존재x");
 		}
-		const endpoint = params.cursor ? `/api/users/${userId}/following?limit=${params.limit}&cursor=${params.cursor}` 
-			: `/api/users/${userId}/following?limit=${params.limit}`;
-		return useApiQuery<UserFollowResponse[]>(["following", userId, params], endpoint);
+		return useApiInfiniteQuery<UserFollowResponse[]>(
+			['following', userId, params],
+			`/api/users/${userId}/following?limit=${params.limit}`,	//cursor 파라미터값은 useApiInfiniteQuery에서 자동설정됨
+			(lastPage: UserFollowResponse[]) => {
+				return (!lastPage || lastPage.length === 0) ? null : (lastPage.at(-1)?.followId ?? null);
+			}
+		);
 	};
 
 	return {
