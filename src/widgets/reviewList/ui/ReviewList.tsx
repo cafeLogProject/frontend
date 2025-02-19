@@ -7,13 +7,8 @@ import { useUserApi } from "@shared/api/user/userApi";
 import NoContent from "@/shared/ui/noContent/NoContent";
 
 interface ReviewListProps {
-<<<<<<< HEAD
-  type: 'all' | 'my';
-  params?: ShowReviewListRequest | ShowUserReviewRequest;
-=======
-  type?: 'all' | 'user' | 'my' | 'follow';  // follow 타입 추가
+  type?: 'all' | 'user' | 'my' | 'follow';
   params?: ShowReviewListRequest | ShowUserReviewRequest | ShowMyReviewRequest;
->>>>>>> 5dfbc84d52e78e8c94f7abe7d91281e5e8760516
   onLoadMore?: (timestamp: string, rating?: number) => void;
 }
 
