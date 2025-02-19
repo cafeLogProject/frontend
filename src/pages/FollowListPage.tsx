@@ -23,29 +23,20 @@ const FollowListPage = () => {
 		{ id: "following", label: "팔로잉" },
 	];  
 	const {useFollowerList, useFollowingList} = useFollowApi();
-	const [lastFollowId, setLastFollowId] = useState<number|undefined>(undefined);
-	const [lastFollowingId, setLastFollowingId] = useState<number|undefined>(undefined);
-	const {data: followerList, refetch: refetchFollowerList} = useFollowerList(Number(id), { 
-		limit : 10,
-		cursor : lastFollowId? lastFollowId : null,
-	})
-	const {data: followingList, refetch: refetchFollowingList} = useFollowingList(Number(id), { 
-		limit : 10,
-		cursor : lastFollowingId? lastFollowingId : null,
-	})
+	const {data: followerList, fetchNextPage: fetchFollowerNextPage, hasNextPage: hasFollowerNexPage, refetch: refetchFollowerList, isLoading: isFollowerLoading} = useFollowerList(Number(id), { limit : 20 });
+	const {data: followingList, fetchNextPage: fetchFollowingNextPage, hasNextPage: hasFollowingNexPage,refetch: refetchFollowingList, isLoading: isFollowingLoading} = useFollowingList(Number(id), { limit : 20 });
 
 	useEffect(() => {
 		switch (activeTab) {
 			case "follower":
-				setLastFollowId(undefined);			// 스크롤 리셋
-				refetchFollowerList();
+				refetchFollowerList();					// 무한 스크롤 리셋
 				break;
 			case "following":
-				setLastFollowingId(undefined);			// 스크롤 리셋
-				refetchFollowingList();
+				refetchFollowingList();					// 무한 스크롤 리셋
 				break;
 		}
 	}, [activeTab]);
+
 
 	const handleUserSelect = (userId : number) => {
 		navigate(`/userpage/${userId}`);
@@ -55,11 +46,23 @@ const FollowListPage = () => {
     switch (activeTab) {
       case "follower":
         return (
-            <FollowList userList={followerList} onUserSelect={handleUserSelect} />
+        	<FollowList 
+						userList={followerList?.pages.flat() ?? undefined} 
+						onUserSelect={handleUserSelect} 
+						onLoadMore={()=> fetchFollowerNextPage()}
+						hasNextPage={hasFollowerNexPage}
+						isLoading={isFollowerLoading}
+					/>
         );
       case "following":
         return (
-			<FollowList userList={followingList} onUserSelect={handleUserSelect} />
+					<FollowList 
+						userList={followingList?.pages.flat()} 
+						onUserSelect={handleUserSelect} 
+						onLoadMore={()=>fetchFollowingNextPage()}
+						hasNextPage={hasFollowingNexPage}
+						isLoading={isFollowingLoading}
+					/>
         );
       default:
         return null;
