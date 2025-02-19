@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { ReviewItem } from "@/entities/review/ui";
 import { useReviewApi } from "@shared/api/reviews/reviewApi";
-import type { ShowReviewResponse, ShowReviewListRequest, ShowUserReviewRequest } from "@shared/api/reviews/types";
+import type { ShowReviewResponse, ShowReviewListRequest, ShowUserReviewRequest, ShowMyReviewRequest } from "@shared/api/reviews/types";
 import styles from "./ReviewList.module.scss";
 import { useUserApi } from "@shared/api/user/userApi";
 import NoContent from "@/shared/ui/noContent/NoContent";
 
 interface ReviewListProps {
+<<<<<<< HEAD
   type: 'all' | 'my';
   params?: ShowReviewListRequest | ShowUserReviewRequest;
+=======
+  type?: 'all' | 'user' | 'my' | 'follow';  // follow 타입 추가
+  params?: ShowReviewListRequest | ShowUserReviewRequest | ShowMyReviewRequest;
+>>>>>>> 5dfbc84d52e78e8c94f7abe7d91281e5e8760516
   onLoadMore?: (timestamp: string, rating?: number) => void;
 }
 
@@ -19,7 +24,7 @@ const ReviewList = ({ type = 'all', params = { limit: 10 }, onLoadMore }: Review
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreTriggerRef = useRef<HTMLDivElement>(null);
 
-  const { useReviewList, useMyReviews } = useReviewApi();
+  const { useReviewList, useMyReviews, useUserReviews, useFollowingReviews } = useReviewApi();
   const { getMyInfo } = useUserApi();
   const [currentUserId, setCurrentUserId] = useState<number | undefined>();
   
@@ -39,14 +44,28 @@ const ReviewList = ({ type = 'all', params = { limit: 10 }, onLoadMore }: Review
   const reviewListQuery = type === 'all' ? useReviewList({
     ...{sort: "NEW"},
     ...(params as ShowReviewListRequest)
-}) : undefined
+  }) : undefined
+
+  const userReviewsQuery = type === 'user' ? useUserReviews({
+    ...(params as ShowUserReviewRequest),
+  }) : undefined
   
   const myReviewsQuery = type === 'my' ? useMyReviews({
-    ...params as ShowUserReviewRequest
+    ...params as ShowMyReviewRequest
+  }) : undefined;
+
+  const followingReviewsQuery = type === 'follow' ? useFollowingReviews({
+    ...(params as ShowUserReviewRequest),
   }) : undefined;
 
   useEffect(() => {
-    const queryData = type === 'all' ? reviewListQuery?.data : myReviewsQuery?.data;
+    const queryData = 
+      type === 'all' ? reviewListQuery?.data : 
+      type === 'my' ? myReviewsQuery?.data : 
+      type === 'user' ? userReviewsQuery?.data :
+      type === 'follow' ? followingReviewsQuery?.data : 
+      (console.log("type 오류"), undefined);
+  
     if (queryData) {
       if (params.timestamp === new Date(3000, 0, 1).toISOString()) {
         setReviews(queryData);
@@ -55,7 +74,7 @@ const ReviewList = ({ type = 'all', params = { limit: 10 }, onLoadMore }: Review
       }
       setHasMore(queryData.length === params.limit);
     }
-  }, [reviewListQuery?.data, myReviewsQuery?.data]);
+  }, [reviewListQuery?.data, userReviewsQuery?.data, myReviewsQuery?.data, followingReviewsQuery?.data]);
 
   // 백엔드에서 대신 처리해줘서 사용되지 않는 함수. 삭제해도 무방하지만 추후 유틸리티 클래스로 이동할 수도 있음.
   const normalizeTimestamp = (timestamp: string) => {
@@ -82,8 +101,13 @@ const ReviewList = ({ type = 'all', params = { limit: 10 }, onLoadMore }: Review
   }, [hasMore, isLoading, reviews, onLoadMore, type, params]);
 
   useEffect(() => {
-    setIsLoading(reviewListQuery?.isFetching || myReviewsQuery?.isFetching || false);
-  }, [reviewListQuery?.isFetching, myReviewsQuery?.isFetching]);
+    setIsLoading(
+      reviewListQuery?.isFetching || 
+      myReviewsQuery?.isFetching || 
+      followingReviewsQuery?.isFetching || 
+      false
+    );
+  }, [reviewListQuery?.isFetching, myReviewsQuery?.isFetching, followingReviewsQuery?.isFetching]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {

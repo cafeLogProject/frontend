@@ -10,6 +10,7 @@ import type {
   ShowReviewResponse,
   ShowReviewListRequest,
   ShowUserReviewRequest,
+  ShowMyReviewRequest
 } from "./types";
 
 export const useReviewApi = () => {
@@ -104,7 +105,30 @@ export const useReviewApi = () => {
     );
   };
 
-  const useMyReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+  const useUserReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+    const validatedParams = {
+      userId : params.userId,
+      limit: Math.min(Math.max(params.limit || 10, 1), 20),
+      ...(params.timestamp
+        ? {
+            timestamp: params.timestamp?.endsWith("Z")
+              ? params.timestamp.slice(0, -1)
+              : params.timestamp,
+          }
+        : {}),
+    };
+
+    const cleanParams = Object.fromEntries(
+      Object.entries(validatedParams).filter(([_, value]) => value != null)
+    );
+
+    return useApiQuery<ShowReviewResponse[]>(
+      ["reviews", "user", validatedParams],
+      `/api/reviews/user?${new URLSearchParams(cleanParams as any).toString()}`
+    );
+  };
+
+  const useMyReviews = (params: ShowMyReviewRequest = { limit: 10 }) => {
     const validatedParams = {
       limit: Math.min(Math.max(params.limit || 10, 1), 20),
       ...(params.timestamp
@@ -123,6 +147,28 @@ export const useReviewApi = () => {
     return useApiQuery<ShowReviewResponse[]>(
       ["reviews", "my", validatedParams],
       `/api/reviews/my?${new URLSearchParams(cleanParams as any).toString()}`
+    );
+  };
+
+  const useFollowingReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+    const validatedParams = {
+      limit: Math.min(Math.max(params.limit || 10, 1), 20),
+      ...(params.timestamp
+        ? {
+            timestamp: params.timestamp?.endsWith("Z")
+              ? params.timestamp.slice(0, -1)
+              : params.timestamp,
+          }
+        : {}),
+    };
+
+    const cleanParams = Object.fromEntries(
+      Object.entries(validatedParams).filter(([_, value]) => value != null)
+    );
+
+    return useApiQuery<ShowReviewResponse[]>(
+      ["reviews", "following", validatedParams],
+      `/api/reviews/follow?${new URLSearchParams(cleanParams as any).toString()}`
     );
   };
 
@@ -166,8 +212,22 @@ export const useReviewApi = () => {
     []
   );
 
-  const getMyReviews = useCallback(
+  const getUserReviews = useCallback(
     async (params: ShowUserReviewRequest = { limit: 10 }) => {
+      try {
+        const query = useUserReviews(params);
+        const response = await query.refetch();
+        return response.data || [];
+      } catch (error) {
+        console.error("내 리뷰 목록 조회 중 오류 발생:", error);
+        throw error;
+      }
+    },
+    []
+  );
+
+  const getMyReviews = useCallback(
+    async (params: ShowMyReviewRequest = { limit: 10 }) => {
       try {
         const query = useMyReviews(params);
         const response = await query.refetch();
@@ -186,10 +246,13 @@ export const useReviewApi = () => {
 
     useCafeReviews,
     useReviewList,
+    useUserReviews,
     useMyReviews,
+    useFollowingReviews,
 
     getCafeReviews,
     getReviewList,
+    getUserReviews,
     getMyReviews,
 
     deleteReview,
