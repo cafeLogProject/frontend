@@ -150,6 +150,28 @@ export const useReviewApi = () => {
     );
   };
 
+  const useFollowingReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+    const validatedParams = {
+      limit: Math.min(Math.max(params.limit || 10, 1), 20),
+      ...(params.timestamp
+        ? {
+            timestamp: params.timestamp?.endsWith("Z")
+              ? params.timestamp.slice(0, -1)
+              : params.timestamp,
+          }
+        : {}),
+    };
+
+    const cleanParams = Object.fromEntries(
+      Object.entries(validatedParams).filter(([_, value]) => value != null)
+    );
+
+    return useApiQuery<ShowReviewResponse[]>(
+      ["reviews", "following", validatedParams],
+      `/api/reviews/follow?${new URLSearchParams(cleanParams as any).toString()}`
+    );
+  };
+
   /**
    * 이하 레거시 호환을 위한 코드
    */
@@ -226,6 +248,7 @@ export const useReviewApi = () => {
     useReviewList,
     useUserReviews,
     useMyReviews,
+    useFollowingReviews,
 
     getCafeReviews,
     getReviewList,
