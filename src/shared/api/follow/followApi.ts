@@ -7,6 +7,7 @@ import {
 	useInfiniteQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { apiInstance } from "../base";
 
 export const useFollowApi = () => {
 	const queryClient = useQueryClient();
@@ -80,7 +81,7 @@ export const useFollowApi = () => {
 	// };
 
 	// 팔로워 리스트 조회 (cursor 기반 무한스크롤)
-	const useFollowerList = (userId: number, params: UserFollowRequest = {
+	const useInfiniteFollowerList = (userId: number, params: UserFollowRequest = {
 		limit : 10
 	}) => {
 		if (!userId) {
@@ -91,12 +92,12 @@ export const useFollowApi = () => {
 			`/api/users/${userId}/follower?limit=${params.limit}`,	//cursor 파라미터값은 useApiInfiniteQuery에서 자동설정됨
 			(lastPage: UserFollowResponse[]) => {
 				return (!lastPage || lastPage.length === 0) ? null : (lastPage.at(-1)?.followId ?? null);
-			}
+			},
 		);
 	};
 
 	// 팔로잉 리스트 조회 (cursor 기반 무한스크롤)
-	const useFollowingList = (userId: number, params: UserFollowRequest = {
+	const useInfiniteFollowingList = (userId: number, params: UserFollowRequest = {
 		limit : 10
 	}) => {
 		if (!userId) {
@@ -111,10 +112,62 @@ export const useFollowApi = () => {
 		);
 	};
 
+	// 팔로워 리스트 조회 (cursor 기반 무한스크롤) (초기 실행시 쿼리 자동 실행하지 않도록 설정)
+	const useLazyInfiniteFollowerList = (userId: number, params: UserFollowRequest = {
+		limit : 10
+	}) => {
+		if (!userId) {
+			console.log("useFollowerList 오류 : userId 존재x");
+		}
+
+		return useInfiniteQuery<UserFollowResponse[]>({
+			queryKey : ['follower', userId, params],
+			queryFn: async ({ pageParam = null}) => {
+				const url = `/api/users/${userId}/follower?limit=${params.limit}`;
+				return pageParam 
+					? await apiInstance.get<UserFollowResponse[]>(`${url}&cursor=${pageParam}`) 
+					: await apiInstance.get<UserFollowResponse[]>(`${url}`);
+			},
+			getNextPageParam : (lastPage: UserFollowResponse[]) => {
+				return (!lastPage || lastPage.length === 0) ? null : (lastPage.at(-1)?.followId ?? null);
+			},
+			throwOnError: true,
+			initialPageParam: null,
+			enabled: false, // 쿼리를 자동 실행하지 않도록 설정
+		});
+	}
+
+		// 팔로잉 리스트 조회 (cursor 기반 무한스크롤) (초기 실행시 쿼리 자동 실행하지 않도록 설정)
+		const useLazyInfiniteFollowingList = (userId: number, params: UserFollowRequest = {
+			limit : 10
+		}) => {
+			if (!userId) {
+				console.log("useFollowerList 오류 : userId 존재x");
+			}
+	
+			return useInfiniteQuery<UserFollowResponse[]>({
+				queryKey : ['following', userId, params],
+				queryFn: async ({ pageParam = null}) => {
+					const url = `/api/users/${userId}/following?limit=${params.limit}`;
+					return pageParam 
+						? await apiInstance.get<UserFollowResponse[]>(`${url}&cursor=${pageParam}`) 
+						: await apiInstance.get<UserFollowResponse[]>(`${url}`);
+				},
+				getNextPageParam : (lastPage: UserFollowResponse[]) => {
+					return (!lastPage || lastPage.length === 0) ? null : (lastPage.at(-1)?.followId ?? null);
+				},
+				throwOnError: true,
+				initialPageParam: null,
+				enabled: false, // 쿼리를 자동 실행하지 않도록 설정
+			});
+		}
+
 	return {
 		useFollow,
 		useUnfollow,
-		useFollowerList,
-		useFollowingList,
+		useInfiniteFollowerList,
+		useInfiniteFollowingList,
+		useLazyInfiniteFollowerList,
+		useLazyInfiniteFollowingList
 	};
 }
