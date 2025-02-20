@@ -131,7 +131,7 @@ const CafeInfo = () => {
         state: { from: `/cafe/${cafeInfo?.id}` }
       });
       setShouldNavigate(false);
-    } 
+    }
   }, [shouldNavigate, navigate, cafeInfo]);
 
   if (isLoading || reviewsQuery.isLoading) {
