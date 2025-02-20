@@ -5,6 +5,8 @@ import type { ShowReviewResponse, ShowReviewListRequest, ShowUserReviewRequest, 
 import styles from "./ReviewList.module.scss";
 import { useUserApi } from "@shared/api/user/userApi";
 import NoContent from "@/shared/ui/noContent/NoContent";
+import Lottie from 'lottie-react';
+import spinnerAnimation from '@shared/assets/images/spinner.json';
 
 interface ReviewListProps {
   type?: 'all' | 'user' | 'my' | 'follow';
@@ -131,8 +133,12 @@ const ReviewList = ({ type = 'all', params = { limit: 10 }, onLoadMore }: Review
   return (
     <div>
       {isLoading && reviews.length === 0 ? (
-        <div className={styles.loadingIndicator}>
-          로딩 중...
+        <div className={`${styles.loadingIndicator} ${styles['loadingIndicator--center']}`}>
+          <Lottie
+            animationData={spinnerAnimation}
+            style={{ width: 40, height: 40 }}
+            loop={true}
+          />
         </div>
       ) : reviews.length === 0 ? (
         <NoContent 
@@ -158,13 +164,17 @@ const ReviewList = ({ type = 'all', params = { limit: 10 }, onLoadMore }: Review
             <div 
               ref={loadMoreTriggerRef}
               className={styles.loadMoreTrigger}
-              style={{ height: '20px', margin: '20px 0' }}
+              style={{ height: '1px', margin: '8px 0' }}
             />
           )}
           
           {isLoading && (
-            <div className={styles.loadingIndicator}>
-              로딩 중...
+            <div className={`${styles.loadingIndicator} ${styles['loadingIndicator--bottom']}`}>
+              <Lottie
+                animationData={spinnerAnimation}
+                style={{ width: 40, height: 40 }}
+                loop={true}
+              />
             </div>
           )}
         </div>
