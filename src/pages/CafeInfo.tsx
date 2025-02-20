@@ -14,6 +14,8 @@ import { useReviewApi } from "@shared/api/reviews/reviewApi";
 import type { ShowReviewResponse } from "@shared/api/reviews/types";
 import { useReviewDraftApi } from "@shared/api/reviews/reviewDraftApi";
 import { useFavoriteApi } from "@shared/api/favorite";
+import Lottie from 'lottie-react';
+import spinnerAnimation from '@shared/assets/images/spinner.json';
 
 const CafeInfo = () => {
   const { id } = useParams();
@@ -133,7 +135,15 @@ const CafeInfo = () => {
   }, [shouldNavigate, navigate, cafeInfo]);
 
   if (isLoading || reviewsQuery.isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <div className={`${styles.loadingIndicator} ${styles['loadingIndicator--center']}`}>
+        <Lottie
+          animationData={spinnerAnimation}
+          style={{ width: 40, height: 40 }}
+          loop={true}
+        />
+      </div>
+    );
   }
 
   if (error || !cafeInfo || reviewsQuery.isError) {
