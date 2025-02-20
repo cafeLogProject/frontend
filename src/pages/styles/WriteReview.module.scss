@@ -2,13 +2,13 @@
 @use "@app/styles/abstracts/variables" as var;
 @use "@app/styles/abstracts/mixins";
 
-$bottom-nav-height: 34px;
-$button-height: 56px;
-$spacing: 32px;
+$bottom-nav-height: 34px; // 버튼 하단 여백
+$button-height: 56px; // 버튼 높이
+$spacing: 32px; // 버튼 상단 여백
 
 .container {
-  // padding-bottom: calc(#{$bottom-nav-height} + #{$button-height} + #{$spacing});
-  padding-bottom: calc(#{$button-height});
+  padding-bottom: calc(#{$bottom-nav-height} + #{$button-height} + #{$spacing});
+  // padding-bottom: calc(#{$button-height});
   position: relative;
   z-index: 1;
 
