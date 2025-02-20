@@ -1,4 +1,4 @@
-import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, type QueryKey, useInfiniteQuery, UseInfiniteQueryOptions, InfiniteData } from '@tanstack/react-query'
+import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, type QueryKey, useInfiniteQuery } from '@tanstack/react-query'
 // import { useMutation, useSuspenseQuery, type UseMutationOptions, type UseSuspenseQueryOptions, type QueryKey } from '@tanstack/react-query'
 import { apiInstance } from '@shared/api/base'
 import type { AxiosError } from 'axios'
@@ -52,7 +52,6 @@ export const useApiInfiniteQuery = <TData>(
   queryKey: QueryKey,
   endpoint: string | (() => string),
   getNextPageParam: (lastPage: any, allPages: any) => number | null,
-  options?: any
 ) => {
   return useInfiniteQuery<TData>({
     queryKey,
@@ -66,6 +65,5 @@ export const useApiInfiniteQuery = <TData>(
     throwOnError: true,
     getNextPageParam,
     initialPageParam: null,
-    ...options,
   });
 };
