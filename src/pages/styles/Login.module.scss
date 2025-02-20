@@ -1,5 +1,5 @@
-@use "/src/app/styles/abstracts/mixins";
-@use "/src/app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
+@use "@app/styles/abstracts/variables" as var;
 
 .loginWrap {
   display: flex;
