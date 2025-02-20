@@ -51,7 +51,7 @@ export const useApiMutation = <TData, TVariables>(
 export const useApiInfiniteQuery = <TData>(
   queryKey: QueryKey,
   endpoint: string | (() => string),
-  getNextPageParam: (lastPage: any, allPages: any) => number | null,
+  getNextPageParam: (lastPage: any, allPages: any) => number | null
 ) => {
   return useInfiniteQuery<TData>({
     queryKey,
