@@ -100,7 +100,7 @@ const MyPage = () => {
           <>
             {favorites.length === 0 ? 
               <NoContent 
-                logo="noResult"
+                logo="noReview"
                 mainContent="아직 스크랩한 장소가 없어요"
                 subContent="카페를 스크랩하면 나만의 장소들을 모아볼 수 있어요"
               />

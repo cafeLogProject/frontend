@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import styles from "./ReviewerInfo.module.scss";
 import SimpleStarRating from "@/widgets/simpleStarRating/ui/SimpleStarRating";
 import ReviewMore from "../reviewMore/ReviewMore";
-import profileIcon from "@shared/assets/images/profile.svg";
+import profileIcon from "@shared/assets/images/profile/profile.svg";
 import moreIcon from "@shared/assets/images/more.svg";
 import { useProfileImageApi } from "@/shared/api/user/useProfileImagesApi";
 import { useNavigate } from "react-router-dom";
