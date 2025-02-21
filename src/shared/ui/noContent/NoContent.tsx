@@ -15,13 +15,14 @@ const NoContent = ({
 } : NoContentProps) => {
 
   return (
-    <div>
+    <div className={styles.noContent}>
       <img 
+        className={styles.logo}
         src= {logo === "noResult"? noResultIcon : noReviewIcon} 
         alt="컨텐츠 없음"
       /> 
-      <p>{mainContent}</p>
-      <p>{subContent}</p>
+      <p className={styles.mainContent}>{mainContent}</p>
+      <p className={styles.subContent}>{subContent}</p>
     </div>
   );
 };
