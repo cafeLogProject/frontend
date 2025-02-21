@@ -62,3 +62,24 @@
   visibility: hidden;
   pointer-events: none;
 }
+
+.closeButton {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1002;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  
+  img {
+    width: 24px;
+    height: 24px;
+    filter: invert(1);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

@@ -65,7 +65,7 @@ const PhotoSwiper: FC<PhotoSwiperProps> = ({
             {showChips && cafeName && (
               <div
                 className={styles.chipsWrap}
-                onClick={(e) => e.stopPropagation()} // Add this line
+                onClick={(e) => e.stopPropagation()}
               >
                 <Chips cafeName={cafeName} cafeId={cafeId} />
               </div>

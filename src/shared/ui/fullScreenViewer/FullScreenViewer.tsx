@@ -5,6 +5,7 @@ import type { Swiper as SwiperType } from "swiper";
 import styles from "./FullScreenViewer.module.scss";
 import ArrowLeft from "@shared/assets/images/photo/nav-arrow-left.svg";
 import ArrowRight from "@shared/assets/images/photo/nav-arrow-right.svg";
+import CloseIcon from "@shared/assets/images/photo/close.svg";
 
 interface FullScreenViewerProps {
   images: string[];
@@ -27,6 +28,15 @@ const FullScreenViewer = ({
 
   return (
     <div className={styles.viewer} onClick={onClose}>
+      <button
+        className={styles.closeButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+      >
+        <img src={CloseIcon} alt="Close" />
+      </button>
       <Swiper
         initialSlide={initialIndex}
         className={styles.swiper}
@@ -53,7 +63,12 @@ const FullScreenViewer = ({
         </button>
         {images.map((url) => (
           <SwiperSlide key={url}>
-            <img src={url} className={styles.image} alt="" onClick={e => e.stopPropagation()}/>
+            <img
+              src={url}
+              className={styles.image}
+              alt=""
+              onClick={(e) => e.stopPropagation()}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
