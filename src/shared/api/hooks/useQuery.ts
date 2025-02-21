@@ -2,6 +2,7 @@ import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, t
 // import { useMutation, useSuspenseQuery, type UseMutationOptions, type UseSuspenseQueryOptions, type QueryKey } from '@tanstack/react-query'
 import { apiInstance } from '@shared/api/base'
 import type { AxiosError } from 'axios'
+import { UseApiOptions } from './useApi'
 
 export type ApiError = {
   message: string
@@ -10,6 +11,22 @@ export type ApiError = {
 }
 
 export const useApiQuery = <TData>(
+  queryKey: QueryKey,
+  endpoint: string | (() => string),
+  options?: UseQueryOptions<TData, ApiError>
+) => {
+  return useQuery<TData, ApiError>({
+    queryKey,
+    queryFn: async () => {
+      const url = typeof endpoint === "function" ? endpoint() : endpoint;
+      const response = await apiInstance.get<TData>(url);
+      return response
+    },
+    ...options,
+  })
+}
+
+export const useApiSuspenseQuery = <TData>(
   queryKey: QueryKey,
   endpoint: string | (() => string),
   options?: UseSuspenseQueryOptions<TData, ApiError>
