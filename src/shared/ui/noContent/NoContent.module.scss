@@ -1,0 +1,27 @@
+@use "@app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
+
+.noContent {
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 120px;
+
+  .logo {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+
+  .mainContent {
+    @include mixins.apply-text-style(b1_bold);
+    margin-bottom: 2px;
+    color: var.$semantic-text-icon-primary;
+  }
+
+  .subContent {
+    @include mixins.apply-text-style(b2_regular);
+    color: var.$semantic-text-icon-secondary;
+  }
+}
