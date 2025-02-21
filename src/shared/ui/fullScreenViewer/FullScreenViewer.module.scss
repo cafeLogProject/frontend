@@ -21,3 +21,36 @@
   height: 100%;
   object-fit: contain;
 }
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 10px;
+  
+  &:focus {
+    outline: none;
+  }
+  
+  img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.prevButton {
+  left: 20px;
+}
+
+.nextButton {
+  right: 20px;
+}
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
