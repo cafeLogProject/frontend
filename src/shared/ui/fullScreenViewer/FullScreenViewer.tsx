@@ -53,7 +53,7 @@ const FullScreenViewer = ({
         </button>
         {images.map((url) => (
           <SwiperSlide key={url}>
-            <img src={url} className={styles.image} alt="" />
+            <img src={url} className={styles.image} alt="" onClick={e => e.stopPropagation()}/>
           </SwiperSlide>
         ))}
       </Swiper>
