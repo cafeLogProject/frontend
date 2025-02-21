@@ -36,6 +36,8 @@ import TestError from "@/shared/components/TestError";
 import GeneralErrorPage from "@/shared/components/GeneralErrorPage";
 import UserPage from "@/pages/UserPage";
 import { useProfileEditStore } from "@shared/store/useProfileEditStore";
+import { Suspense } from "react";
+import Loading from "@/shared/ui/loading/Loading";
 
 export const AppRouter = () => {
   const { isFromFooter } = useNavigationStore();
@@ -157,7 +159,11 @@ export const AppRouter = () => {
               bgColor="rgb(249, 248, 246)"
               rightElement={<NavBtn />}
             >
-              <MyPage />
+              <Suspense fallback={
+                <Loading />
+              }>
+                <MyPage />
+              </Suspense>
             </MainLayout>
           }
           handle={{ crumb: <Link to="/mypage">마이페이지</Link> }}
@@ -195,7 +201,11 @@ export const AppRouter = () => {
               showBackButton={true}
               bgColor="rgb(249, 248, 246)"
             >
-              <UserPage />
+              <Suspense fallback={
+                <Loading />
+              }>
+                <UserPage />
+              </Suspense>
             </MainLayout>
           }
           handle={{ crumb: <Link to="/user">유저페이지</Link> }}
