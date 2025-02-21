@@ -22,6 +22,7 @@ export const useApiQuery = <TData>(
       const response = await apiInstance.get<TData>(url);
       return response
     },
+    throwOnError: true,
     ...options,
   })
 }
