@@ -1,6 +1,6 @@
 import { useReviewImageApi } from "@/shared/api/images";
 import styles from "./FollowListItem.module.scss";
-import defaultProfile from "@shared/assets/images/profile.svg";
+import defaultProfile from "@shared/assets/images/profile/profile.svg";
 import { UserFollowResponse } from "@/shared/api/follow/types";
 import FollowBtn from "../profile/ui/followBtn/FollowBtn";
 
