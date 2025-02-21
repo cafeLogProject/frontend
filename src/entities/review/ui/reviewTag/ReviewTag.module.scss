@@ -6,4 +6,10 @@
   background-color: var.$primitive-secondary-brown50;
   border-radius: var.$radius-radius-sm;
   @include mixins.apply-text-style(l_regular);
+  height: 24px;
+}
+
+.icon {
+  width: 15px;
+  height: 15px;
 }
