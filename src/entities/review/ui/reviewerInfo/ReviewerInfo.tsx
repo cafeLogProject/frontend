@@ -3,6 +3,7 @@ import styles from "./ReviewerInfo.module.scss";
 import SimpleStarRating from "@/widgets/simpleStarRating/ui/SimpleStarRating";
 import ReviewMore from "../reviewMore/ReviewMore";
 import profileIcon from "@shared/assets/images/profile/profile.svg";
+import myProfileIcon from "@shared/assets/images/profile/myProfile.svg";
 import moreIcon from "@shared/assets/images/more.svg";
 import { useProfileImageApi } from "@/shared/api/user/useProfileImagesApi";
 import { useNavigate } from "react-router-dom";
@@ -101,7 +102,7 @@ const ReviewerInfo = ({
         <img
           onClick={()=>{navigate(`/userpage/${userId}`)}}
           className={styles.reviewerInfo__profilePicture}
-          src={profileImageUrl || profileIcon}
+          src={profileImageUrl || (isOwner ? myProfileIcon : profileIcon)}
           alt={`${nickname}의 프로필`}
         />
         <div className={styles.reviewerInfo__details}>
