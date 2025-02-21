@@ -1,4 +1,4 @@
-import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, type QueryKey, useInfiniteQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, type QueryKey, useInfiniteQuery, UseSuspenseQueryOptions, useSuspenseQuery } from '@tanstack/react-query'
 // import { useMutation, useSuspenseQuery, type UseMutationOptions, type UseSuspenseQueryOptions, type QueryKey } from '@tanstack/react-query'
 import { apiInstance } from '@shared/api/base'
 import type { AxiosError } from 'axios'
@@ -12,16 +12,15 @@ export type ApiError = {
 export const useApiQuery = <TData>(
   queryKey: QueryKey,
   endpoint: string | (() => string),
-  options?: UseQueryOptions<TData, ApiError>
+  options?: UseSuspenseQueryOptions<TData, ApiError>
 ) => {
-  return useQuery<TData, ApiError>({
+  return useSuspenseQuery<TData, ApiError>({
     queryKey,
     queryFn: async () => {
       const url = typeof endpoint === "function" ? endpoint() : endpoint;
       const response = await apiInstance.get<TData>(url);
       return response
     },
-    throwOnError: true,
     ...options,
   })
 }
