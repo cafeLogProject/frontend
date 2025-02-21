@@ -5,7 +5,7 @@ import type {
   UserUpdateRequest,
   IsExistNicknameResponse,
 } from "./types";
-import { useApiQuery } from "@shared/api/hooks/useQuery";
+import { useApiQuery, useApiSuspenseQuery } from "@shared/api/hooks/useQuery";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from 'react';
 
@@ -14,14 +14,14 @@ export const useUserApi = () => {
   const { get, patch, isLoading, error } = useApi();
 
   const useUserInfo = (id : number) => {
-    return useApiQuery<OtherUserInfoRes>(
+    return useApiSuspenseQuery<OtherUserInfoRes>(
       ["user", id],
       () => `/api/users/${id}`,
     );
   };
 
   const useMyInfo = () => {
-    return useApiQuery<UserInfoResponse>(
+    return useApiSuspenseQuery<UserInfoResponse>(
       ["myInfo"],
       () => `/api/my/profile`,
     );
