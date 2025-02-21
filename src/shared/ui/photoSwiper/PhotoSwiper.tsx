@@ -15,11 +15,11 @@ interface PhotoSwiperProps {
   cafeId?: number;
 }
 
-const PhotoSwiper: FC<PhotoSwiperProps> = ({ 
-  imageIds, 
+const PhotoSwiper: FC<PhotoSwiperProps> = ({
+  imageIds,
   showChips = true,
   cafeName = "",
-  cafeId
+  cafeId,
 }) => {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [initialSlideIndex, setInitialSlideIndex] = useState(0);
@@ -49,21 +49,24 @@ const PhotoSwiper: FC<PhotoSwiperProps> = ({
         slidesPerView={1}
       >
         {imageIds.map((imageId, index) => (
-          <SwiperSlide 
-            key={imageId} 
+          <SwiperSlide
+            key={imageId}
             className={styles.swiperSlide}
             onClick={() => {
               setInitialSlideIndex(index);
               setViewerOpen(true);
             }}
           >
-            <img 
+            <img
               src={getImageUrl(imageId)}
               alt="Review"
               className={styles.image}
             />
             {showChips && cafeName && (
-              <div className={styles.chipsWrap}>
+              <div
+                className={styles.chipsWrap}
+                onClick={(e) => e.stopPropagation()} // Add this line
+              >
                 <Chips cafeName={cafeName} cafeId={cafeId} />
               </div>
             )}
