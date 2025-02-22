@@ -13,28 +13,19 @@ export type ApiError = {
   data?: any
 }
 
-export const useApiQuery = <TData>(
+export const useApiQuery = <TData, ApiError>(
   queryKey: QueryKey,
   endpoint: string | (() => string),
   options?: UseQueryOptions<TData, ApiError>,
-  errorHandling?: 'toast' | 'fallback', 
-  errorMsg?: string
 ) => {
-  return useQuery<TData>({
+  return useQuery<TData, ApiError>({
     queryKey,
     queryFn: async () => {
       const url = typeof endpoint === "function" ? endpoint() : endpoint;
       const response = await apiInstance.get<TData>(url);
       return response
     },
-    onError: (error) => {
-      if (errorHandling === 'toast') {
-        showErrorToast(errorMsg);
-      } else {
-        throw error;  // 에러 바운더리로 넘김
-      }
-    },
-    // throwOnError: true,
+    throwOnError: true,
     ...options,
   })
 }
