@@ -1,17 +1,14 @@
 import { toast } from "react-toastify";
 import checked from "@/shared/assets/images/common/checked.svg";
+import styles from "./CustomToast.module.scss";
+import yellowAlert from "@/shared/assets/images/common/yellowAlert.svg";
 
-
-/**
- * 에러 토스트 표시
- * @param message - 표시할 메시지
- */
 export const showErrorToast = (message?: string) => {
-  toast.error(
+  toast(
     <div className="toast-content">
       <div className="toast-content-left">
-        {/* <img src={checked} /> */}
-        <span>{message || "알 수 없는 에러 발생"}</span>
+        <img src={yellowAlert} />
+        <span className={styles.toastContent}>{message || "알 수 없는 에러 발생"}</span>
       </div>
     </div>,
     {

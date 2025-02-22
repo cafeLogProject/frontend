@@ -16,16 +16,25 @@ export type ApiError = {
 export const useApiQuery = <TData>(
   queryKey: QueryKey,
   endpoint: string | (() => string),
-  options?: UseQueryOptions<TData, ApiError>
+  options?: UseQueryOptions<TData, ApiError>,
+  errorHandling?: 'toast' | 'fallback', 
+  errorMsg?: string
 ) => {
-  return useQuery<TData, ApiError>({
+  return useQuery<TData>({
     queryKey,
     queryFn: async () => {
       const url = typeof endpoint === "function" ? endpoint() : endpoint;
       const response = await apiInstance.get<TData>(url);
       return response
     },
-    throwOnError: true,
+    onError: (error) => {
+      if (errorHandling === 'toast') {
+        showErrorToast(errorMsg);
+      } else {
+        throw error;  // 에러 바운더리로 넘김
+      }
+    },
+    // throwOnError: true,
     ...options,
   })
 }
@@ -49,13 +58,13 @@ export const useApiSuspenseQuery = <TData>(
 export const useApiMutation = <TData, TVariables>(
   url: string,
   method: string,
+  errorHandling: 'toast' | 'fallback', 
   options?: {
     urlTransform?: (variables: TVariables) => string;
     onMutate?: (variables: TVariables) => Promise<any>;
-    // onError?: (error: any, variables: TVariables, context: any) => void;
+    onError?: (error: any, variables: TVariables, context: any) => void;
   },
-  errorHandling?: 'toast' | 'fallback', 
-  errorMsg?: string
+  toastErrorMsg?: string,
 ) => {
   return useMutation<TData, AxiosError, TVariables>({
     mutationFn: async (variables) => {
@@ -65,14 +74,14 @@ export const useApiMutation = <TData, TVariables>(
       const response = await apiInstance[method]<TData>(transformedUrl, variables)
       return response
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
       if (errorHandling === 'toast') {
-        showErrorToast(errorMsg);
+        showErrorToast(toastErrorMsg);
       } else {
         throw error;  // 에러 바운더리로 넘김
       }
+      options?.onError?.(error, variables, context)  // options.onError가 있다면 실행
     }
-    // throwOnError: true   //throwOnError 사용x
   });
 };
 

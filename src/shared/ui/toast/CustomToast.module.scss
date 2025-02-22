@@ -1,0 +1,8 @@
+@use "@app/styles/abstracts/variables" as var;
+@use "@app/styles/abstracts/mixins";
+
+
+.toastContent {
+  @include mixins.apply-text-style(b1_bold);
+  color: var.$primitive-system-white;
+}
