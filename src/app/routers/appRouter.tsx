@@ -38,6 +38,7 @@ import UserPage from "@/pages/UserPage";
 import { useProfileEditStore } from "@shared/store/useProfileEditStore";
 import { Suspense } from "react";
 import Loading from "@/shared/ui/loading/Loading";
+import Toast from "@/shared/ui/toast/Toast";
 
 export const AppRouter = () => {
   const { isFromFooter } = useNavigationStore();

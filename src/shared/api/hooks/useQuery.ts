@@ -3,6 +3,9 @@ import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, t
 import { apiInstance } from '@shared/api/base'
 import type { AxiosError } from 'axios'
 import { UseApiOptions } from './useApi'
+import Toast from '@/shared/ui/toast/Toast'
+import { toast } from 'react-toastify'
+import { showErrorToast } from '@/shared/ui/toast/CustomToast'
 
 export type ApiError = {
   message: string
@@ -10,10 +13,10 @@ export type ApiError = {
   data?: any
 }
 
-export const useApiQuery = <TData>(
+export const useApiQuery = <TData, ApiError>(
   queryKey: QueryKey,
   endpoint: string | (() => string),
-  options?: UseQueryOptions<TData, ApiError>
+  options?: UseQueryOptions<TData, ApiError>,
 ) => {
   return useQuery<TData, ApiError>({
     queryKey,
@@ -46,11 +49,13 @@ export const useApiSuspenseQuery = <TData>(
 export const useApiMutation = <TData, TVariables>(
   url: string,
   method: string,
+  errorHandling: 'toast' | 'fallback', 
   options?: {
     urlTransform?: (variables: TVariables) => string;
     onMutate?: (variables: TVariables) => Promise<any>;
     onError?: (error: any, variables: TVariables, context: any) => void;
-  }
+  },
+  toastErrorMsg?: string,
 ) => {
   return useMutation<TData, AxiosError, TVariables>({
     mutationFn: async (variables) => {
@@ -60,7 +65,14 @@ export const useApiMutation = <TData, TVariables>(
       const response = await apiInstance[method]<TData>(transformedUrl, variables)
       return response
     },
-    throwOnError: true
+    onError: (error, variables, context) => {
+      if (errorHandling === 'toast') {
+        showErrorToast(toastErrorMsg);
+      } else {
+        throw error;  // 에러 바운더리로 넘김
+      }
+      options?.onError?.(error, variables, context)  // options.onError가 있다면 실행
+    }
   });
 };
 

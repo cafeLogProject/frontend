@@ -16,57 +16,64 @@ export const useFollowApi = () => {
 	const useFollow = useApiMutation<
 		FollowResponse, 
 		{id : number}
-	>( "/api/follow/:id", "post", {
-		urlTransform: ({ id }) => `/api/follow/${id}`,
+	>( "/api/follow/:id", 
+		"post", 
+		'toast', 
+		{urlTransform: ({ id }) => `/api/follow/${id}`,
 		onMutate: async ( variables ) => {
-			// 이전 상태 백업
+      // 이전 상태 백업
 			const previousFollow = queryClient.getQueryData<FollowResponse>(['follow', variables.id]);
-
+      
 			// Ensure previousFollow exists before spreading
 			if (previousFollow) {
-				// 낙관적 업데이트
+        // 낙관적 업데이트
 				queryClient.setQueryData(['follow', variables.id], {
-						...previousFollow,
+          ...previousFollow,
 				});
 			}
-
+      
 			return { previousFollow };
 		},
 		onError: (err, variables, context) => {
-			if (context?.previousFollow) {
-				// 에러시 롤백
+      if (context?.previousFollow) {
+        // 에러시 롤백
 				queryClient.setQueryData(['follow', variables.id], context.previousFollow);
 			}
-		}
-	});
+		}},
+    "알 수 없는 오류로 인해 팔로우 실패했습니다",
+	);
 
 	// 특정 유저 언팔로우
 	const useUnfollow = useApiMutation<
 		FollowResponse, 
 		{id : number}
-	>( "/api/follow/:id", "delete", {
-		urlTransform: ({ id }) => `/api/follow/${id}`,
+	>( 
+    "/api/follow/:id", 
+    "delete", 
+    'toast', 
+    { urlTransform: ({ id }) => `/api/follow/${id}`,
 		onMutate: async ( variables ) => {
-			// 이전 상태 백업
+      // 이전 상태 백업
 			const previousFollow = queryClient.getQueryData<FollowResponse>(['follow', variables.id]);
-
+      
 			// Ensure previousFollow exists before spreading
 			if (previousFollow) {
-				// 낙관적 업데이트
+        // 낙관적 업데이트
 				queryClient.setQueryData(['follow', variables.id], {
-						...previousFollow,
+          ...previousFollow,
 				});
 			}
-
+      
 			return { previousFollow };
 		},
 		onError: (err, variables, context) => {
-			if (context?.previousFollow) {
-				// 에러시 롤백
+      if (context?.previousFollow) {
+        // 에러시 롤백
 				queryClient.setQueryData(['follow', variables.id], context.previousFollow);
 			}
-		}
-	});
+		}},
+    "알 수 없는 오류로 인해 언팔로우 실패했습니다",
+	);
 
 	// // 팔로워 리스트 조회 (useQuery 버전)
 	// const useFollowerList = (userId: number, params: UserFollowRequest = {
