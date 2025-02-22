@@ -11,14 +11,19 @@ import profileIconOn from "@shared/assets/images/nav/profile-on.svg";
 const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { setIsFromFooter } = useNavigationStore();
+  const { isFromFooter, setIsFromFooter } = useNavigationStore();
 
   const handleSearchClick = () => {
     setIsFromFooter(true);
     navigate("/search");
   };
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === "/search") {
+      return location.pathname === path && isFromFooter;
+    }
+    return location.pathname === path;
+  };
 
   return (
     <footer className={styles.footer}>
