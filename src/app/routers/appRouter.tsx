@@ -105,7 +105,7 @@ export const AppRouter = () => {
               showHeader={true}
               showFooter={true}
               showBackButton={true}
-              headerTitle="장소 검색"
+              headerTitle="검색"
               rightElement={!isFromFooter ? <DraftCounter /> : null}
             >
               <CafeSearch />

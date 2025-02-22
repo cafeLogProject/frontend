@@ -1,3 +1,6 @@
+@use "@app/styles/abstracts/mixins";
+@use "@app/styles/abstracts/variables" as var;
+
 .searchContainer {
   width: 100%;
   position: relative;
@@ -9,39 +12,38 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   height: 40px;
+  padding-left: 12px;
+  gap: 12px;
+  border-radius: 8px;
+  background-color: #f9f8f6;
 }
 
 .searchIcon {
-  position: absolute;
-  left: 8px;
-  width: 16px;
-  height: 16px;
-  color: #9CA3AF;
+  width: 18px;
+  height: 18px;
+  color: #9ca3af;
 }
 
 .searchInput {
   width: 100%;
   height: 40px;
-  padding: 8px;
-  padding-left: 32px;
-  border-radius: 8px;
-  background-color: #F9F8F6;
-  color: #374151;
+  background-color: transparent;
+  @include mixins.apply-text-style(b1_regular);
+  color: var.$primitive-secondary-brown500;
   outline: none;
   border: none;
+
+  &::placeholder {
+    @include mixins.apply-text-style(b1_regular);
+    color: var.$primitive-secondary-brown500;
+  }
 }
 
 .searchInput:focus {
   outline: none;
 }
-
-.searchInput::placeholder {
-  color: #9CA3AF;
-}
-
 
 .searchInput::-webkit-search-decoration,
 .searchInput::-webkit-search-cancel-button,
@@ -59,12 +61,12 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #9CA3AF;
+  color: #9ca3af;
   padding: 0.25rem;
 }
 
 .clearButton:hover {
-  color: #4B5563;
+  color: #4b5563;
 }
 
 .clearIcon {

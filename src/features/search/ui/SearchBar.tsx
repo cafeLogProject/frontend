@@ -24,7 +24,7 @@ export const SearchBar = ({ initialValue = '' }: { initialValue?: string }) => {
           type="search"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="장소 검색"
+          placeholder="카페명, 닉네임을 검색해주세요"
           className={styles.searchInput}
         />
         {value && (
