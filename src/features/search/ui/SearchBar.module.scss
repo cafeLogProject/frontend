@@ -30,7 +30,7 @@
   height: 40px;
   background-color: transparent;
   @include mixins.apply-text-style(b1_regular);
-  color: var.$primitive-secondary-brown500;
+  color: var.$semantic-text-icon-primary;
   outline: none;
   border: none;
 
