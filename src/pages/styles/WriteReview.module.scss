@@ -56,6 +56,10 @@ $spacing: 32px; // 버튼 상단 여백
 .charCount {
   color: var.$semantic-text-icon-secondary;
   @include mixins.apply-text-style(b2_regular);
+
+  span:first-child {
+    color: #121212;
+  }
 }
 
 .reviewTextarea {
@@ -83,6 +87,10 @@ $spacing: 32px; // 버튼 상단 여백
   display: flex;
   justify-content: flex-end;
   margin: 4px 0;
+
+  span:first-child {
+    color: #121212;
+  }
 }
 
 .buttonOverlay {
@@ -148,7 +156,7 @@ $spacing: 32px; // 버튼 상단 여백
   margin-top: 16px;
   margin-bottom: 16px;
   width: 100%;
-  
+
   &.noMarginBottom {
     margin-bottom: 0;
   }
