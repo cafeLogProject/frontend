@@ -22,8 +22,7 @@ const WriteReview = () => {
   const location = useLocation();
   const { returnPath, setReturnPath } = useNavigationStore();
   const { draft, updateDraft, clearDraft } = useReviewDraftStore();
-  // draftReviewId를 명시적으로 전달
-  const { images, config } = usePhotoUploaderStore(draft.id!);
+  const { config } = usePhotoUploaderStore(draft.id!);
   const { createReview, isLoading } = useReviewApi();
   const { getCafe } = useCafeApi();
   const [isImageUploading, setIsImageUploading] = useState(false);
@@ -59,7 +58,7 @@ const WriteReview = () => {
       if (returnPath) {
         navigate(returnPath, { replace: true });
       } else {
-        navigate('/', { replace: true });
+        navigate("/", { replace: true });
       }
       return true;
     }
@@ -286,7 +285,7 @@ const WriteReview = () => {
             <div className={styles.reviewLabelContainer}>
               <span className={styles.reviewSubLabel}>상세 리뷰</span>
               <span className={styles.charCount}>
-                {draft.content?.length || 0} / 200자
+                <span>{draft.content?.length || 0}</span>&nbsp;/ 200자
               </span>
             </div>
           }
@@ -307,7 +306,7 @@ const WriteReview = () => {
             <div className={styles.reviewLabelContainer}>
               <span className={styles.reviewSubLabel}>사진 첨부</span>
               <span className={styles.photoCount}>
-                {images.length} / {config.maxCount}장
+                <span>{draft.imageIds?.length || 0}</span>&nbsp;/ {config.maxCount}장
               </span>
             </div>
           }
