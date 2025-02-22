@@ -3,6 +3,9 @@ import { useMutation, useQuery, type UseMutationOptions, type UseQueryOptions, t
 import { apiInstance } from '@shared/api/base'
 import type { AxiosError } from 'axios'
 import { UseApiOptions } from './useApi'
+import Toast from '@/shared/ui/toast/Toast'
+import { toast } from 'react-toastify'
+import { showErrorToast } from '@/shared/ui/toast/CustomToast'
 
 export type ApiError = {
   message: string
@@ -49,8 +52,10 @@ export const useApiMutation = <TData, TVariables>(
   options?: {
     urlTransform?: (variables: TVariables) => string;
     onMutate?: (variables: TVariables) => Promise<any>;
-    onError?: (error: any, variables: TVariables, context: any) => void;
-  }
+    // onError?: (error: any, variables: TVariables, context: any) => void;
+  },
+  errorHandling?: 'toast' | 'fallback', 
+  errorMsg?: string
 ) => {
   return useMutation<TData, AxiosError, TVariables>({
     mutationFn: async (variables) => {
@@ -60,7 +65,14 @@ export const useApiMutation = <TData, TVariables>(
       const response = await apiInstance[method]<TData>(transformedUrl, variables)
       return response
     },
-    throwOnError: true
+    onError: (error) => {
+      if (errorHandling === 'toast') {
+        showErrorToast(errorMsg);
+      } else {
+        throw error;  // 에러 바운더리로 넘김
+      }
+    }
+    // throwOnError: true   //throwOnError 사용x
   });
 };
 
