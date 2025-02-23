@@ -28,13 +28,9 @@
     margin-bottom:2px;
   }
   
-  h2.modal-subtitle {
+  h2.modal-description {
     @include mixins.apply-text-style(b2_regular);
     color: var.$semantic-text-icon-primary;
-  }
-
-  p {
-    @include mixins.apply-text-style(b2_bold);
   }
 
   .modal-btn-wrap {
@@ -46,6 +42,7 @@
       width: 100%;
       height: 40px;
       border-radius: var.$radius-radius-md;
+      @include mixins.apply-text-style(b2_bold);
     }
     
     .modal-btn-no {

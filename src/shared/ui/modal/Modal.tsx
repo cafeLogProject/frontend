@@ -31,7 +31,7 @@ const Modal: React.FC<ModalProps> = ({
       overlayClassName="modal-overlay"
     >
       <h1>{title}</h1>
-      {description && <h2 className="modal-subtitle">{description}</h2>}
+      {description && <h2 className="modal-description">{description}</h2>}
       <div className="modal-btn-wrap">
         <Button {...secondaryButton} />
         <Button {...primaryButton} />
