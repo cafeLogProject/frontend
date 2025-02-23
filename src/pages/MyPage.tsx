@@ -55,6 +55,7 @@ const MyPage = () => {
   const closeModal = () => setIsModalOpen(false);
 
   const handleFilterChange = (type: "review" | "scrap") => {
+    setLastTimestamp(new Date(3000, 0, 1).toISOString());
     setActiveFilter(type);
   };
 
