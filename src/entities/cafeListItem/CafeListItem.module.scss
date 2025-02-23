@@ -4,17 +4,35 @@
 .cafeItem {
   list-style: none;
   padding: 16px;
-  border-bottom: 1px solid rgb(212, 212, 212);
+  border-bottom: 1px solid var.$semantic-border-primary;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var.$primitive-secondary-brown50
+  }
+  
   .cafeItem__link {
     text-decoration: none;
     display: flex;
+    align-items: center;
     gap: 16px;
+
+    .cafeItem__imageWrapper {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+    }
+    
     .cafeItem__info {
       line-height: 140%;
+      
       .cafeItem__name {
+        margin-bottom: 2px;
         color: var.$semantic-text-icon-primary;
         @include mixins.apply-text-style(b1_bold);
       }
+      
       .cafeItem__address {
         color: var.$semantic-text-icon-secondary;
         @include mixins.apply-text-style(b2_regular);
