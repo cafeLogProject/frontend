@@ -8,7 +8,6 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  subTitle?: string;
   description?: string;
   primaryButton: ButtonProps;
   secondaryButton: ButtonProps;
@@ -18,7 +17,6 @@ const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
-  subTitle,
   description,
   primaryButton,
   secondaryButton,
