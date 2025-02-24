@@ -84,7 +84,7 @@ const ReviewMore = ({
           isOpen={isModalOpen}
           onClose={closeModal}
           title="내가 작성한 리뷰를 삭제하시겠어요?"
-          subTitle="삭제된 글은 복구되지 않아요."
+          description="삭제된 글은 복구되지 않아요."
           primaryButton={{
             text: "취소",
             onClick: () => {

@@ -285,7 +285,7 @@ const CafeSearch = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={`${selectedCafe?.cafe.name}의 리뷰를 이어서 작성하시겠어요?`}
-        subTitle="해당 카페의 임시 저장된 리뷰가 있어요."
+        description="해당 카페의 임시 저장된 리뷰가 있어요."
         primaryButton={{
           text: "새로 작성하기",
           onClick: () => {
