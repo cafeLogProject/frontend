@@ -4,6 +4,7 @@ import type {
   UserInfoResponse,
   UserUpdateRequest,
   IsExistNicknameResponse,
+  UserSearchResponse,
 } from "./types";
 import { useApiQuery, useApiSuspenseQuery } from "@shared/api/hooks/useQuery";
 import { useQuery } from "@tanstack/react-query";
@@ -94,12 +95,20 @@ export const useUserApi = () => {
     }
   };
 
+  const useSearchUsers = (nickname: string) => {
+    return useApiSuspenseQuery<UserSearchResponse[]>(
+      ["userSearch", nickname],
+      () => `/api/profile/search?nickname=${encodeURIComponent(nickname)}`,
+    );
+  };
+
   return {
     useUserInfo,
     getMyInfo,
     useMyInfo,
     updateUserInfo,
     checkNicknameExistence,
+    useSearchUsers,
     isLoading,
     error,
   };
