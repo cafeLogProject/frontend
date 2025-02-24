@@ -10,7 +10,7 @@ import {
 import MainLayout from "@app/layout/mainLayout/MainLayout";
 import Login from "@/pages/Login";
 import Main from "@/pages/Main";
-import CafeSearch from "@/pages/CafeSearch";
+import Search from "@/pages/Search";
 import WriteReview from "@/pages/WriteReview";
 import DraftReview from "@/pages/DraftReview";
 import CafeInfo from "@/pages/CafeInfo";
@@ -108,7 +108,7 @@ export const AppRouter = () => {
               headerTitle="검색"
               rightElement={!isFromFooter ? <DraftCounter /> : null}
             >
-              <CafeSearch />
+              <Search />
             </MainLayout>
           }
           handle={{ crumb: <Link to="/search">카페 검색</Link> }}
