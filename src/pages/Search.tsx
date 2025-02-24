@@ -9,7 +9,7 @@ import type { ICafeDescription } from "@shared/api/cafe/types";
 import { useCafeApi } from "@/shared/api/cafe/cafe";
 import { useReviewDraftApi } from "@shared/api/reviews/reviewDraftApi";
 import Modal from "@shared/ui/modal/Modal";
-import styles from "./styles/CafeSearch.module.scss";
+import styles from "./styles/Search.module.scss";
 import { Tabs } from "@shared/ui/tabs/Tabs";
 import type { Tab } from "@shared/ui/tabs/types";
 import NoContent from "@/shared/ui/noContent/NoContent";
