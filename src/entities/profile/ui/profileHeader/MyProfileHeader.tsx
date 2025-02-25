@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./ProfileHeader.module.scss";
 import { ProfileHeaderProps } from "../../types";
-import DefaultProfile from "@shared/assets/images/profile/profile.svg";
+import DefaultProfile from "@shared/assets/images/profile/myProfile.svg";
 import addImage from "@shared/assets/images/add.svg";
 import { useUserApi } from "@shared/api/user/userApi";
 import type { UserInfoResponse } from "@shared/api/user/types";

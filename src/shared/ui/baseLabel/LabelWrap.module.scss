@@ -26,5 +26,13 @@
     .label__right--current {
       color: var.$semantic-text-icon-primary;
     }
+    
+    .label__right__maxLength {
+      color: var.$primitive-system-error;
+    }
+
+    &__img{
+      margin-right: -4px;
+    }
   }
 }

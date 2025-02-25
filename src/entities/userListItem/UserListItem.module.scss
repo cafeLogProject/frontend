@@ -1,15 +1,10 @@
 @use "@app/styles/abstracts/variables" as var;
 @use "@app/styles/abstracts/mixins";
 
-.cafeItem {
+.userItem {
   list-style: none;
   padding: 16px 20px;
-  border-bottom: 1px solid var.$semantic-border-primary;
-  cursor: pointer;
-  
-  &:hover {
-    background-color: var.$primitive-secondary-brown50;
-  }
+  border-bottom: 1px solid var(--gray-100);
 
   &__container {
     display: flex;
@@ -24,6 +19,10 @@
     align-items: center;
     gap: 12px;
     flex: 1;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
     cursor: pointer;
   }
 
@@ -54,8 +53,12 @@
     @include mixins.apply-text-style(b1_bold);
   }
 
-  &__address {
+  &__meta {
     color: var.$semantic-text-icon-secondary;
     @include mixins.apply-text-style(b2_regular);
+  }
+
+  &__followButton {
+    margin-left: 12px;
   }
 }

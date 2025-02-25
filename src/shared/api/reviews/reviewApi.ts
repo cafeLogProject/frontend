@@ -19,9 +19,13 @@ export const useReviewApi = () => {
   const createReviewMutation = useApiMutation<
     ReviewResponse,
     ReviewRequest & { draftId: number }
-  >("/api/reviews/:draftId", "post", {
-    urlTransform: (request) => `/api/reviews/${request.draftId}`,
-  });
+  >("/api/reviews/:draftId", 
+    "post", 
+    'toast',
+    {urlTransform: 
+      (request) => `/api/reviews/${request.draftId}`},
+    '알 수 없는 오류로 인해 저장 실패했습니다'
+  );
 
   const createReview = async (
     request: ReviewRequest & { draftId: number },
@@ -46,9 +50,11 @@ export const useReviewApi = () => {
   const deleteReviewMutation = useApiMutation<void, number>(
     "/api/reviews/:reviewId",
     "delete",
+    "toast",
     {
       urlTransform: (reviewId) => `/api/reviews/${reviewId}`,
-    }
+    },
+    '알 수 없는 오류로 인해 삭제 실패했습니다'
   );
 
   const deleteReview = async (

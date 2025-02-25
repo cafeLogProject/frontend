@@ -1,5 +1,6 @@
 import styles from "./LabelWrap.module.scss";
 import mail from "@/shared/assets/images/profile/mail.svg";
+import alert from "@/shared/assets/images/common/alert.svg";
 
 interface LabelWrapProps {
   label: string;
@@ -34,8 +35,12 @@ const LabelWrap = ({
       )}
       {showRight && (
         <div className={styles.label__right}>
+          {currentLength >= maxLength
+            ? <img className={styles.label__right__img} src={alert} alt="경고 이모티콘"/>
+            : null
+          }
           <span>
-            <span className={styles["label__right--current"]}>
+            <span className={`${styles["label__right--current"]} ${currentLength >= maxLength ? styles["label__right__maxLength"] : ""}`}>
               {currentLength}
             </span>{" "}
             / {maxLength}자

@@ -16,7 +16,6 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
   const navigate = useNavigate();
   const { getProfileImageUrl } = useReviewImageApi();
   const profileImageUrl = userInfo?.isProfileImageExist ? getProfileImageUrl(String(userInfo?.userId)) : null;
-  const [isFollowing, setIsFollowing] = useState(false);
   
   return (
     <div>
@@ -71,7 +70,7 @@ const ProfileHeader = ({ isScrolled, onViewReviews }: ProfileHeaderProps) => {
         </div>
         <FollowBtn 
           onChange={()=>{}} 
-          activeType={isFollowing? "follow" : "unfollow"} 
+          activeType={userInfo.isFollow? "follow" : "unfollow"} 
           userId={id || ""}
           size="large"
         />

@@ -42,6 +42,13 @@ const Main = () => {
     }
   };
 
+  const handleTabChange = (newTab: string) => {
+    setActiveTab(newTab);
+    setLastTimestamp(new Date(3000, 0, 1).toISOString());
+    setLastRating(undefined);
+    invalidateReviewsQuery();
+  };
+
   const invalidateReviewsQuery = () => {
     queryClient.invalidateQueries({
       queryKey: ["reviews", "list"],
@@ -51,7 +58,11 @@ const Main = () => {
   return (
     <div>
       <div>
-        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+        <Tabs 
+          tabs={tabs} 
+          activeTab={activeTab} 
+          onTabChange={handleTabChange} 
+        />
       </div>
       {activeTab === "explore" && (
         <ReviewFilter

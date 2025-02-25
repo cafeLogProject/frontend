@@ -22,9 +22,9 @@ const FollowListPage = () => {
 		{ id: "follower", label: "팔로워" },
 		{ id: "following", label: "팔로잉" },
 	];  
-	const {useFollowerList, useFollowingList} = useFollowApi();
-	const {data: followerList, fetchNextPage: fetchFollowerNextPage, hasNextPage: hasFollowerNexPage, refetch: refetchFollowerList, isLoading: isFollowerLoading} = useFollowerList(Number(id), { limit : 20 });
-	const {data: followingList, fetchNextPage: fetchFollowingNextPage, hasNextPage: hasFollowingNexPage,refetch: refetchFollowingList, isLoading: isFollowingLoading} = useFollowingList(Number(id), { limit : 20 });
+	const {useLazyInfiniteFollowerList, useLazyInfiniteFollowingList} = useFollowApi();
+	const {data: followerList, fetchNextPage: fetchFollowerNextPage, hasNextPage: hasFollowerNexPage, refetch: refetchFollowerList, isLoading: isFollowerLoading} = useLazyInfiniteFollowerList(Number(id), { limit : 20 });
+	const {data: followingList, fetchNextPage: fetchFollowingNextPage, hasNextPage: hasFollowingNexPage,refetch: refetchFollowingList, isLoading: isFollowingLoading} = useLazyInfiniteFollowingList(Number(id), { limit : 20 });
 
 	useEffect(() => {
 		switch (activeTab) {

@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useNavigationStore } from '@shared/store/useNavigationStore';
 import searchIcon from '@shared/assets/images/search/search.svg';
 import clearIcon from '@shared/assets/images/search/search-clear.svg';
 import styles from './SearchBar.module.scss';
@@ -7,11 +8,11 @@ import styles from './SearchBar.module.scss';
 export const SearchBar = ({ initialValue = '' }: { initialValue?: string }) => {
   const [value, setValue] = useState(initialValue);
   const navigate = useNavigate();
+  const { isFromFooter } = useNavigationStore();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (value.trim()) {
-      // replace: true 옵션을 추가하여 히스토리 누적 방지
       navigate(`/search?name=${encodeURIComponent(value.trim())}`, { replace: true });
     }
   };
@@ -24,7 +25,7 @@ export const SearchBar = ({ initialValue = '' }: { initialValue?: string }) => {
           type="search"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="장소 검색"
+          placeholder={isFromFooter ? "카페명, 닉네임을 검색해주세요" : "카페명을 검색해주세요"}
           className={styles.searchInput}
         />
         {value && (

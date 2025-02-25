@@ -30,3 +30,11 @@ export interface IsExistNicknameResponse {
   nickname: string;
   exist: boolean;
 }
+
+export interface UserSearchResponse {
+  userId: number;
+  nickname: string;
+  isProfileImageExist: boolean;
+  isFollow: number;
+  followerCountMessage: string;
+}

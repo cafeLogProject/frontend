@@ -7,8 +7,7 @@ import googleLogo from "@shared/assets/images/social-icons/google-logo.svg";
 import facebookLogo from "@shared/assets/images/social-icons/facebook-logo.svg";
 import { useAuthStore } from "@app/auth/useAuthStore";
 import axios from "axios";
-import buttonStyles from "@/shared/ui/button/ui/Button.module.scss";
-import loginStyles from "./styles/Login.module.scss";
+import styles from "./styles/Login.module.scss";
 import { useEffect } from "react";
 
 axios.defaults.withCredentials = true;
@@ -33,27 +32,27 @@ const Login = () => {
   };
 
   return (
-    <div className={loginStyles.loginWrap}>
+    <div className={styles.loginWrap}>
       <LogoWrap>
         <Logo />
       </LogoWrap>
-      <div className={buttonStyles.btnWrap}>
+      <div className={styles.btnWrap}>
         <Button
-          className={`${buttonStyles.loginBtn} ${buttonStyles.naverBtn}`}
+          className={`${styles.loginBtn} ${styles.naverBtn}`}
           text="네이버로 시작하기"
           imgUrl={naverLogo}
           altText="네이버 로그인"
           onClick={() => handleLogin("naver")}
         />
         <Button
-          className={`${buttonStyles.loginBtn} ${buttonStyles.googleBtn}`}
+          className={`${styles.loginBtn} ${styles.googleBtn}`}
           text="구글로 시작하기"
           imgUrl={googleLogo}
           altText="구글 로그인"
           onClick={() => handleLogin("google")}
         />
         <Button
-          className={`${buttonStyles.loginBtn} ${buttonStyles.faceBtn}`}
+          className={`${styles.loginBtn} ${styles.faceBtn}`}
           text="페이스북으로 시작하기"
           imgUrl={facebookLogo}
           altText="페이스북 로그인"
