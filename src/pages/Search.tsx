@@ -194,22 +194,24 @@ const Search = () => {
     }
   }, [shouldNavigate, navigate]);
 
-  // 검색어와 탭이 변경될 때마다 해당 탭의 검색 실행
+  // 검색어와 탭이 변경될 때마다 초기화
   useEffect(() => {
     const query = searchParams.get("name");
-    if (!query) return;
-
-    switch (activeTab) {
-      case "cafe":
-        // TODO: 프로필 검색 결과 초기화
-        searchByName(query).then(setCafes);
-        break;
-      case "profile":
-        // 카페 검색 결과 초기화
-        setCafes([]);
-        // TODO: 프로필 검색 API 호출
-        break;
-    }
+  
+    const fetchCafes = async () => {
+      setCafes([]);
+      if (!isFromFooter || activeTab === "cafe") {
+        try {
+          const results = await searchByName(query);
+          setCafes(results);
+        } catch (error) {
+          console.error("카페 검색 중 오류 발생:", error);
+          setCafes([]);
+        }
+      }
+    };
+  
+    fetchCafes();
   }, [searchParams, activeTab]);
 
   useEffect(() => {
@@ -232,11 +234,12 @@ const Search = () => {
 
   const ProfileSearchResults = ({ nickname }: { nickname: string }) => {
     const { data: users, error } = useSearchUsers(nickname);
-  
-    const handleFollowChange = (userId: number) => (type: "follow" | "unfollow") => {
-      console.log(`User ${userId} ${type}`);
-    };
-  
+
+    const handleFollowChange =
+      (userId: number) => (type: "follow" | "unfollow") => {
+        console.log(`User ${userId} ${type}`);
+      };
+
     if (error) {
       return (
         <div className={styles.errorContainer}>
@@ -244,7 +247,7 @@ const Search = () => {
         </div>
       );
     }
-  
+
     if (!users || users.length === 0) {
       return (
         <NoContent
@@ -254,12 +257,12 @@ const Search = () => {
         />
       );
     }
-  
+
     return (
-      <UserList 
-        users={users} 
+      <UserList
+        users={users}
         onUserSelect={handleUserSelect}
-        renderFollowButton={(user) => (
+        renderFollowButton={(user) =>
           user.isFollow !== 2 && (
             <FollowBtn
               onChange={handleFollowChange(user.userId)}
@@ -268,7 +271,7 @@ const Search = () => {
               size="small"
             />
           )
-        )}
+        }
       />
     );
   };
