@@ -4,7 +4,12 @@
 .cafeItem {
   list-style: none;
   padding: 16px 20px;
-  border-bottom: 1px solid var(--gray-100);
+  border-bottom: 1px solid var.$semantic-border-primary;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var.$primitive-secondary-brown50;
+  }
 
   &__container {
     display: flex;
