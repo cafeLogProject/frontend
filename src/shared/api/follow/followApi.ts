@@ -165,7 +165,7 @@ export const useFollowApi = () => {
 				},
 				throwOnError: true,
 				initialPageParam: null,
-				enabled: false, // 쿼리를 자동 실행하지 않도록 설정
+				enabled: false, // 쿼리를 자동 실행하지 않도록 설정 
 			});
 		}
 

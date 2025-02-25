@@ -174,7 +174,7 @@ export const AppRouter = () => {
           element={
             <MainLayout
               showHeader={true}
-              showFooter={true}
+              showFooter={false}
               showBackButton={true}
               showWriteButton={false}
               bgColor="rgb(249, 248, 246)"

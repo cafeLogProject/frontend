@@ -4,7 +4,7 @@
 .filterBtnWrap {
   width: 304px;
   height: 44px;
-  padding: 8px;
+  padding: 6px 8px;
   margin: 32px auto 8px;
   border-radius: var.$radius-radius-md;
   background-color: var.$primitive-secondary-brown100;
@@ -12,6 +12,7 @@
   display: flex;
   gap: 8px;
   .reviewFilterBtn {
+    padding: 0px;
     flex: 1;
     @include mixins.apply-text-style(b1_regular);
     background-color: var.$primitive-secondary-brown100;
