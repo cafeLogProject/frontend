@@ -24,6 +24,7 @@
       height: 100%;
       
       .cafeItem__name {
+        margin-bottom: 2px;
         color: var.$semantic-text-icon-primary;
         @include mixins.apply-text-style(b1_bold);
       }
