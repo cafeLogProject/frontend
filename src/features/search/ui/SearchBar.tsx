@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FormEvent, useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useNavigationStore } from '@shared/store/useNavigationStore';
 import searchIcon from '@shared/assets/images/search/search.svg';
 import clearIcon from '@shared/assets/images/search/search-clear.svg';
@@ -7,8 +7,14 @@ import styles from './SearchBar.module.scss';
 
 export const SearchBar = ({ initialValue = '' }: { initialValue?: string }) => {
   const [value, setValue] = useState(initialValue);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { isFromFooter } = useNavigationStore();
+
+  useEffect(() => {
+    const query = searchParams.get("name");
+    setValue(query || '');
+  }, [isFromFooter, searchParams]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

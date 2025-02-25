@@ -1,6 +1,7 @@
 import { useApi, ApiError } from "@shared/api/hooks/useApi";
 import type { INaverLocalApiResponse, ICafeDescription } from '@shared/api/cafe/types';
 import { CafeMapper } from '@shared/api/cafe/mapper/cafeMapper';
+import { useCallback } from "react";
 
 interface SearchResponse {
   items: INaverLocalApiResponse[]
@@ -21,7 +22,7 @@ export const useCafeSearch = (): CafeSearchHook => {
     get 
   } = useApi<ICafeDescription[]>();
 
-  const searchByName = async (name: string | null) => {
+  const searchByName = useCallback(async (name: string | null) => {
     if (!name) {
       return [];
     }
@@ -48,7 +49,7 @@ export const useCafeSearch = (): CafeSearchHook => {
       console.error('카페 검색 중 오류 발생:', error);
       throw error;
     }
-  };
+  }, [get]);
 
   return {
     cafes: data || [],
