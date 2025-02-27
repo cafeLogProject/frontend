@@ -1,4 +1,6 @@
 @use '@shared/ui/input/Input.module.scss';
+@use "@app/styles/abstracts/mixins";
+@use "/src/app/styles/abstracts/variables" as var;
 
 .inputContainer {
   position: relative;
@@ -17,7 +19,12 @@
   padding-right: 32px;
   border-radius: 8px;
   background-color: #F9F8F6;
-  color: #374151;
+  &::placeholder {
+    @include mixins.apply-text-style(b1_regular);
+    color: var.$primitive-secondary-brown500;
+  }
+  @include mixins.apply-text-style(b1_regular);
+  color: var.$primitive-secondary-brown500;
   outline: none;
   border: none;
   
@@ -35,8 +42,8 @@
 .calendarIcon {
   position: absolute;
   right: 8px;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   color: #9CA3AF;
   pointer-events: none;
 }

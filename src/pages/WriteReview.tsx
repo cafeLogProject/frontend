@@ -211,7 +211,7 @@ const WriteReview = () => {
 
         <InputWrapper
           label={<span className={styles.mainLabel}>언제 방문했나요?</span>}
-          className={styles.inputLabel}
+          className={`${styles.inputLabel} ${styles.firstInputWrapper}`}
           isRequired={true}
           error={
             !draft.visitDate &&
