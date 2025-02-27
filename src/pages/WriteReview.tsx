@@ -205,7 +205,7 @@ const WriteReview = () => {
       onBackClick={handleBackClick} // BackButton 클릭 핸들러 추가
     >
       <div className={styles.container}>
-        <div className="selected-cafe">
+        <div className={styles.stickySelectedCafe}>
           <CafeListItem {...draft.cafe} onSelect={() => {}} />
         </div>
 

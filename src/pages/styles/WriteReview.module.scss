@@ -30,6 +30,13 @@ $spacing: 32px; // 버튼 상단 여백
   }
 }
 
+.stickySelectedCafe {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: white;
+}
+
 .tagSection {
   h3 {
     font-size: 14px;
