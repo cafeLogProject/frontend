@@ -4,7 +4,7 @@
  * 추후에 리팩토링이 필요합니다.
  */
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useApi } from "@shared/api/hooks/useApi";
 import { API_URL } from "../base";
 import type {
@@ -17,7 +17,9 @@ const BASE_URL = `${API_URL}/api/images/draftReview`;
 
 export const useReviewImageApi = (draftReviewId?: number) => {
   const { post, remove } = useApi<ImageApiResponse>();
-
+  const { get } = useApi();
+  const prevUrls = useRef(new Set<string>());
+  
   const upload = useCallback(
     async (file: File): Promise<string> => {
       try {
@@ -55,6 +57,44 @@ export const useReviewImageApi = (draftReviewId?: number) => {
     },
     [draftReviewId]
   );
+  
+  const getImageUrlWithModified = useCallback(
+    async (imageId: string): Promise<{imageUrl: string|null; modified: number|null}> => {
+      try {
+        const response = await get<Response>(
+          `${API_URL}/api/images/review/${imageId}`, {
+            responseType: "blob",
+            transformResponse: (data, headers) => ({ blob:data, headers }),  //headers 유지
+          }
+        );
+        const modifiedHeader = response.headers?.["last-modified"];
+        const modified = modifiedHeader ? Date.parse(modifiedHeader) : null;
+          
+        const blob = response.blob;
+        if (!(blob instanceof Blob)) throw new Error("응답 데이터가 Blob이 아닙니다.");
+
+        const imageUrl = URL.createObjectURL(blob);
+        prevUrls.current.add(imageUrl);
+        return { imageUrl, modified };
+      } catch (error) {
+        console.error("이미지 불러오기 실패:", error);
+        return { imageUrl: null, modified: null };
+      }
+    },
+    [get]
+  );
+
+
+  // useEffect의 cleanup 함수 (컴포넌트 언마운트 될때 실행)
+  // 새로고침 또는 페이지 벗어날 때 URL 해제
+  useEffect(() => {
+    return () => {
+      if (prevUrls.current.size > 0){
+      prevUrls.current.forEach((url) => URL.revokeObjectURL(url));
+      prevUrls.current.clear();
+      }
+    };
+  }, []);
 
   // 일반 리뷰의 이미지인 경우
   const getImageUrl = (imageId: string) => {
@@ -78,8 +118,9 @@ export const useReviewImageApi = (draftReviewId?: number) => {
       getUrl,
       getImageUrl,
       getDraftImageUrl,
-      getProfileImageUrl
+      getProfileImageUrl,
+      getImageUrlWithModified,
     }),
-    [upload, removeImage, getUrl, getImageUrl, getDraftImageUrl, getProfileImageUrl]
+    [upload, removeImage, getUrl, getImageUrl, getDraftImageUrl, getProfileImageUrl, getImageUrlWithModified]
   );
 };
