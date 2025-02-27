@@ -51,7 +51,6 @@ const PhotoSwiper: FC<PhotoSwiperProps> = ({
         imageIds.map(async (imageId) => {
           const { imageUrl, modified } = await getImageUrlWithModified(imageId);
           if (imageUrl === null || modified === null) throw new Error("이미지 로드 실패했습니다.");
-          console.log(imageUrl);
           return { imageId, imageUrl, modified,};
         })
       );

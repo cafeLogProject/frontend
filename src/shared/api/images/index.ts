@@ -19,6 +19,7 @@ export const useReviewImageApi = (draftReviewId?: number) => {
   const { post, remove } = useApi<ImageApiResponse>();
   const { get } = useApi();
   const prevUrls = useRef(new Set<string>());
+  const imageCache = useRef(new Map<string, {url: string, modified: number|null}>());
   
   const upload = useCallback(
     async (file: File): Promise<string> => {
@@ -60,6 +61,12 @@ export const useReviewImageApi = (draftReviewId?: number) => {
   
   const getImageUrlWithModified = useCallback(
     async (imageId: string): Promise<{imageUrl: string|null; modified: number|null}> => {
+      // 이미지가 캐시되어 있는지 확인
+      if (imageCache.current.has(imageId)) {
+        const cached = imageCache.current.get(imageId)!;
+        return { imageUrl: cached.url, modified: cached.modified };
+      }
+      
       try {
         const response = await get<Response>(
           `${API_URL}/api/images/review/${imageId}`, {
@@ -74,6 +81,7 @@ export const useReviewImageApi = (draftReviewId?: number) => {
         if (!(blob instanceof Blob)) throw new Error("응답 데이터가 Blob이 아닙니다.");
 
         const imageUrl = URL.createObjectURL(blob);
+        imageCache.current.set(imageId, {url: imageUrl, modified}); // 이미지 캐싱
         prevUrls.current.add(imageUrl);
         return { imageUrl, modified };
       } catch (error) {
@@ -93,6 +101,7 @@ export const useReviewImageApi = (draftReviewId?: number) => {
       prevUrls.current.forEach((url) => URL.revokeObjectURL(url));
       prevUrls.current.clear();
       }
+      imageCache.current.clear();
     };
   }, []);
 
