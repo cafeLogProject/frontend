@@ -16,6 +16,10 @@ $spacing: 32px; // 버튼 상단 여백
     color: #121212;
   }
 
+  .firstInputWrapper {
+    margin-top: 32px;
+  }
+  
   .tagContainer {
     display: flex;
     flex-direction: column;
@@ -24,6 +28,13 @@ $spacing: 32px; // 버튼 상단 여백
     // background-color: #F9F8F6;
     border-radius: 8px;
   }
+}
+
+.stickySelectedCafe {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: white;
 }
 
 .tagSection {
@@ -143,18 +154,27 @@ $spacing: 32px; // 버튼 상단 여백
 }
 
 .starRatingContainer {
+  height: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   background-color: #f9f8f6;
   border-radius: 8px;
+
+  gap: 0px;
+  padding: 0;
+
+  &.expanded {
+    height: 100px;
+  }
 }
 
 .starRatingStars {
   --stars-gap: 8px;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  // margin-top: 16px;
+  // margin-bottom: 16px;
   width: 100%;
 
   &.noMarginBottom {
