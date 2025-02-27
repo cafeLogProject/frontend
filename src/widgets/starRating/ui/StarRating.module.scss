@@ -27,8 +27,8 @@
 }
 
 .star {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -51,13 +51,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 8px;
   gap: 4px;
 }
 
 .ratingValue {
   @include mixins.apply-text-style(b2_bold);
-  margin-top: 2px;
-  margin-bottom: 16px;
   
   &.low {
     color: var.$primitive-secondary-brown500;

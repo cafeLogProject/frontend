@@ -252,6 +252,8 @@ const WriteReview = () => {
             onChange={handleRatingChange}
             showRatingText={true}
             rootClassName={`${styles.starRatingContainer} ${
+              draft.rating > 0 ? styles.expanded : ""
+            } ${
               !draft.rating &&
               (draft.tags.menu?.length > 0 || draft.tags.interior?.length > 0)
                 ? styles.errorInput
@@ -306,7 +308,8 @@ const WriteReview = () => {
             <div className={styles.reviewLabelContainer}>
               <span className={styles.reviewSubLabel}>사진 첨부</span>
               <span className={styles.photoCount}>
-                <span>{draft.imageIds?.length || 0}</span>&nbsp;/ {config.maxCount}장
+                <span>{draft.imageIds?.length || 0}</span>&nbsp;/{" "}
+                {config.maxCount}장
               </span>
             </div>
           }
