@@ -9,6 +9,7 @@ import { useReviewImageApi } from '@/shared/api/images';
 interface UserItemProps extends UserSearchResponse {
   onSelect: () => void;
   renderFollowButton?: () => React.ReactNode;
+  currentUserId?: number;
 }
 
 const UserItem = ({ 
@@ -17,10 +18,12 @@ const UserItem = ({
   isProfileImageExist,
   followerCountMessage,
   onSelect,
-  renderFollowButton
+  renderFollowButton,
+  currentUserId
 }: UserItemProps) => {
   const { getProfileImageUrl } = useReviewImageApi();
   const profileImageUrl = getProfileImageUrl(String(userId));
+  const isOwner = currentUserId === userId;
 
   return (
     <li className={styles.userItem}>
@@ -28,7 +31,7 @@ const UserItem = ({
         <button onClick={onSelect} className={styles.userItem__link}>
           <div className={styles.userItem__imageWrapper}>
             <img
-              src={(isProfileImageExist && profileImageUrl) || profileIcon}
+              src={(isProfileImageExist && profileImageUrl) || (isOwner ? myProfileIcon : profileIcon)}
               alt={`${nickname} profile`}
               className={styles.userItem__image}
             />
