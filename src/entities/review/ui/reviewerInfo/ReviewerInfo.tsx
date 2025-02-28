@@ -86,7 +86,7 @@ const ReviewerInfo = ({
         <img
           onClick={()=>{navigate(`/userpage/${userId}`)}}
           className={styles.reviewerInfo__profilePicture}
-          src={profileImageUrl || (isOwner ? myProfileIcon : profileIcon)}
+          src={(isProfileImageExist && profileImageUrl) || (isOwner ? myProfileIcon : profileIcon)}
           alt={`${nickname}의 프로필`}
         />
         <div className={styles.reviewerInfo__details}>
