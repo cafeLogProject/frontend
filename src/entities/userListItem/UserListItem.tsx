@@ -1,6 +1,7 @@
 import styles from './UserListItem.module.scss';
 import type { UserSearchResponse } from '@/shared/api/user/types';
-import defaultProfile from "@shared/assets/images/profile/profile.svg";
+import profileIcon from "@shared/assets/images/profile/profile.svg";
+import myProfileIcon from "@shared/assets/images/profile/myProfile.svg";
 import { useEffect, useState } from 'react';
 import { useProfileImageApi } from '@shared/api/user/useProfileImagesApi';
 import { useReviewImageApi } from '@/shared/api/images';
@@ -27,7 +28,7 @@ const UserItem = ({
         <button onClick={onSelect} className={styles.userItem__link}>
           <div className={styles.userItem__imageWrapper}>
             <img
-              src={profileImageUrl || defaultProfile}
+              src={(isProfileImageExist && profileImageUrl) || profileIcon}
               alt={`${nickname} profile`}
               className={styles.userItem__image}
             />
