@@ -7,8 +7,7 @@
   }
   
   .ratingWrapper {
-    padding: 0 16px;
-    margin-top: 16px;
+    padding: 32px 16px 8px;
   }
   
   .ratingHeader {
@@ -107,5 +106,21 @@
     .reviewList__item {
       padding: 24px 16px;
       border-bottom: 1px solid var.$semantic-border-primary;
+    }
+  }
+  
+  .loadingIndicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    padding: 8px 0;
+  
+    &--center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useApiQuery, useApiMutation } from "@shared/api/hooks/useQuery";
 import {
-  useQueryClient,
+  useQueryClient, QueryClient
 } from "@tanstack/react-query";
 import type {
   ReviewRequest,
@@ -10,6 +10,7 @@ import type {
   ShowReviewResponse,
   ShowReviewListRequest,
   ShowUserReviewRequest,
+  ShowMyReviewRequest
 } from "./types";
 
 export const useReviewApi = () => {
@@ -18,9 +19,13 @@ export const useReviewApi = () => {
   const createReviewMutation = useApiMutation<
     ReviewResponse,
     ReviewRequest & { draftId: number }
-  >("/api/reviews/:draftId", "post", {
-    urlTransform: (request) => `/api/reviews/${request.draftId}`,
-  });
+  >("/api/reviews/:draftId", 
+    "post", 
+    'toast',
+    {urlTransform: 
+      (request) => `/api/reviews/${request.draftId}`},
+    '알 수 없는 오류로 인해 저장 실패했습니다'
+  );
 
   const createReview = async (
     request: ReviewRequest & { draftId: number },
@@ -45,9 +50,11 @@ export const useReviewApi = () => {
   const deleteReviewMutation = useApiMutation<void, number>(
     "/api/reviews/:reviewId",
     "delete",
+    "toast",
     {
       urlTransform: (reviewId) => `/api/reviews/${reviewId}`,
-    }
+    },
+    '알 수 없는 오류로 인해 삭제 실패했습니다'
   );
 
   const deleteReview = async (
@@ -104,7 +111,30 @@ export const useReviewApi = () => {
     );
   };
 
-  const useMyReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+  const useUserReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+    const validatedParams = {
+      userId : params.userId,
+      limit: Math.min(Math.max(params.limit || 10, 1), 20),
+      ...(params.timestamp
+        ? {
+            timestamp: params.timestamp?.endsWith("Z")
+              ? params.timestamp.slice(0, -1)
+              : params.timestamp,
+          }
+        : {}),
+    };
+
+    const cleanParams = Object.fromEntries(
+      Object.entries(validatedParams).filter(([_, value]) => value != null)
+    );
+
+    return useApiQuery<ShowReviewResponse[]>(
+      ["reviews", "user", validatedParams],
+      `/api/reviews/user?${new URLSearchParams(cleanParams as any).toString()}`
+    );
+  };
+
+  const useMyReviews = (params: ShowMyReviewRequest = { limit: 10 }) => {
     const validatedParams = {
       limit: Math.min(Math.max(params.limit || 10, 1), 20),
       ...(params.timestamp
@@ -123,6 +153,28 @@ export const useReviewApi = () => {
     return useApiQuery<ShowReviewResponse[]>(
       ["reviews", "my", validatedParams],
       `/api/reviews/my?${new URLSearchParams(cleanParams as any).toString()}`
+    );
+  };
+
+  const useFollowingReviews = (params: ShowUserReviewRequest = { limit: 10 }) => {
+    const validatedParams = {
+      limit: Math.min(Math.max(params.limit || 10, 1), 20),
+      ...(params.timestamp
+        ? {
+            timestamp: params.timestamp?.endsWith("Z")
+              ? params.timestamp.slice(0, -1)
+              : params.timestamp,
+          }
+        : {}),
+    };
+
+    const cleanParams = Object.fromEntries(
+      Object.entries(validatedParams).filter(([_, value]) => value != null)
+    );
+
+    return useApiQuery<ShowReviewResponse[]>(
+      ["reviews", "following", validatedParams],
+      `/api/reviews/follow?${new URLSearchParams(cleanParams as any).toString()}`
     );
   };
 
@@ -166,8 +218,22 @@ export const useReviewApi = () => {
     []
   );
 
-  const getMyReviews = useCallback(
+  const getUserReviews = useCallback(
     async (params: ShowUserReviewRequest = { limit: 10 }) => {
+      try {
+        const query = useUserReviews(params);
+        const response = await query.refetch();
+        return response.data || [];
+      } catch (error) {
+        console.error("내 리뷰 목록 조회 중 오류 발생:", error);
+        throw error;
+      }
+    },
+    []
+  );
+
+  const getMyReviews = useCallback(
+    async (params: ShowMyReviewRequest = { limit: 10 }) => {
       try {
         const query = useMyReviews(params);
         const response = await query.refetch();
@@ -186,10 +252,13 @@ export const useReviewApi = () => {
 
     useCafeReviews,
     useReviewList,
+    useUserReviews,
     useMyReviews,
+    useFollowingReviews,
 
     getCafeReviews,
     getReviewList,
+    getUserReviews,
     getMyReviews,
 
     deleteReview,

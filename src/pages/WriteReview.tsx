@@ -22,8 +22,7 @@ const WriteReview = () => {
   const location = useLocation();
   const { returnPath, setReturnPath } = useNavigationStore();
   const { draft, updateDraft, clearDraft } = useReviewDraftStore();
-  // draftReviewId를 명시적으로 전달
-  const { images, config } = usePhotoUploaderStore(draft.id!);
+  const { config } = usePhotoUploaderStore(draft.id!);
   const { createReview, isLoading } = useReviewApi();
   const { getCafe } = useCafeApi();
   const [isImageUploading, setIsImageUploading] = useState(false);
@@ -32,6 +31,18 @@ const WriteReview = () => {
 
   // location.state에서 preventBack 확인
   const preventBack = location.state?.preventBack;
+  // location.state에서 isContinue 확인
+  const isContinue = location.state?.isContinue;
+
+  // handleBlock 콜백 함수 업데이트
+  const handleBlock = useCallback(() => {
+    if (!isContinue) {
+      handleSetIsModalOpen(true);
+    }
+  }, [isContinue]);
+
+  // isContinue가 true인 경우에는 preventBack 무시
+  const { setModalState } = useBlocker(handleBlock, !isContinue && preventBack);
 
   // 초안 작성 여부 확인
   const isDrafting = location.state?.from === "/search";
@@ -42,6 +53,25 @@ const WriteReview = () => {
       event.preventDefault();
     }
 
+    // isContinue가 true인 경우 바로 이전 페이지로 이동
+    if (isContinue) {
+      if (returnPath) {
+        navigate(returnPath, { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
+      return true;
+    }
+
+    console.log("returnPath:", returnPath);
+
+    // returnPath가 있는 경우 해당 경로로 이동
+    if (returnPath) {
+      navigate(returnPath, { replace: true });
+      return true;
+    }
+
+    // 기존 로직 유지
     if (
       preventBack ||
       draft.content ||
@@ -54,36 +84,29 @@ const WriteReview = () => {
       return false;
     }
 
-    // 작성된 내용이 없는 경우
     clearDraft();
     navigate("/", { replace: true });
     return true;
   };
 
-  // 페이지 이탈 시도 시 호출될 함수
-  const handleBlock = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
-
-  const { setModalState } = useBlocker(handleBlock, preventBack);
+  // 블로커의 모달 상태도 함께 업데이트하도록 setIsModalOpen 핸들러 수정
+  const handleSetIsModalOpen = (open: boolean) => {
+    setIsModalOpen(open);
+    setModalState(open);
+  };
 
   // 모달에서 "나가기" 선택 시
   const handleExit = () => {
-    Promise.all([
-      setIsModalOpen(false),
-      setModalState(false),
-      clearDraft(),
-    ]).then(() => {
-      navigate("/", {
-        replace: true,
-        state: { from: null },
-      });
+    handleSetIsModalOpen(false);
+    clearDraft();
+    navigate("/", {
+      replace: true,
+      state: { from: null },
     });
   };
 
   const handleContinue = () => {
-    setIsModalOpen(false);
-    setModalState(false);
+    handleSetIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -182,13 +205,13 @@ const WriteReview = () => {
       onBackClick={handleBackClick} // BackButton 클릭 핸들러 추가
     >
       <div className={styles.container}>
-        <div className="selected-cafe">
+        <div className={styles.stickySelectedCafe}>
           <CafeListItem {...draft.cafe} onSelect={() => {}} />
         </div>
 
         <InputWrapper
           label={<span className={styles.mainLabel}>언제 방문했나요?</span>}
-          className={styles.inputLabel}
+          className={`${styles.inputLabel} ${styles.firstInputWrapper}`}
           isRequired={true}
           error={
             !draft.visitDate &&
@@ -229,6 +252,8 @@ const WriteReview = () => {
             onChange={handleRatingChange}
             showRatingText={true}
             rootClassName={`${styles.starRatingContainer} ${
+              draft.rating > 0 ? styles.expanded : ""
+            } ${
               !draft.rating &&
               (draft.tags.menu?.length > 0 || draft.tags.interior?.length > 0)
                 ? styles.errorInput
@@ -262,7 +287,7 @@ const WriteReview = () => {
             <div className={styles.reviewLabelContainer}>
               <span className={styles.reviewSubLabel}>상세 리뷰</span>
               <span className={styles.charCount}>
-                {draft.content?.length || 0} / 200자
+                <span>{draft.content?.length || 0}</span>&nbsp;/ 200자
               </span>
             </div>
           }
@@ -283,7 +308,8 @@ const WriteReview = () => {
             <div className={styles.reviewLabelContainer}>
               <span className={styles.reviewSubLabel}>사진 첨부</span>
               <span className={styles.photoCount}>
-                {images.length} / {config.maxCount}장
+                <span>{draft.imageIds?.length || 0}</span>&nbsp;/{" "}
+                {config.maxCount}장
               </span>
             </div>
           }
@@ -322,7 +348,7 @@ const WriteReview = () => {
 
         <Modal
           isOpen={isModalOpen}
-          onClose={handleContinue}
+          onClose={handleContinue} // This will properly close the modal
           title="정말 나가시겠어요?"
           description="작성 중인 내용은 임시 저장되어 다음에 이어서 작성할 수 있어요."
           primaryButton={{

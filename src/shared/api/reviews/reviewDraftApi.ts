@@ -20,14 +20,14 @@ export const useReviewDraftApi = () => {
   const createDraftMutation = useApiMutation<
     DraftReviewResponse,
     CreateDraftReviewRequest
-  >("/api/reviews/draft", "post");
+  >("/api/reviews/draft", "post", 'toast', {}, "알 수 없는 오류로 인해 생성 실패했습니다");
 
   // 초안 수정
   const updateDraftMutation = useApiMutation<
     DraftReviewResponse,
     UpdateDraftReviewRequest & { id: number }
-  >("/api/reviews/draft/:id", "patch", {
-    urlTransform: ({ id }) => `/api/reviews/draft/${id}`,
+  >("/api/reviews/draft/:id", "patch", 'toast',
+    { urlTransform: ({ id }) => `/api/reviews/draft/${id}`,
     onMutate: async (variables) => {
       // 이전 상태 백업
       const previousDraft = queryClient.getQueryData<DraftReviewResponse>(['draftReview', variables.id]);
@@ -49,12 +49,17 @@ export const useReviewDraftApi = () => {
         queryClient.setQueryData(['draftReview', variables.id], context.previousDraft);
       }
     }
-  });
+  },
+  "알 수 없는 오류로 인해 저장 실패했습니다"
+);
 
   // 초안 삭제
   const deleteDraftMutation = useApiMutation<void, void>(
     "/api/reviews/draft",
-    "delete"
+    "delete",
+    'toast',
+    {},
+    "알 수 없는 오류로 인해 삭제 실패했습니다"
   );
 
   const fetchDraftReview = async (

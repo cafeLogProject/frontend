@@ -4,8 +4,9 @@ import type {
   UserInfoResponse,
   UserUpdateRequest,
   IsExistNicknameResponse,
+  UserSearchResponse,
 } from "./types";
-import { useApiQuery } from "@shared/api/hooks/useQuery";
+import { useApiQuery, useApiSuspenseQuery } from "@shared/api/hooks/useQuery";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from 'react';
 
@@ -14,12 +15,20 @@ export const useUserApi = () => {
   const { get, patch, isLoading, error } = useApi();
 
   const useUserInfo = (id : number) => {
-    return useApiQuery<OtherUserInfoRes>(
+    return useApiSuspenseQuery<OtherUserInfoRes>(
       ["user", id],
       () => `/api/users/${id}`,
     );
   };
 
+  const useMyInfo = () => {
+    return useApiSuspenseQuery<UserInfoResponse>(
+      ["myInfo"],
+      () => `/api/my/profile`,
+    );
+  };
+
+  // useMyInfo 함수로 대체 예정
   const getMyInfo = useCallback(async (options?: {
     onSuccess?: (response: UserInfoResponse) => void;
     onError?: (error: any) => void;
@@ -86,11 +95,20 @@ export const useUserApi = () => {
     }
   };
 
+  const useSearchUsers = (nickname: string) => {
+    return useApiSuspenseQuery<UserSearchResponse[]>(
+      ["userSearch", nickname],
+      () => `/api/profile/search?nickname=${encodeURIComponent(nickname)}`,
+    );
+  };
+
   return {
     useUserInfo,
     getMyInfo,
+    useMyInfo,
     updateUserInfo,
     checkNicknameExistence,
+    useSearchUsers,
     isLoading,
     error,
   };

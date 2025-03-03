@@ -10,12 +10,13 @@ import {
 import MainLayout from "@app/layout/mainLayout/MainLayout";
 import Login from "@/pages/Login";
 import Main from "@/pages/Main";
-import CafeSearch from "@/pages/CafeSearch";
+import Search from "@/pages/Search";
 import WriteReview from "@/pages/WriteReview";
 import DraftReview from "@/pages/DraftReview";
 import CafeInfo from "@/pages/CafeInfo";
 import MyPage from "@/pages/MyPage";
 import MyPageEdit from "@/pages/MyPageEdit";
+import FollowListPage from "@/pages/FollowListPage";
 import { ProtectedRoute } from "@app/routers/ProtectedRoute";
 import styles from "@app/layout/header/Header.module.scss";
 import { OAuthRedirect } from "@app/auth/OAuthRedirect";
@@ -35,6 +36,9 @@ import TestError from "@/shared/components/TestError";
 import GeneralErrorPage from "@/shared/components/GeneralErrorPage";
 import UserPage from "@/pages/UserPage";
 import { useProfileEditStore } from "@shared/store/useProfileEditStore";
+import { Suspense } from "react";
+import Loading from "@/shared/ui/loading/Loading";
+import Toast from "@/shared/ui/toast/Toast";
 
 export const AppRouter = () => {
   const { isFromFooter } = useNavigationStore();
@@ -101,10 +105,10 @@ export const AppRouter = () => {
               showHeader={true}
               showFooter={true}
               showBackButton={true}
-              headerTitle="장소 검색"
+              headerTitle="검색"
               rightElement={!isFromFooter ? <DraftCounter /> : null}
             >
-              <CafeSearch />
+              <Search />
             </MainLayout>
           }
           handle={{ crumb: <Link to="/search">카페 검색</Link> }}
@@ -156,7 +160,11 @@ export const AppRouter = () => {
               bgColor="rgb(249, 248, 246)"
               rightElement={<NavBtn />}
             >
-              <MyPage />
+              <Suspense fallback={
+                <Loading />
+              }>
+                <MyPage />
+              </Suspense>
             </MainLayout>
           }
           handle={{ crumb: <Link to="/mypage">마이페이지</Link> }}
@@ -166,7 +174,7 @@ export const AppRouter = () => {
           element={
             <MainLayout
               showHeader={true}
-              showFooter={true}
+              showFooter={false}
               showBackButton={true}
               showWriteButton={false}
               bgColor="rgb(249, 248, 246)"
@@ -194,10 +202,21 @@ export const AppRouter = () => {
               showBackButton={true}
               bgColor="rgb(249, 248, 246)"
             >
-              <UserPage />
+              <Suspense fallback={
+                <Loading />
+              }>
+                <UserPage />
+              </Suspense>
             </MainLayout>
           }
           handle={{ crumb: <Link to="/user">유저페이지</Link> }}
+        />
+        <Route
+          path="follow/:tabType/:id"  // tabtype은 "follwer" 또는 "following"
+          element={
+            <FollowListPage />  // 동적 변화로 인해 내부에 MainLayout 작성
+          }
+          handle={{ crumb: <Link to="/cafe">카페 정보</Link> }}
         />
         <Route
           path="test/error"

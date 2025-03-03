@@ -8,7 +8,6 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  subTitle?: string;
   description?: string;
   primaryButton: ButtonProps;
   secondaryButton: ButtonProps;
@@ -18,7 +17,6 @@ const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   title,
-  subTitle,
   description,
   primaryButton,
   secondaryButton,
@@ -31,11 +29,10 @@ const Modal: React.FC<ModalProps> = ({
       overlayClassName="modal-overlay"
     >
       <h1>{title}</h1>
-      {subTitle && <h2 className="modal-subtitle">{subTitle}</h2>}
-      {description && <p>{description}</p>}
+      {description && <h2 className="modal-description">{description}</h2>}
       <div className="modal-btn-wrap">
-        <Button {...primaryButton} />
         <Button {...secondaryButton} />
+        <Button {...primaryButton} />
       </div>
     </ReactModal>
   );

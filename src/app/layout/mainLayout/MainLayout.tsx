@@ -64,7 +64,7 @@ const MainLayout = ({
   };
 
   return (
-    <div className={styles.mainLayout}>
+    <div className={`${styles.mainLayout} ${!showFooter ? styles['mainLayout--noFooter'] : ''}`}>
       {showHeader && (
         <Header
           title={headerTitle}

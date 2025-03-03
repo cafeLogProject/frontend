@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { CafeList } from "@widgets/cafeList";
 import { SearchBar } from "@features/search/ui/SearchBar";
@@ -9,17 +9,25 @@ import type { ICafeDescription } from "@shared/api/cafe/types";
 import { useCafeApi } from "@/shared/api/cafe/cafe";
 import { useReviewDraftApi } from "@shared/api/reviews/reviewDraftApi";
 import Modal from "@shared/ui/modal/Modal";
-import styles from "./styles/CafeSearch.module.scss";
+import styles from "./styles/Search.module.scss";
 import { Tabs } from "@shared/ui/tabs/Tabs";
 import type { Tab } from "@shared/ui/tabs/types";
+import NoContent from "@/shared/ui/noContent/NoContent";
+import { useUserApi } from "@/shared/api/user/userApi";
+import { UserList } from "@widgets/userList";
+import FollowBtn from "@entities/profile/ui/followBtn/FollowBtn";
 
-const CafeSearch = () => {
+const Search = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { updateDraft, clearDraft } = useReviewDraftStore();
   const { returnPath, setReturnPath, isFromFooter, setIsFromFooter } =
     useNavigationStore();
-  const { searchByName, isLoading: isCafeLoading, error: cafeError } = useCafeSearch();
+  const {
+    searchByName,
+    isLoading: isCafeLoading,
+    error: cafeError,
+  } = useCafeSearch();
 
   // TODO: 프로필 검색 구현 필요
   // const { searchByName, isLoading: isProfileLoading, error: profileError } = useProfileSearch();
@@ -161,6 +169,7 @@ const CafeSearch = () => {
         state: {
           from: "/search",
           searchParams: window.location.search,
+          isContinue: true,
         },
       });
     } else {
@@ -185,22 +194,24 @@ const CafeSearch = () => {
     }
   }, [shouldNavigate, navigate]);
 
-  // 검색어와 탭이 변경될 때마다 해당 탭의 검색 실행
+  // 검색어와 탭이 변경될 때마다 초기화
   useEffect(() => {
     const query = searchParams.get("name");
-    if (!query) return;
-
-    switch (activeTab) {
-      case "cafe":
-        // TODO: 프로필 검색 결과 초기화
-        searchByName(query).then(setCafes);
-        break;
-      case "profile":
-        // 카페 검색 결과 초기화
-        setCafes([]);
-        // TODO: 프로필 검색 API 호출
-        break;
-    }
+  
+    const fetchCafes = async () => {
+      setCafes([]);
+      if (!isFromFooter || activeTab === "cafe") {
+        try {
+          const results = await searchByName(query);
+          setCafes(results);
+        } catch (error) {
+          console.error("카페 검색 중 오류 발생:", error);
+          setCafes([]);
+        }
+      }
+    };
+  
+    fetchCafes();
   }, [searchParams, activeTab]);
 
   useEffect(() => {
@@ -215,7 +226,81 @@ const CafeSearch = () => {
     }
   }, [draftsQuery.data, selectedCafe, shouldNavigate]);
 
+  const { useSearchUsers } = useUserApi();
+
+  const handleUserSelect = (userId: number) => {
+    navigate(`/userpage/${userId}`);
+  };
+
+  const ProfileSearchResults = ({ nickname }: { nickname: string }) => {
+    const { data: users, error } = useSearchUsers(nickname);
+
+    const handleFollowChange =
+      (userId: number) => (type: "follow" | "unfollow") => {
+        console.log(`User ${userId} ${type}`);
+      };
+
+    if (error) {
+      return (
+        <div className={styles.errorContainer}>
+          <p>프로필 검색 중 오류가 발생했습니다.</p>
+        </div>
+      );
+    }
+
+    if (!users || users.length === 0) {
+      return (
+        <NoContent
+          logo="noResult"
+          mainContent="해당 유저를 찾을 수 없어요"
+          subContent="닉네임이 정확한지 확인하거나, 다른 닉네임을 찾아보세요!"
+        />
+      );
+    }
+
+    return (
+      <UserList
+        users={users}
+        onUserSelect={handleUserSelect}
+        renderFollowButton={(user) =>
+          user.isFollow !== 2 && (
+            <FollowBtn
+              onChange={handleFollowChange(user.userId)}
+              activeType={user.isFollow ? "follow" : "unfollow"}
+              userId={String(user.userId)}
+              size="small"
+            />
+          )
+        }
+      />
+    );
+  };
+
   const renderContent = () => {
+    if (!isFromFooter) {
+      return (
+        <div className={styles.cafeListContainer}>
+          {isCafeLoading ? (
+            <div className={styles.loadingContainer}>
+              <div className={styles.loadingSpinner}></div>
+              <p>검색 중입니다...</p>
+            </div>
+          ) : cafeError ? (
+            <div className={styles.errorContainer}>
+              <p>카페 검색 중 오류가 발생했습니다.</p>
+            </div>
+          ) : cafes.length === 0 ? (
+            <NoContent
+              logo="noResult"
+              mainContent="해당 카페를 찾을 수 없어요"
+              subContent="카페명이 정확한지 확인하거나, 다른 카페를 찾아보세요!"
+            />
+          ) : (
+            <CafeList cafeInfo={cafes} onCafeSelect={handleCafeSelect} />
+          )}
+        </div>
+      );
+    }
     switch (activeTab) {
       case "cafe":
         return (
@@ -230,38 +315,37 @@ const CafeSearch = () => {
                 <p>카페 검색 중 오류가 발생했습니다.</p>
               </div>
             ) : cafes.length === 0 ? (
-              <div className={styles.noResults}>
-                <p>검색 결과가 없습니다.</p>
-              </div>
+              <NoContent
+                logo="noResult"
+                mainContent="해당 카페를 찾을 수 없어요"
+                subContent="카페명이 정확한지 확인하거나, 다른 카페를 찾아보세요!"
+              />
             ) : (
               <CafeList cafeInfo={cafes} onCafeSelect={handleCafeSelect} />
             )}
           </div>
         );
       case "profile":
-        return (
-          <div className={styles.noResults}>
-            <p>프로필 검색 기능은 준비 중입니다.</p>
+        const query = searchParams.get("name");
+        return query ? (
+          <div className={styles.profileListContainer}>
+            <Suspense
+              fallback={
+                <div className={styles.loadingContainer}>
+                  <div className={styles.loadingSpinner}></div>
+                  <p>검색 중입니다...</p>
+                </div>
+              }
+            >
+              <ProfileSearchResults nickname={query} />
+            </Suspense>
           </div>
-          // TODO: 프로필 검색 구현 필요
-          // <div className={styles.profileListContainer}>
-          //   {isProfileLoading ? (
-          //     <div className={styles.loadingContainer}>
-          //       <div className={styles.loadingSpinner}></div>
-          //       <p>검색 중입니다...</p>
-          //     </div>
-          //   ) : profileError ? (
-          //     <div className={styles.errorContainer}>
-          //       <p>프로필 검색 중 오류가 발생했습니다.</p>
-          //     </div>
-          //   ) : profiles.length === 0 ? (
-          //     <div className={styles.noResults}>
-          //       <p>검색 결과가 없습니다.</p>
-          //     </div>
-          //   ) : (
-          //     <ProfileList profileInfo={profiles} onProfileSelect={handleProfileSelect} />
-          //   )}
-          // </div>
+        ) : (
+          <NoContent
+            logo="noResult"
+            mainContent="해당 닉네임의 사용자를 찾을 수 없어요"
+            subContent="닉네임을 다시 확인하거나 다른 사용자를 찾아보세요!"
+          />
         );
       default:
         return null;
@@ -271,17 +355,25 @@ const CafeSearch = () => {
   return (
     <div className={styles.searchPage}>
       <div className={styles.searchBarWrapper}>
-        <SearchBar />
+        <SearchBar initialValue={searchParams.get("name") || ""} />
       </div>
       <div>
-        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+        {isFromFooter && (
+          <div>
+            <Tabs
+              tabs={tabs}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
+          </div>
+        )}
       </div>
       {renderContent()}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={`${selectedCafe?.cafe.name}의 리뷰를 이어서 작성하시겠어요?`}
-        subTitle="해당 카페의 임시 저장된 리뷰가 있어요."
+        description="해당 카페의 임시 저장된 리뷰가 있어요."
         primaryButton={{
           text: "새로 작성하기",
           onClick: () => {
@@ -302,4 +394,4 @@ const CafeSearch = () => {
   );
 };
 
-export default CafeSearch;
+export default Search;

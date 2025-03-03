@@ -61,15 +61,15 @@ export interface ShowReviewListRequest {
   rating?: number;
 }
 
-export interface ShowUserReviewRequest {
+export interface ShowMyReviewRequest {
   limit: number;
   timestamp?: string;
 }
 
-export interface ReviewListProps {
-  type?: 'all' | 'my';
-  params?: ShowReviewListRequest | ShowUserReviewRequest;
-  onLoadMore?: (timestamp: string, rating?: number) => void;
+export interface ShowUserReviewRequest {
+  userId? : number; 
+  limit: number;
+  timestamp?: string;
 }
 
 export interface DraftReviewResponse {

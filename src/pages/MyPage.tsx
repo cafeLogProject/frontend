@@ -8,6 +8,7 @@ import Modal from "@/shared/ui/modal/Modal";
 import Toast from "@/shared/ui/toast/Toast";
 import styles from "@/app/layout/mainLayout/MainLayout.module.scss";
 import type { ICafeDescription } from "@shared/api/cafe/types";
+import NoContent from "@/shared/ui/noContent/NoContent";
 
 const MyPage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -54,6 +55,7 @@ const MyPage = () => {
   const closeModal = () => setIsModalOpen(false);
 
   const handleFilterChange = (type: "review" | "scrap") => {
+    setLastTimestamp(new Date(3000, 0, 1).toISOString());
     setActiveFilter(type);
   };
 
@@ -96,15 +98,23 @@ const MyPage = () => {
         ) : isLoading ? (
           <div>로딩 중...</div>
         ) : (
-          <CafeList
-            cafeInfo={favorites.map((favorite) => ({
-              id: favorite.cafeId,
-              name: favorite.cafeName,
-              address: favorite.location,
-              profileImg: ''
-            }))}
-            onCafeSelect={handleCafeSelect}
-          />
+          <>
+            {favorites.length === 0 ? 
+              <NoContent 
+                logo="noReview"
+                mainContent="아직 스크랩한 장소가 없어요"
+                subContent="카페를 스크랩하면 나만의 장소들을 모아볼 수 있어요"
+              />
+              : <CafeList cafeInfo={favorites.map((favorite) => ({
+                id: favorite.cafeId,
+                name: favorite.cafeName,
+                address: favorite.location,
+                profileImg: ''
+              }))}
+              onCafeSelect={handleCafeSelect}
+            />
+            }
+          </>
         )}
 
       </div>

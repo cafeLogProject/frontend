@@ -2,9 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import styles from "./ReviewerInfo.module.scss";
 import SimpleStarRating from "@/widgets/simpleStarRating/ui/SimpleStarRating";
 import ReviewMore from "../reviewMore/ReviewMore";
-import profileIcon from "@shared/assets/images/profile.svg";
+import profileIcon from "@shared/assets/images/profile/profile.svg";
+import myProfileIcon from "@shared/assets/images/profile/myProfile.svg";
 import moreIcon from "@shared/assets/images/more.svg";
 import { useProfileImageApi } from "@/shared/api/user/useProfileImagesApi";
+import { useNavigate } from "react-router-dom";
+import { useReviewImageApi } from "@/shared/api/images";
 
 interface ReviewerInfoProps {
   nickname: string;
@@ -29,25 +32,9 @@ const ReviewerInfo = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const reviewMoreRef = useRef<HTMLDivElement | null>(null);
   const isOwner = currentUserId === userId;
-
-  const { getProfileImage } = useProfileImageApi();
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadProfileImage = async () => {
-      if (isProfileImageExist && userId) {
-        try {
-          const imageUrl = await getProfileImage(userId);
-          setProfileImageUrl(imageUrl);
-        } catch (error) {
-          console.error("프로필 이미지 로드 실패:", error);
-          setProfileImageUrl(null);
-        }
-      }
-    };
-
-    loadProfileImage();
-  }, [isProfileImageExist, userId, getProfileImage]);
+  const navigate = useNavigate();
+  const { getProfileImageUrl } = useReviewImageApi();
+  const profileImageUrl = getProfileImageUrl(String(userId));
 
   // 표시할 버튼 개수 계산
   const getVisibleButtonCount = () => {
@@ -94,42 +81,45 @@ const ReviewerInfo = ({
   };
 
   return (
+    <div>
     <div className={styles.reviewerInfo}>
-      <img
-        className={styles.reviewerInfo__profilePicture}
-        src={profileImageUrl || profileIcon}
-        alt={`${nickname}의 프로필`}
-      />
-      <div className={styles.reviewerInfo__details}>
-        <p className={styles.reviewerInfo__name}>{nickname}</p>
-        <div className={styles.reviewerInfo__meta}>
-          <p className={styles.reviewerInfo__visitDate}>
-            {formatVisitDate(visitDate)} 방문
-          </p>
-          <p>・</p>
-          <SimpleStarRating rating={rating} />
+        <img
+          onClick={()=>{navigate(`/userpage/${userId}`)}}
+          className={styles.reviewerInfo__profilePicture}
+          src={(isProfileImageExist && profileImageUrl) || (isOwner ? myProfileIcon : profileIcon)}
+          alt={`${nickname}의 프로필`}
+        />
+        <div className={styles.reviewerInfo__details}>
+          <p className={styles.reviewerInfo__name}>{nickname}</p>
+          <div className={styles.reviewerInfo__meta}>
+            <p className={styles.reviewerInfo__visitDate}>
+              {formatVisitDate(visitDate)} 방문
+            </p>
+            <p>・</p>
+            <SimpleStarRating rating={rating} />
+          </div>
         </div>
-      </div>
 
-      {hasVisibleButtons && (
-        <div ref={reviewMoreRef} className={styles.reviewerInfo__moreWrapper}>
-          <img
-            className={styles.reviewerInfo__moreIcon}
-            src={moreIcon}
-            alt="더보기 아이콘"
-            onClick={toggleReviewMore}
-          />
-          {showReviewMore && (
-            <ReviewMore 
-              reviewId={reviewId}
-              isOwner={isOwner}
-              onDelete={() => setShowReviewMore(false)}
-              onModalOpen={() => setIsModalOpen(true)}
-              onModalClose={() => setIsModalOpen(false)}
+        {hasVisibleButtons && (
+          <div ref={reviewMoreRef} className={styles.reviewerInfo__moreWrapper}>
+            <img
+              className={styles.reviewerInfo__moreIcon}
+              src={moreIcon}
+              alt="더보기 아이콘"
+              onClick={toggleReviewMore}
             />
-          )}
-        </div>
-      )}
+            {showReviewMore && (
+              <ReviewMore 
+                reviewId={reviewId}
+                isOwner={isOwner}
+                onDelete={() => setShowReviewMore(false)}
+                onModalOpen={() => setIsModalOpen(true)}
+                onModalClose={() => setIsModalOpen(false)}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

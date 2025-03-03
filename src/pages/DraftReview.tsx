@@ -57,7 +57,12 @@ const DraftReview = () => {
 
       // 스토어 업데이트가 완료된 후 네비게이션
       Promise.resolve().then(() => {
-        navigate("/review/write", { state: { from: '/draft' } });
+        navigate("/review/write", { 
+          state: { 
+            from: '/draft',
+            isContinue: true
+          } 
+        });
       });
     }
 

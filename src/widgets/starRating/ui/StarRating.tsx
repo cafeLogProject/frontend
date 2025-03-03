@@ -38,7 +38,7 @@ export const StarRating = ({
   onChange,
   showRatingText = false,
   showRatingValue = false,
-  size = 36,
+  size = 40,
   rootClassName,
   starsContainerClassName,
   ratingTextClassName,
